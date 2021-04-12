@@ -1,0 +1,267 @@
+import { AppDispatch } from "../../App";
+import { NewHabitProps, HabitEditProps, TimeDataProps } from "./types";
+import { setBanner } from "../banner/actions";
+import { realtimeDb } from "../../firebase";
+import Database from "../../constants/Database";
+import { ReducerStateProps } from "..";
+import { ADD_HABIT, ADD_COMPLETED_HABIT, UPDATE_HABIT, ARCHIVE_HABIT } from "./actionTypes";
+import { processArchiveHabit, saveNotificationData, orderAndFormatHabits, handleCompletedHabit } from "./utils";
+import { isInvalidTime, convertTimeToInt, formatTimeForNotification } from "../../utils/tools";
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { AutoId } from "../../utils/styles";
+
+export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+    let k: keyof NewHabitProps;
+
+    for (k in habit) {
+        if (k !== 'notes' && k !== 'remove') {
+            if (!habit[k]) {
+                dispatch(setBanner('warning', 'Please make sure all the required fields are filled out.'))
+                return;
+            }
+        }
+    }
+
+    let timeInterfereWarning = '';
+    let notificationWarning = '';
+
+    //validate start and end time
+    const habitsStore = getState().habits.habits;
+    const prepareValidation: TimeDataProps = { startTime: habit.startTime, endTime: habit.endTime, docId: '' }
+
+    const { type, message } = isInvalidTime(prepareValidation, habitsStore)
+
+    if (type === 'error') {
+        dispatch(setBanner('warning', message))
+        return;
+    }
+
+    if (type === 'warning') {
+        timeInterfereWarning = message;
+    }
+
+    const { uid, notificationToken } = getState().user;
+
+    const dateNow = new Date()
+
+    const newHabit: any = {
+        ...habit,
+        notificationOn: !notificationToken ? false : habit.notificationOn,
+        createdAt: dateNow,
+        updatedAt: dateNow,
+        completedHabits: [],
+        docId: AutoId.newId()
+    }
+
+    if (newHabit.notificationOn) {
+        try {
+            await saveNotificationData(newHabit, uid, notificationToken)
+        } catch (err) {
+            console.log(err)
+            notificationWarning = "Not able to save your notification data. Please make sure you are connected to the internet.";
+            newHabit.notificationOn = false
+        }
+    }
+
+    //get store habits
+    const { habits } = getState().habits;
+
+    //add the new habit to store
+    const updatedHabits = orderAndFormatHabits([...habits, newHabit])
+
+    await AsyncStorage.setItem(uid + Database.Habits, JSON.stringify(updatedHabits))
+        .then(() => {
+            dispatch({ type: ADD_HABIT, payload: updatedHabits })
+            if (timeInterfereWarning) {
+                dispatch(setBanner('warning', `${timeInterfereWarning}. ${habit.name} succcessfully saved!`));
+            } else if (notificationWarning) {
+                dispatch(setBanner('warning', `${notificationWarning}. ${habit.name} succcessfully saved!`));
+            } else {
+                dispatch(setBanner('success', `${habit.name} succcessfully saved!`));
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            dispatch(setBanner('error', 'Failed to save your new habit. Please try again.'));
+            throw new Error()
+        })
+}
+
+export const addCompletedHabit = (habitDocId: string) => (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+    if (!habitDocId) {
+        dispatch(setBanner('error', "Sorry, I couldn't find your habit id."))
+        return;
+    }
+
+    const newDate = new Date();
+    // newDate.setDate(newDate.getDate() )
+
+    const { habits, user } = getState();
+
+    const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
+
+    AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
+        .then(() => {
+            dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
+        })
+        .catch((err) => {
+            console.log(err)
+            dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
+        })
+}
+
+export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+    const { user } = getState();
+
+    const habits = [...getState().habits.habits]
+
+    const { uid, notificationToken } = user;
+
+    const originalHabit = habits.find((item) => item.docId === updatedHabit.docId)
+
+    if (!originalHabit) {
+        dispatch(setBanner('error', "Sorry, we couldn't found the habit you are trying to edit."))
+        return false;
+    }
+
+    let timeInterfereWarning = '';
+    let notificationWarning = '';
+
+    let updateNotificationData = false;
+
+    //check if times are different
+    if (convertTimeToInt(originalHabit.startTime) != convertTimeToInt(updatedHabit.startTime) || convertTimeToInt(originalHabit.endTime) != convertTimeToInt(updatedHabit.endTime)) {
+
+        const { type, message } = isInvalidTime({ startTime: updatedHabit.startTime, endTime: updatedHabit.endTime, docId: updatedHabit.docId }, [...habits])
+
+
+        if (type == 'error') {
+            dispatch(setBanner('warning', message))
+            return false;
+        } else if (type == 'warning') {
+            timeInterfereWarning = message;
+        }
+
+        if (convertTimeToInt(originalHabit.startTime) != convertTimeToInt(updatedHabit.startTime)) {
+            updateNotificationData = true;
+        }
+    }
+
+    //check if cue updated
+    if (originalHabit.cue !== updatedHabit.cue || originalHabit.notificationOn !== updatedHabit.notificationOn) {
+        updateNotificationData = true;
+    }
+
+
+    if (!notificationToken && updatedHabit.notificationOn) {
+        notificationWarning = "Unable to turn on notification. Don't have access to notification credentials.";
+        updatedHabit.notificationOn = false;
+    }
+
+
+    //recalc notificationData
+    if (updateNotificationData || (originalHabit.notificationTime.totalMins != updatedHabit.notificationTime.totalMins)) {
+
+        const orgnalNotifyDate = new Date(updatedHabit.startTime.date)
+        const updatedNotificationDate = new Date(orgnalNotifyDate.getFullYear(), orgnalNotifyDate.getMonth(), orgnalNotifyDate.getDate(), orgnalNotifyDate.getHours(), orgnalNotifyDate.getMinutes() - updatedHabit.notificationTime.totalMins);
+
+        updatedHabit.notificationTime = {
+            date: updatedNotificationDate,
+            hour: updatedNotificationDate.getHours(),
+            minute: updatedNotificationDate.getMinutes(),
+            totalMins: updatedHabit.notificationTime.totalMins
+        }
+
+        updateNotificationData = true;
+
+    }
+
+    const habitIndex = habits.findIndex((item) => item.docId === updatedHabit.docId);
+
+    //now update habits
+    habits[habitIndex] = {
+        ...habits[habitIndex],
+        ...updatedHabit
+    }
+
+    if (updateNotificationData) {
+        try {
+            await saveNotificationData(habits[habitIndex], uid, notificationToken, originalHabit.notificationTime);
+        } catch (err) {
+            console.log(err)
+            notificationWarning = "Not able to save your notification data. Please make sure you are connected to the internet.";
+            habits[habitIndex].notificationOn = false;
+        }
+
+    }
+
+    const updatedHabits = orderAndFormatHabits(habits);
+
+    await AsyncStorage.setItem(uid + Database.Habits, JSON.stringify(updatedHabits))
+        .then(() => {
+            dispatch({ type: UPDATE_HABIT, payload: updatedHabits })
+            if (timeInterfereWarning) {
+                dispatch(setBanner('warning', `${timeInterfereWarning} ${habits[habitIndex].name} succcessfully saved!`))
+            } else if (notificationWarning) {
+                dispatch(setBanner('warning', `${notificationWarning} ${habits[habitIndex].name} succcessfully saved!`))
+            } else {
+                dispatch(setBanner('success', `${habits[habitIndex].name} succcessfully saved!`))
+            }
+
+            return true;
+        })
+        .catch((err) => {
+            console.log(err)
+            dispatch(setBanner('error', 'Oops! Something went wrong updating your habit. Please try again.'));
+            return false;
+        })
+
+}
+
+export const archiveHabit = (docId: string) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+    const { uid } = getState().user;
+
+    if (!docId) {
+        dispatch(setBanner('error', "Sorry, looks like we are having a hard time finding the habit."));
+        return false;
+    }
+
+    const archivedDate = new Date()
+
+    const localArchivedData = {
+        docId: docId,
+        archivedAt: archivedDate
+    }
+
+    const habitsStore = getState().habits;
+
+    //update habits store
+    const { habits, archivedHabits } = processArchiveHabit([...habitsStore.habits], [...habitsStore.archivedHabits], localArchivedData)
+    const archivedHabit = archivedHabits.find(item => item.docId === docId);
+
+    try {
+        if (archivedHabit && archivedHabit.notificationOn) {
+            let timeString = formatTimeForNotification(archivedHabit.startTime)
+            const baseRef = Database.NotificationRealDb.habits;
+            const habitTimeRef = `${baseRef}/${timeString}/${uid}`;
+            await realtimeDb.ref(habitTimeRef).remove()
+        }
+    } catch (err) {
+        console.log(err)
+        dispatch(setBanner('error', "Need to be connected to the internet to remove this habit or turn notification off. Please try again."));
+        return false;
+    }
+
+    try {
+        await AsyncStorage.setItem(uid + Database.ArchivedHabits, JSON.stringify(archivedHabits))
+        await AsyncStorage.setItem(uid + Database.Habits, JSON.stringify(habits))
+    } catch (err) {
+        console.log(err)
+        dispatch(setBanner('error', 'Oops! Something went wrong updating your habit. Please try again.'));
+        return false;
+    }
+
+    dispatch({ type: ARCHIVE_HABIT, payload: { habits, archivedHabits } })
+    dispatch(setBanner('success', "Successfully archived."));
+    return true;
+}

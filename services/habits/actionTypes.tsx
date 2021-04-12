@@ -1,0 +1,5 @@
+export const SET_HABITS = 'SET_HABITS';
+export const ADD_HABIT = 'ADD_HABIT';
+export const ADD_COMPLETED_HABIT = 'ADD_COMPLETED_HABIT';
+export const UPDATE_HABIT = 'UPDATE_HABIT';
+export const ARCHIVE_HABIT = 'ARCHIVE_HABIT';
