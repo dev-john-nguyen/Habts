@@ -12,10 +12,6 @@ type SettingsNavProps = StackNavigationProp<RootStackParamList, 'Settings'>;
 export default ({ navigation }: { navigation: SettingsNavProps }) => {
     return (
         <View style={styles.container}>
-            <View style={styles.header}>
-                {/* <FontAwesome name="gear" size={40} color={Colors.white} />
-                <AsapText style={styles.headerText}>Settings</AsapText> */}
-            </View>
             <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('Account')}>
                 <View style={styles.item}>
                     <Entypo name="user" size={24} color={Colors.white} />
@@ -48,16 +44,7 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-    },
-    header: {
-        flex: .3,
-        justifyContent: 'center',
-        flexDirection: 'row',
-    },
-    headerText: {
-        fontSize: 30,
-        color: Colors.white,
-        marginLeft: 5
+        justifyContent: 'center'
     },
     itemContainer: {
         width: '100%',

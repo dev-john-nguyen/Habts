@@ -1,7 +1,7 @@
 import { firebaseDb, firestoreDb, realtimeDb } from '../../firebase';
 import "firebase/auth";
 import { AppDispatch } from '../../App';
-import { FETCHED, SET_USER, SET_NOTIFICATION_TOKEN, SIGN_OUT } from './actionTypes';
+import { FETCHED, SET_USER, SET_NOTIFICATION_TOKEN, SIGN_OUT, PURCHASE_ITEM } from './actionTypes';
 import { fetchStorage } from './utils';
 import { SET_HABITS } from '../habits/actionTypes';
 import { SET_REVIEWS } from '../reviews/actionTypes';
@@ -14,22 +14,6 @@ import { formatTimeForNotification } from '../../utils/tools';
 
 
 export const verifyAuth = (state: ReducerStateProps): any => (dispatch: AppDispatch) => {
-
-    // firebaseDb.auth().onAuthStateChanged(async (user) => {
-    //     if (user){
-    //         if(state.user.initializeUser && state.user.initializeUserData) {
-    //             //init user
-    //             await firestoreDb.collection(Database.Users).doc(user.uid).set(state.user.initializeUserData)
-    //             await AsyncStorage.setItem(user.uid + Database.Users, JSON.stringify(state.user.initializeUserData))
-    //             dispatch({ type: SET_USER, payload: state.user.initializeUserData })
-    //         }
-    //     }
-    // }, err => {
-    //     console.log(err)
-    //     dispatch(setBanner('error', 'Sorry! Failed to initialize your acccount.'));
-    //     dispatch({ type: FETCHED })
-    // })
-
     fetchStorage()
         .then((data) => {
             dispatch({ type: SET_USER, payload: data.user });
@@ -58,11 +42,19 @@ export const signUp = (email: string, password: string, password2: string) => as
         const { user } = await firebaseDb.auth().createUserWithEmailAndPassword(email, password);
         if (!user) throw 'Sorry, failed to get your user information'
 
+        const utcNow = DateTime.utc()
+        const expiredAt = DateTime.utc(utcNow.year, utcNow.month + 1, utcNow.day).toJSDate();
+
         const userStorage = {
             uid: user.uid,
-            createdAt: new Date()
+            createdAt: new Date(),
+            expiredAt: expiredAt,
+            loginAt: utcNow.toJSDate(),
+            subscription: Database.oneMonthFreeTrail
         }
+
         await firestoreDb.collection(Database.Users).doc(userStorage.uid).set(userStorage)
+        await AsyncStorage.setItem(Database.currentUser, userStorage.uid);
         await AsyncStorage.setItem(userStorage.uid + Database.Users, JSON.stringify(userStorage))
         dispatch({ type: SET_USER, payload: userStorage })
     } catch (error) {
@@ -98,17 +90,18 @@ export const signIn = (email: string, password: string) => async (dispatch: AppD
 
         if (!userData.exists) throw 'Failed to get your profile information.'
 
-        const { createdAt, notificationToken, loginAt } = userData.data() as { createdAt: Date, notificationToken: string, loginAt: Date }
+        const { createdAt, notificationToken, expiredAt } = userData.data() as { createdAt: Date, notificationToken: string, expiredAt: Date }
+
+        //update login date
+        const updatedAt = DateTime.utc()
 
         const userStorage = {
             uid: user.uid,
             createdAt: createdAt.toDate(),
             notificationToken,
-            loginAt: loginAt.toDate()
+            loginAt: updatedAt.toJSDate(),
+            expiredAt: expiredAt.toDate()
         }
-
-        //update login date
-        const updatedAt = DateTime.utc()
 
         await firestoreDb.collection(Database.Users).doc(user.uid).set({
             loginAt: updatedAt.toJSDate()
@@ -219,3 +212,35 @@ export const saveNotificationToken = (token: string) => async (dispatch: AppDisp
             console.log(err)
         })
 }
+
+export const subscriptionPurchased = (productId: string, purchaseTime: number) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+    const { user } = getState();
+    const utcNow = DateTime.fromMillis(purchaseTime).toUTC();
+    const expiredAt = DateTime.utc(utcNow.year, utcNow.month + 1, utcNow.day).toJSDate();
+
+    try {
+        await firestoreDb.collection(Database.Users).doc(user.uid).set({
+            expiredAt,
+            subscription: productId
+        }, { merge: true })
+
+        await AsyncStorage.setItem(user.uid + Database.Users, JSON.stringify({
+            ...user,
+            expiredAt,
+            subscription: productId
+        }));
+    } catch (err) {
+        console.log(err)
+        dispatch(setBanner('error', "Sorry, something went wrong. Completing your purchase. If you purchased an item, please contact us directly."))
+        return;
+    }
+
+    dispatch({
+        type: PURCHASE_ITEM, payload: {
+            expiredAt,
+            subscription: productId
+        }
+    })
+}
+
+32

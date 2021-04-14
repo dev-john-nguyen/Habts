@@ -3,3 +3,4 @@ export const SET_USER = 'SET_USER';
 export const INITIALIZE_USER = 'INITIALIZE_USER';
 export const SET_NOTIFICATION_TOKEN = 'SET_NOTIFICATION_TOKEN';
 export const SIGN_OUT = 'SIGN_OUT';
+export const PURCHASE_ITEM = 'PURCHASE_ITEM';

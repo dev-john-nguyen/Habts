@@ -3,19 +3,21 @@ import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../services';
 import Navigation from '../navigation';
-import useColorScheme from '../hooks/useColorScheme';
+// import useColorScheme from '../hooks/useColorScheme';
 import Colors from '../constants/Colors';
 import { UserProps, UserActionsProps } from '../services/user/types';
 import { removeBanner, setBanner } from '../services/banner/actions';
 import { BannerActionsProps, BannerProps } from '../services/banner/types';
 import Banner from '../components/Banner';
-import { signUp, saveNotificationToken, signIn } from '../services/user/actions';
+import { signUp, saveNotificationToken, signIn, subscriptionPurchased } from '../services/user/actions';
 import SignInForm from '../components/SignInForm';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { LinearGradient } from 'expo-linear-gradient';
 import Stars from '../components/Stars';
 import Layout from '../constants/Layout';
+import * as InAppPurchases from 'expo-in-app-purchases';
+import Database from '../constants/Database';
 
 interface MainProps {
     user: UserProps;
@@ -25,10 +27,52 @@ interface MainProps {
     setBanner: BannerActionsProps['setBanner'];
     saveNotificationToken: UserActionsProps['saveNotificationToken'];
     signIn: UserActionsProps['signIn'];
+    subscriptionPurchased: UserActionsProps['subscriptionPurchased']
 }
 
-const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationToken, signIn }: MainProps) => {
-    const colorScheme = useColorScheme();
+const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationToken, signIn, subscriptionPurchased }: MainProps) => {
+    // const colorScheme = useColorScheme();
+
+    useEffect(() => {
+        (async () => {
+            try {
+                await InAppPurchases.connectAsync()
+
+                InAppPurchases.setPurchaseListener(({ responseCode, results, errorCode }) => {
+                    // Purchase was successful
+                    if (responseCode === InAppPurchases.IAPResponseCode.OK) {
+                        results.forEach((purchase: InAppPurchases.InAppPurchase) => {
+                            if (!purchase.acknowledged) {
+                                console.log(`Successfully purchased ${purchase.productId}`);
+                                // Process transaction here and unlock content...
+                                subscriptionPurchased(purchase.productId, purchase.purchaseTime)
+
+                                // Then when you're done
+                                InAppPurchases.finishTransactionAsync(purchase, true);
+                            }
+                        });
+                        return;
+                    }
+
+                    // Else find out what went wrong
+                    if (responseCode === InAppPurchases.IAPResponseCode.USER_CANCELED) {
+                        setBanner('warning', 'You canceled the transaction');
+                    } else if (responseCode === InAppPurchases.IAPResponseCode.DEFERRED) {
+                        setBanner('warning', 'You do not have permissions to buy but requested parental approval (iOS only)');
+                    } else {
+                        setBanner('error', `Something went wrong with the purchase. Received errorCode ${errorCode}`);
+                    }
+                });
+
+            } catch (err) {
+                console.log(err)
+            }
+
+
+        })()
+
+    }, [])
+
 
 
     useEffect(() => {
@@ -37,12 +81,13 @@ const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationT
             registerForPushNotificationsAsync()
                 .catch((err) => {
                     console.log(err)
-                    setBanner("error", "Failed to get push token for push notification!")
+                    setBanner("error", "Failed to access push notification.")
                 })
         }
     }, [user.uid])
 
     async function registerForPushNotificationsAsync() {
+        //need experience id for push notification since it is bare workflow
         if (Constants.isDevice) {
             const { status: existingStatus } = await Notifications.getPermissionsAsync();
             let finalStatus = existingStatus;
@@ -54,7 +99,7 @@ const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationT
                 setBanner('warning', "Your notification is off.")
                 return;
             }
-            const token = (await Notifications.getExpoPushTokenAsync()).data;
+            const token = (await Notifications.getExpoPushTokenAsync({ experienceId: process.env.EXPERIENCE_ID })).data;
             saveNotificationToken(token)
         } else {
             console.log('Must use physical device for Push Notifications');
@@ -113,4 +158,4 @@ const mapStateToProps = (state: ReducerStateProps) => ({
     banner: state.banner
 })
 
-export default connect(mapStateToProps, { removeBanner, signUp, setBanner, saveNotificationToken, signIn })(Main)
+export default connect(mapStateToProps, { removeBanner, signUp, setBanner, saveNotificationToken, signIn, subscriptionPurchased })(Main)

@@ -11,5 +11,7 @@ export default {
     NotificationRealDb: {
         habits: 'notifications/habits',
         reviews: 'notifications/reviews'
-    }
+    },
+    monthlyPurchaseId: 'habts_01.99_1m',
+    oneMonthFreeTrail: 'habts_00.00_1m'
 }

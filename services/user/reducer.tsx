@@ -1,4 +1,4 @@
-import { FETCHED, SET_USER, INITIALIZE_USER, SET_NOTIFICATION_TOKEN, SIGN_OUT } from "./actionTypes";
+import { FETCHED, SET_USER, INITIALIZE_USER, SET_NOTIFICATION_TOKEN, SIGN_OUT, PURCHASE_ITEM } from "./actionTypes";
 
 const INITIAL_STATE = {
     uid: '',
@@ -32,6 +32,12 @@ export default (state = INITIAL_STATE, action: any) => {
             return {
                 ...state,
                 notificationToken: action.payload
+            }
+        case PURCHASE_ITEM:
+            return {
+                ...state,
+                expiredAt: action.payload.expiredAt,
+                subscription: action.payload.subscription
             }
         case SIGN_OUT:
             return { ...INITIAL_STATE, fetched: true };

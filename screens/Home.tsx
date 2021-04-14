@@ -20,6 +20,7 @@ import Moon from '../components/Moon';
 import Superman from '../assets/svgs/superman';
 import Layout from '../constants/Layout';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Pay from './settings/Pay';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
 
@@ -38,6 +39,8 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
     const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([])
     const [activeDate, setActiveDate] = useState<Date>(new Date())
     const listRef: any = useRef();
+    const [expired, setExpired] = useState(false)
+
 
     useEffect(() => {
         if (habits.length > 0) {
@@ -97,6 +100,19 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
         };
     }, []);
 
+    useEffect(() => {
+        //expiredAt is in utc
+        if (user.expiredAt) {
+            const utcNow = DateTime.utc();
+            const luxExpiredAt = DateTime.fromJSDate(new Date(user.expiredAt)).toUTC();
+            if (utcNow > luxExpiredAt) {
+                setExpired(true)
+                return;
+            }
+        }
+        setExpired(false)
+    }, [user.expiredAt])
+
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
         if (appState.current.match(/background/) &&
             nextAppState === "active") {
@@ -133,17 +149,17 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
         }
     }
 
-    const navToSettings = () => navigation.navigate('Settings');
+    const navToSettings = () => !expired && navigation.navigate('Settings');
 
-    const navToHabit = (item: HabitProps) => navigation.navigate('Habit', { habitDocId: item.docId, activeDay: activeDate.getDate() });
+    const navToHabit = (item: HabitProps) => !expired && navigation.navigate('Habit', { habitDocId: item.docId, activeDay: activeDate.getDate() });
 
-    const navToReview = () => navigation.navigate('Review');
+    const navToReview = () => !expired && navigation.navigate('Review');
 
-    const navToNew = () => navigation.navigate('New');
+    const navToNew = () => !expired && navigation.navigate('New');
 
-    const navToReviewHistory = () => navigation.navigate('ReviewHistory');
+    const navToReviewHistory = () => !expired && navigation.navigate('ReviewHistory');
 
-    const navToHabitHistory = () => navigation.navigate('HabitHistory');
+    const navToHabitHistory = () => !expired && navigation.navigate('HabitHistory');
 
     return (
         <SafeAreaView style={styles.container}>
@@ -193,12 +209,14 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
                 )}
                 keyExtractor={(item, index) => item.docId ? item.docId + index.toString() : index.toString()}
             />
+
             <BottomTab
                 navtoNew={navToNew}
                 navToHabitHistory={navToHabitHistory}
                 navToReviewHistory={navToReviewHistory}
                 navToSettings={navToSettings}
             />
+            {expired && <Pay />}
         </SafeAreaView>
     )
 }

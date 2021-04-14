@@ -14,7 +14,7 @@ import { signOut } from '../../services/user/actions';
 import { connect } from 'react-redux';
 import { UserActionsProps } from '../../services/user/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { normalizeHeight } from '../../utils/styles';
+import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 
 
 function validateEmail(email: string) {
@@ -115,13 +115,13 @@ const styles = StyleSheet.create({
         margin: 10
     },
     headerText: {
-        fontSize: 25,
+        fontSize: normalizeWidth(15),
         margin: 10,
         textAlign: 'center',
         color: Colors.white
     },
     subText: {
-        fontSize: 14,
+        fontSize: normalizeWidth(25),
         textAlign: 'center',
         margin: 10,
         color: Colors.white

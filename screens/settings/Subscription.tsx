@@ -1,58 +1,73 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { AsapText, LatoText } from '../../components/StyledText';
+import { AsapText, AsapTextBold } from '../../components/StyledText';
 import Colors from '../../constants/Colors';
-import { StyledPrimaryButton } from '../../components/StyledButton';
-import { normalizeHeight } from '../../utils/styles';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { connect } from 'react-redux';
+import { ReducerStateProps } from '../../services';
+import { UserProps } from '../../services/user/types';
+import { DateTime } from 'luxon';
+import { normalizeWidth, normalizeHeight } from '../../utils/styles';
+import Pay from './Pay';
+import Database from '../../constants/Database';
 
-export default () => {
+const Subscription = ({ user }: { user: UserProps }) => {
+
+    const expiredAt = DateTime.fromJSDate(new Date(user.expiredAt));
+
+    const subscriptionType = () => {
+        switch (user.subscription) {
+            case Database.monthlyPurchaseId:
+                return 'Monthly'
+            case Database.oneMonthFreeTrail:
+            default:
+                return '1 Month Free Trail'
+        }
+    }
+
     return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <View style={styles.container}>
-                <View style={styles.section}>
-                    <AsapText style={styles.headerText}>Current Subscription</AsapText>
-                    <LatoText style={styles.text}>Monthly: $0.99</LatoText>
-                </View>
-
-                <View style={styles.section}>
-                    <AsapText style={styles.headerText}>Update Subscription</AsapText>
-                    <LatoText style={styles.text}>Upgrade to Yearly Subscription at $10.</LatoText>
-                    <StyledPrimaryButton
-                        style={styles.button}
-                        text='Pay Yearly'
-                    />
-                </View>
-
-                <View style={styles.section}>
-                    <AsapText style={styles.headerText}>Cancel Subscription</AsapText>
-                    <LatoText style={styles.text}>Monthly: $0.99</LatoText>
-                    <StyledPrimaryButton
-                        style={styles.button}
-                        text='Cancel'
-                    />
-                </View>
+        <View style={styles.container}>
+            <View style={styles.section}>
+                <AsapText style={styles.headerText}>Subscription Type:</AsapText>
+                <AsapTextBold style={styles.text}>{subscriptionType()}</AsapTextBold>
             </View>
-        </SafeAreaView>
+
+            <View style={styles.section}>
+                <AsapText style={styles.headerText}>Subscription Expiration Date:</AsapText>
+                <AsapTextBold style={styles.text}>{expiredAt.toFormat('LLL dd yyyy')}</AsapTextBold>
+            </View>
+
+            <View style={styles.section}>
+                <AsapText style={styles.headerText}>You can manage your subscription in your account settings on the App Store.</AsapText>
+            </View>
+        </View>
     )
 }
+
+const mapStateToProps = (state: ReducerStateProps) => ({
+    user: state.user
+})
+
+export default connect(mapStateToProps, {})(Subscription);
+
+
+
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
         justifyContent: 'center'
     },
     section: {
-        margin: 20,
+        marginBottom: normalizeHeight(20),
         alignItems: 'center',
     },
     headerText: {
-        fontSize: 16,
-        color: Colors.white
+        fontSize: normalizeWidth(20),
+        color: Colors.white,
+        padding: 20
     },
     text: {
-        fontSize: 14,
+        fontSize: normalizeWidth(15),
         color: Colors.white,
         margin: 20
     },

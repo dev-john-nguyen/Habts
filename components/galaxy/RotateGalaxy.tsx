@@ -31,7 +31,8 @@ export default ({ balls, login }: Props) => {
         <View style={styles.container}>
             <LinearGradient
                 colors={[`rgba(${Colors.primaryRgb},.5)`, `rgba(${Colors.whiteRgb},.5)`, `rgba(${Colors.secondaryRgb},.5)`]}
-                start={{ x: 0.0, y: 1.0 }} end={{ x: 1.0, y: 1.0 }}
+                start={{ x: 0, y: 1 }}
+                end={{ x: 1, y: 1 }}
                 style={styles.gradientBorder} />
             <View style={styles.container}>
                 <Animated.View

@@ -1,7 +1,3 @@
-export interface UserReducerProps {
-
-}
-
 export interface UserProps {
     initializeUser: boolean;
     fetched: boolean;
@@ -18,7 +14,9 @@ export interface UserProps {
     subEndAt: Date,
     subPaidAt: Date,
     createdAt: Date,
-    initializeUserData?: { createdAt: Date }
+    expiredAt: Date,
+    initializeUserData?: { createdAt: Date },
+    subscription: string
 }
 
 export interface UserActionsProps {
@@ -26,4 +24,5 @@ export interface UserActionsProps {
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
     saveNotificationToken: (token: string) => Promise<void>;
+    subscriptionPurchased: (productId: string, purchaseTime: number) => Promise<void | undefined>
 }
