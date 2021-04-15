@@ -140,9 +140,9 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
         setStep(10)
 
         addHabit(newHabit)
-            .then(() => {
+            .then((res) => {
                 setLoading(false)
-                navigation.goBack()
+                if (res) navigation.navigate("Home")
             })
             .catch((err) => {
                 console.log(err)

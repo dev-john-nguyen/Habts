@@ -1,3 +1,4 @@
+import NetInfo from "@react-native-community/netinfo";
 import { AppDispatch } from "../../App";
 import { NewHabitProps, HabitEditProps, TimeDataProps } from "./types";
 import { setBanner } from "../banner/actions";
@@ -55,10 +56,16 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
 
     if (newHabit.notificationOn) {
         try {
-            await saveNotificationData(newHabit, uid, notificationToken)
+            const state = await NetInfo.fetch();
+            if (state.isConnected) {
+                await saveNotificationData(newHabit, uid, notificationToken)
+            } else {
+                notificationWarning = "Unable to turn on notification. Looks like your offline.";
+                newHabit.notificationOn = false
+            }
         } catch (err) {
             console.log(err)
-            notificationWarning = "Not able to save your notification data. Please make sure you are connected to the internet.";
+            notificationWarning = "Unable to turn on notification. Please check your mobile connection.";
             newHabit.notificationOn = false
         }
     }
@@ -75,7 +82,7 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
             if (timeInterfereWarning) {
                 dispatch(setBanner('warning', `${timeInterfereWarning}. ${habit.name} succcessfully saved!`));
             } else if (notificationWarning) {
-                dispatch(setBanner('warning', `${notificationWarning}. ${habit.name} succcessfully saved!`));
+                dispatch(setBanner('warning', `${notificationWarning} ${habit.name} succcessfully saved!`));
             } else {
                 dispatch(setBanner('success', `${habit.name} succcessfully saved!`));
             }
@@ -83,8 +90,10 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
         .catch((err) => {
             console.log(err)
             dispatch(setBanner('error', 'Failed to save your new habit. Please try again.'));
-            throw new Error()
+            throw new Error('unexpected error occured saving in storage.')
         })
+
+    return true;
 }
 
 export const addCompletedHabit = (habitDocId: string) => (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
@@ -94,7 +103,6 @@ export const addCompletedHabit = (habitDocId: string) => (dispatch: AppDispatch,
     }
 
     const newDate = new Date();
-    // newDate.setDate(newDate.getDate() )
 
     const { habits, user } = getState();
 
@@ -184,12 +192,19 @@ export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: Ap
         ...updatedHabit
     }
 
-    if (updateNotificationData) {
+    if (updateNotificationData && updatedHabit.notificationOn) {
         try {
-            await saveNotificationData(habits[habitIndex], uid, notificationToken, originalHabit.notificationTime);
+            const state = await NetInfo.fetch();
+
+            if (state.isConnected) {
+                await saveNotificationData(habits[habitIndex], uid, notificationToken, originalHabit.notificationTime);
+            } else {
+                notificationWarning = "Unable to turn on notification. Looks like your offline.";
+                habits[habitIndex].notificationOn = false
+            }
         } catch (err) {
             console.log(err)
-            notificationWarning = "Not able to save your notification data. Please make sure you are connected to the internet.";
+            notificationWarning = "Unable to turn on notification. Please check your mobile connection.";
             habits[habitIndex].notificationOn = false;
         }
 
@@ -241,10 +256,15 @@ export const archiveHabit = (docId: string) => async (dispatch: AppDispatch, get
 
     try {
         if (archivedHabit && archivedHabit.notificationOn) {
-            let timeString = formatTimeForNotification(archivedHabit.startTime)
-            const baseRef = Database.NotificationRealDb.habits;
-            const habitTimeRef = `${baseRef}/${timeString}/${uid}`;
-            await realtimeDb.ref(habitTimeRef).remove()
+            const state = await NetInfo.fetch();
+            if (state.isConnected) {
+                let timeString = formatTimeForNotification(archivedHabit.startTime)
+                const baseRef = Database.NotificationRealDb.habits;
+                const habitTimeRef = `${baseRef}/${timeString}/${uid}`;
+                await realtimeDb.ref(habitTimeRef).remove()
+            } else {
+                throw new Error('No connected to internet')
+            }
         }
     } catch (err) {
         console.log(err)

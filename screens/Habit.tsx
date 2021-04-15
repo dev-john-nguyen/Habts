@@ -17,7 +17,6 @@ import { addCompletedHabit, updateHabit, archiveHabit } from '../services/habits
 import Modal from '../components/ArchiveModal';
 import { normalizeHeight } from '../utils/styles';
 import { LinearGradient } from 'expo-linear-gradient';
-import Stars from '../components/Stars';
 import Galaxy from '../components/galaxy';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>

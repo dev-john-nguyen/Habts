@@ -61,7 +61,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit }: HabitHeader) => {
                                     minuteInterval={5}
                                     mode='time'
                                     is24Hour={true}
-                                    display="clock"
+                                    display="default"
                                     onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, startTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes() } })}
                                     style={styles.datePicker}
                                 />
@@ -73,7 +73,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit }: HabitHeader) => {
                                     minuteInterval={5}
                                     mode='time'
                                     is24Hour={true}
-                                    display="clock"
+                                    display="default"
                                     onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, endTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes() } })}
                                     style={styles.datePicker}
                                     children

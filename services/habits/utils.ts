@@ -212,6 +212,5 @@ export async function saveNotificationData(habit: HabitProps, uid: string, notif
         updatedAt: updatedAt
     } : null
 
-
     return realtimeDb.ref().update(timesRef)
 }

@@ -2,7 +2,7 @@
   "scripts": {
     "start": "react-native start",
     "android": "react-native run-android",
-    "ios": "react-native run-ios",
+    "ios": "react-native run-ios --simulator='iPhone 8'",
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",
@@ -19,6 +19,7 @@
     "@react-native-async-storage/async-storage": "^1.14.1",
     "@react-native-community/datetimepicker": "3.0.4",
     "@react-native-community/masked-view": "0.1.10",
+    "@react-native-community/netinfo": "^6.0.0",
     "@react-native-picker/picker": "1.9.2",
     "@react-navigation/bottom-tabs": "5.11.2",
     "@react-navigation/native": "~5.8.10",

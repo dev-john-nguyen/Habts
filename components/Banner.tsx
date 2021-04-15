@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '90%',
         alignSelf: 'center',
-        minHeight: (Layout.window.height / 9),
+        minHeight: (Layout.window.height / 8),
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         zIndex: 100

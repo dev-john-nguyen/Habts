@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { AsapText, LatoText } from '../../components/StyledText';
 import Colors from '../../constants/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { normalizeHeight } from '../../utils/styles';
+import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 
 export default () => {
     return (
@@ -30,13 +30,13 @@ const styles = StyleSheet.create({
         margin: 10
     },
     headerText: {
-        fontSize: 25,
+        fontSize: normalizeWidth(15),
         margin: 10,
         textAlign: 'center',
         color: Colors.white
     },
     subText: {
-        fontSize: 14,
+        fontSize: normalizeWidth(25),
         textAlign: 'left',
         margin: 10,
         color: Colors.white
