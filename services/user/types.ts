@@ -16,7 +16,9 @@ export interface UserProps {
     createdAt: Date,
     expiredAt: Date,
     initializeUserData?: { createdAt: Date },
-    subscription: string
+    subscription: string,
+    orderId: string,
+    requestReview: boolean
 }
 
 export interface UserActionsProps {
@@ -24,5 +26,6 @@ export interface UserActionsProps {
     signIn: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
     saveNotificationToken: (token: string) => Promise<void>;
-    subscriptionPurchased: (productId: string, purchaseTime: number) => Promise<void | undefined>
+    subscriptionPurchased: (productId: string, purchaseTime: number, orderId: string) => Promise<void | undefined>;
+    updateRequestReview: () => Promise<void>;
 }

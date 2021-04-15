@@ -1,7 +1,7 @@
 import { firebaseDb, firestoreDb, realtimeDb } from '../../firebase';
 import "firebase/auth";
 import { AppDispatch } from '../../App';
-import { FETCHED, SET_USER, SET_NOTIFICATION_TOKEN, SIGN_OUT, PURCHASE_ITEM } from './actionTypes';
+import { FETCHED, SET_USER, SET_NOTIFICATION_TOKEN, SIGN_OUT, PURCHASE_ITEM, REQUEST_REVIEW } from './actionTypes';
 import { fetchStorage } from './utils';
 import { SET_HABITS } from '../habits/actionTypes';
 import { SET_REVIEWS } from '../reviews/actionTypes';
@@ -54,8 +54,11 @@ export const signUp = (email: string, password: string, password2: string) => as
         }
 
         await firestoreDb.collection(Database.Users).doc(userStorage.uid).set(userStorage)
+
         await AsyncStorage.setItem(Database.currentUser, userStorage.uid);
-        await AsyncStorage.setItem(userStorage.uid + Database.Users, JSON.stringify(userStorage))
+
+        await AsyncStorage.setItem(userStorage.uid + Database.Users, JSON.stringify({ ...userStorage, requestReview: true }))
+
         dispatch({ type: SET_USER, payload: userStorage })
     } catch (error) {
         var errorCode = error.code;
@@ -109,6 +112,7 @@ export const signIn = (email: string, password: string) => async (dispatch: AppD
 
 
         await AsyncStorage.setItem(Database.currentUser, userStorage.uid);
+
         await AsyncStorage.setItem(userStorage.uid + Database.Users, JSON.stringify(userStorage));
 
         const data = await fetchStorage();
@@ -213,21 +217,29 @@ export const saveNotificationToken = (token: string) => async (dispatch: AppDisp
         })
 }
 
-export const subscriptionPurchased = (productId: string, purchaseTime: number) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+export const subscriptionPurchased = (productId: string, purchaseTime: number, orderId: string) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
     const { user } = getState();
+    if (user.uid) return;
+
     const utcNow = DateTime.fromMillis(purchaseTime).toUTC();
     const expiredAt = DateTime.utc(utcNow.year, utcNow.month + 1, utcNow.day).toJSDate();
+
+    if (user.orderId == orderId) return;
+
+    console.log(`Successfully purchased ${productId}`);
 
     try {
         await firestoreDb.collection(Database.Users).doc(user.uid).set({
             expiredAt,
-            subscription: productId
+            subscription: productId,
+            orderId: orderId
         }, { merge: true })
 
         await AsyncStorage.setItem(user.uid + Database.Users, JSON.stringify({
             ...user,
             expiredAt,
-            subscription: productId
+            subscription: productId,
+            orderId: orderId
         }));
     } catch (err) {
         console.log(err)
@@ -238,9 +250,23 @@ export const subscriptionPurchased = (productId: string, purchaseTime: number) =
     dispatch({
         type: PURCHASE_ITEM, payload: {
             expiredAt,
-            subscription: productId
+            subscription: productId,
+            orderId: orderId
         }
     })
 }
 
-32
+export const updateRequestReview = () => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+    const { user } = getState();
+
+    try {
+        await AsyncStorage.setItem(user.uid + Database.Users, JSON.stringify({
+            ...user,
+            requestReview: false
+        }));
+    } catch (err) {
+        console.log(err)
+    }
+
+    dispatch({ type: REQUEST_REVIEW })
+}

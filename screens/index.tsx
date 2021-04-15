@@ -9,7 +9,7 @@ import { UserProps, UserActionsProps } from '../services/user/types';
 import { removeBanner, setBanner } from '../services/banner/actions';
 import { BannerActionsProps, BannerProps } from '../services/banner/types';
 import Banner from '../components/Banner';
-import { signUp, saveNotificationToken, signIn, subscriptionPurchased } from '../services/user/actions';
+import { signUp, saveNotificationToken, signIn, subscriptionPurchased, updateRequestReview } from '../services/user/actions';
 import SignInForm from '../components/SignInForm';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
@@ -17,7 +17,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import Stars from '../components/Stars';
 import Layout from '../constants/Layout';
 import * as InAppPurchases from 'expo-in-app-purchases';
-import Database from '../constants/Database';
+import * as StoreReview from 'expo-store-review';
+import { DateTime } from 'luxon';
 
 interface MainProps {
     user: UserProps;
@@ -27,30 +28,38 @@ interface MainProps {
     setBanner: BannerActionsProps['setBanner'];
     saveNotificationToken: UserActionsProps['saveNotificationToken'];
     signIn: UserActionsProps['signIn'];
-    subscriptionPurchased: UserActionsProps['subscriptionPurchased']
+    subscriptionPurchased: UserActionsProps['subscriptionPurchased'];
+    updateRequestReview: UserActionsProps['updateRequestReview'];
 }
 
-const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationToken, signIn, subscriptionPurchased }: MainProps) => {
+const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationToken, signIn, subscriptionPurchased, updateRequestReview }: MainProps) => {
     // const colorScheme = useColorScheme();
 
     useEffect(() => {
+
+        if (!user.uid) return;
+
         (async () => {
             try {
                 await InAppPurchases.connectAsync()
 
-                InAppPurchases.setPurchaseListener(({ responseCode, results, errorCode }) => {
+                InAppPurchases.setPurchaseListener(async ({ responseCode, results, errorCode }) => {
                     // Purchase was successful
                     if (responseCode === InAppPurchases.IAPResponseCode.OK) {
-                        results.forEach((purchase: InAppPurchases.InAppPurchase) => {
+
+                        for (let i = 0; i < results.length; i++) {
+                            const purchase: InAppPurchases.InAppPurchase = results[i];
+
                             if (!purchase.acknowledged) {
-                                console.log(`Successfully purchased ${purchase.productId}`);
                                 // Process transaction here and unlock content...
-                                subscriptionPurchased(purchase.productId, purchase.purchaseTime)
+                                await subscriptionPurchased(purchase.productId, purchase.purchaseTime, purchase.originalOrderId ? purchase.originalOrderId : purchase.orderId)
 
                                 // Then when you're done
                                 InAppPurchases.finishTransactionAsync(purchase, true);
                             }
-                        });
+
+                        }
+
                         return;
                     }
 
@@ -71,9 +80,21 @@ const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationT
 
         })()
 
-    }, [])
+    }, [user.uid])
 
+    useEffect(() => {
+        if (!user.uid) return;
 
+        const { createdAt, requestReview } = user
+        const requestReviewDate = DateTime.local(createdAt.getFullYear(), createdAt.getMonth() + 1, createdAt.getDate() + 7);
+
+        if (requestReview) {
+            if (DateTime.now() > requestReviewDate) {
+                StoreReview.requestReview();
+                updateRequestReview();
+            }
+        }
+    }, [user.uid])
 
     useEffect(() => {
         if (user.uid) {
@@ -158,4 +179,4 @@ const mapStateToProps = (state: ReducerStateProps) => ({
     banner: state.banner
 })
 
-export default connect(mapStateToProps, { removeBanner, signUp, setBanner, saveNotificationToken, signIn, subscriptionPurchased })(Main)
+export default connect(mapStateToProps, { removeBanner, signUp, setBanner, saveNotificationToken, signIn, subscriptionPurchased, updateRequestReview })(Main)

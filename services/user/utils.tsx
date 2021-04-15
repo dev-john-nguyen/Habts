@@ -4,6 +4,7 @@ import firebase from 'firebase';
 import { HabitProps } from "../habits/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ReviewProps } from "../reviews/types";
+import { UserProps } from "./types";
 
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp()
 
@@ -120,6 +121,14 @@ function convertReviewDates(reviewsStorage: ReviewProps[]) {
     return reviewsStorage;
 }
 
+function convertUserDates(userStorage: UserProps): UserProps {
+    return {
+        ...userStorage,
+        createdAt: new Date(userStorage.createdAt),
+        expiredAt: new Date(userStorage.expiredAt)
+    }
+}
+
 const empty = {
     user: null,
     habits: {
@@ -136,7 +145,7 @@ export async function fetchStorage() {
 
     const usersStorage = await AsyncStorage.getItem(userId + Database.Users);
 
-    const user = usersStorage != null ? JSON.parse(usersStorage) : null;
+    const user = usersStorage != null ? convertUserDates(JSON.parse(usersStorage)) : null;
 
     if (!user) return empty;
 

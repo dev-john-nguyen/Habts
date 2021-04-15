@@ -1,10 +1,11 @@
-import { FETCHED, SET_USER, INITIALIZE_USER, SET_NOTIFICATION_TOKEN, SIGN_OUT, PURCHASE_ITEM } from "./actionTypes";
+import { FETCHED, SET_USER, INITIALIZE_USER, SET_NOTIFICATION_TOKEN, SIGN_OUT, PURCHASE_ITEM, REQUEST_REVIEW } from "./actionTypes";
 
 const INITIAL_STATE = {
     uid: '',
     fetched: false,
     initializeUser: false,
-    notificationToken: ''
+    notificationToken: '',
+    requestReview: false
 }
 
 export default (state = INITIAL_STATE, action: any) => {
@@ -37,7 +38,13 @@ export default (state = INITIAL_STATE, action: any) => {
             return {
                 ...state,
                 expiredAt: action.payload.expiredAt,
-                subscription: action.payload.subscription
+                subscription: action.payload.subscription,
+                orderId: action.payload.orderId
+            }
+        case REQUEST_REVIEW:
+            return {
+                ...state,
+                requestReview: false
             }
         case SIGN_OUT:
             return { ...INITIAL_STATE, fetched: true };

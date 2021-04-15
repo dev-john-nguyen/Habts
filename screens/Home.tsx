@@ -104,7 +104,7 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
         //expiredAt is in utc
         if (user.expiredAt) {
             const utcNow = DateTime.utc();
-            const luxExpiredAt = DateTime.fromJSDate(new Date(user.expiredAt)).toUTC();
+            const luxExpiredAt = DateTime.fromJSDate(user.expiredAt).toUTC();
             if (utcNow > luxExpiredAt) {
                 setExpired(true)
                 return;
