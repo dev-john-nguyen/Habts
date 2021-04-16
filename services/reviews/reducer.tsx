@@ -1,4 +1,4 @@
-import { SET_REVIEWS, ADD_REVIEW, UPDATE_REVIEW } from "./actionTypes"
+import { SET_REVIEWS, ADD_REVIEW, UPDATE_REVIEW, SIGNOUT_REVIEWS } from "./actionTypes"
 import { ReviewProps } from "./types"
 
 const INITIAL_STATE = {
@@ -23,6 +23,8 @@ export default (state = INITIAL_STATE, action: any) => {
                 ...state,
                 reviews: action.payload
             }
+        case SIGNOUT_REVIEWS:
+            return INITIAL_STATE;
         default:
             return state;
     }

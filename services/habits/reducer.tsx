@@ -1,4 +1,4 @@
-import { SET_HABITS, ADD_HABIT, ADD_COMPLETED_HABIT, UPDATE_HABIT, ARCHIVE_HABIT } from "./actionTypes"
+import { SET_HABITS, ADD_HABIT, ADD_COMPLETED_HABIT, UPDATE_HABIT, ARCHIVE_HABIT, SIGNOUT_HABITS } from "./actionTypes"
 import { orderAndFormatHabits } from "./utils"
 
 const INITIAL_STATE = {
@@ -35,6 +35,8 @@ export default (state = INITIAL_STATE, action: any) => {
                 ...state,
                 ...action.payload
             }
+        case SIGNOUT_HABITS:
+            return INITIAL_STATE
         default:
             return state;
     }

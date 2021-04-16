@@ -1,9 +1,10 @@
+import NetInfo from "@react-native-community/netinfo";
 import { firebaseDb, firestoreDb, realtimeDb } from '../../firebase';
 import "firebase/auth";
 import { AppDispatch } from '../../App';
 import { FETCHED, SET_USER, SET_NOTIFICATION_TOKEN, SIGN_OUT, PURCHASE_ITEM, REQUEST_REVIEW } from './actionTypes';
 import { fetchStorage } from './utils';
-import { SET_HABITS } from '../habits/actionTypes';
+import { SET_HABITS, SIGNOUT_HABITS } from '../habits/actionTypes';
 import { SET_REVIEWS } from '../reviews/actionTypes';
 import { setBanner } from '../banner/actions';
 import Database from '../../constants/Database';
@@ -11,6 +12,7 @@ import { ReducerStateProps } from '..';
 import { DateTime } from 'luxon';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { formatTimeForNotification } from '../../utils/tools';
+import { HabitsProps } from "../habits/types";
 
 
 export const verifyAuth = (state: ReducerStateProps): any => (dispatch: AppDispatch) => {
@@ -173,31 +175,54 @@ export const signIn = (email: string, password: string) => async (dispatch: AppD
     }
 }
 
-export const signOut = () => async (dispatch: AppDispatch) => {
+export const signOut = () => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+    const { habits, user } = getState();
     try {
-        await AsyncStorage.removeItem(Database.currentUser)
+        await removeNotifys(habits.habits, user.uid);
+        const { ref } = getReviewDate(user.uid, user.createdAt)
+        await realtimeDb.ref(ref).remove()
+        await AsyncStorage.removeItem(Database.currentUser);
         dispatch({ type: SIGN_OUT })
+        dispatch({ type: SIGNOUT_HABITS })
+        dispatch({ type: SIGNOUT_HABITS })
     } catch (err) {
         console.log(err)
         dispatch(setBanner('error', 'Failed to sign you out. Please try again.'))
     }
 }
 
+async function removeNotifys(habits: HabitsProps['habits'], uid: string) {
+    const state = await NetInfo.fetch();
+
+    if (state.isConnected) {
+        const baseRef = Database.NotificationRealDb.habits;
+        const removeNotifys: any = {};
+
+        habits.forEach(habit => {
+            if (!habit.notificationOn) return;
+
+            let timeString = formatTimeForNotification(habit.notificationTime)
+            const habitTimeRef = `${baseRef}/${timeString}/${uid}/${habit.docId}`;
+
+            removeNotifys[habitTimeRef] = null
+        })
+
+        if (Object.keys(removeNotifys).length > 0) {
+            await realtimeDb.ref().update(removeNotifys);
+        }
+
+    }
+}
+
 export const saveNotificationToken = (token: string) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
     const { uid, createdAt, notificationToken } = getState().user;
 
-    // if (notificationToken == token) return;
+    if (notificationToken == token) return;
 
-    const formatCreatedAt = DateTime.local(createdAt.getFullYear(), createdAt.getMonth() + 1, createdAt.getDate(), 12, 5);
-    const utcDate = formatCreatedAt.toUTC();
-    const day = utcDate.day;
-
-    const minStr = utcDate.minute < 10 ? ('0' + utcDate.minute) : utcDate.minute;
-    const hourStr = utcDate.hour < 10 ? ('0' + utcDate.hour) : utcDate.hour;
-    const formatTime = hourStr + ':' + minStr;
+    const { ref, utcDate } = getReviewDate(uid, createdAt)
 
     try {
-        await realtimeDb.ref(`notifications/reviews/${day}/${formatTime}/${uid}`).set({
+        await realtimeDb.ref(ref).set({
             notificationToken: token,
             utcCreatedAt: utcDate.toString(),
             createdAt: createdAt.toString(),
@@ -269,4 +294,19 @@ export const updateRequestReview = () => async (dispatch: AppDispatch, getState:
     }
 
     dispatch({ type: REQUEST_REVIEW })
+}
+
+function getReviewDate(uid: string, createdAt: Date) {
+    const formatCreatedAt = DateTime.local(createdAt.getFullYear(), createdAt.getMonth() + 1, createdAt.getDate(), 12, 5);
+    const utcDate = formatCreatedAt.toUTC();
+    const day = utcDate.day;
+
+    const minStr = utcDate.minute < 10 ? ('0' + utcDate.minute) : utcDate.minute;
+    const hourStr = utcDate.hour < 10 ? ('0' + utcDate.hour) : utcDate.hour;
+    const formatTime = hourStr + ':' + minStr;
+
+    return {
+        ref: `notifications/reviews/${day}/${formatTime}/${uid}`,
+        utcDate
+    };
 }

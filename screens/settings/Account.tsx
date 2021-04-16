@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
 import { AsapText, LatoText } from '../../components/StyledText';
 import { StyledPrimaryButton, StyledRedButton } from '../../components/StyledButton';
 import { firebaseDb, firestoreDb } from '../../firebase';
@@ -8,13 +8,15 @@ import Colors from '../../constants/Colors';
 import { RootStackParamList } from '../../navigation/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { Entypo } from '@expo/vector-icons';
-import Database from '../../constants/Database';
 import { ScrollView } from 'react-native-gesture-handler';
 import { signOut } from '../../services/user/actions';
 import { connect } from 'react-redux';
 import { UserActionsProps } from '../../services/user/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
+import Database from '../../constants/Database';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SIGN_OUT } from '../../services/user/actionTypes';
 
 
 function validateEmail(email: string) {
@@ -24,17 +26,30 @@ function validateEmail(email: string) {
 
 type AccountNavProps = StackNavigationProp<RootStackParamList, 'Account'>;
 
+interface Props {
+    navigation: AccountNavProps;
+    signOut: UserActionsProps['signOut'];
+    signOutUser: () => void;
+}
 
-const Account = ({ navigation, signOut }: { navigation: AccountNavProps, signOut: UserActionsProps['signOut'] }) => {
+const Account = ({ navigation, signOut, signOutUser }: Props) => {
     const [email, setEmail] = useState('');
     const [loading, setLoading] = useState(false);
+    const [deleteLoading, setDeleteLoading] = useState(false);
+    const mount = useRef(false)
 
     useEffect(() => {
+        mount.current = true
+
         navigation.setOptions({
             headerRight: () => (
                 <Entypo name="log-out" size={24} color={Colors.red} onPress={signOut} style={{ marginRight: 10 }} />
             )
         })
+
+        return () => {
+            mount.current = false;
+        }
     }, [])
 
     const sendPasswordResetEmail = () => {
@@ -59,22 +74,41 @@ const Account = ({ navigation, signOut }: { navigation: AccountNavProps, signOut
             })
     }
 
-    const deleteAccount = async () => {
+    const handleConfirm = () => {
+        Alert.alert(
+            "Remove My Account",
+            "Are You Sure?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed"),
+                    style: "cancel"
+                },
+                { text: "Yes", onPress: handleOnDeleteAccount }
+            ]
+        );
+    }
+
+    const handleOnDeleteAccount = async () => {
+        setDeleteLoading(true)
+
         const { currentUser } = firebaseDb.auth();
+
         if (currentUser) {
-            setLoading(true)
             try {
                 await firestoreDb.collection(Database.Users).doc(currentUser.uid).delete()
-                await currentUser.delete()
+                await AsyncStorage.removeItem(Database.currentUser)
+                await currentUser.delete();
+                signOutUser()
             } catch (err) {
-                console.log(err);
-                alert("Failed. Please try to log out and log in again.")
-                setLoading(false)
+                console.log(err)
+                alert('We are having trouble removing your account. Please try to sign out and then sign back in.')
             }
-
         } else {
-            alert("Please try to log out and log in again.")
+            alert('Please sign out and sign back in to remove account.')
         }
+
+        mount.current && setDeleteLoading(false)
     }
 
     return (
@@ -99,7 +133,7 @@ const Account = ({ navigation, signOut }: { navigation: AccountNavProps, signOut
                 </View>
                 <View style={styles.section}>
                     <AsapText style={styles.headerText}>Delete Account</AsapText>
-                    <StyledRedButton text={loading ? <ActivityIndicator color={Colors.white} size='small' /> : 'Remove'} style={styles.button} onPress={deleteAccount} />
+                    <StyledRedButton text={deleteLoading ? <ActivityIndicator color={Colors.white} size='small' /> : 'Remove'} style={styles.button} onPress={handleConfirm} />
                 </View>
             </ScrollView>
         </SafeAreaView>
@@ -141,5 +175,10 @@ const styles = StyleSheet.create({
     }
 })
 
-export default connect(null, { signOut })(Account);
+export default connect(null, { signOut, signOutUser })(Account);
 
+function signOutUser() {
+    return {
+        type: SIGN_OUT
+    }
+}
