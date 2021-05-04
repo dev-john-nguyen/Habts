@@ -10,14 +10,17 @@ import HabitHeader from '../components/HabitHeader';
 import { RouteProp } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../services';
-import { HabitProps, HabitsActionsProps, HabitEditProps } from '../services/habits/types';
+import { HabitProps, HabitsActionsProps, HabitEditProps, CompletedHabitsProps } from '../services/habits/types';
 import { setBanner } from '../services/banner/actions';
 import { BannerActionsProps } from '../services/banner/types';
 import { addCompletedHabit, updateHabit, archiveHabit } from '../services/habits/actions';
 import Modal from '../components/ArchiveModal';
 import { normalizeHeight } from '../utils/styles';
 import { LinearGradient } from 'expo-linear-gradient';
-import Galaxy from '../components/galaxy';
+import DropBallJar from '../components/DropBallJar';
+import ShootingStars from '../components/shootingstars';
+import Congrats from '../components/congrats';
+import Notes from '../components/habit/Notes';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
 type HabitComRouteProps = RouteProp<RootStackParamList, 'Habit'>
@@ -34,10 +37,13 @@ interface HabitComProps {
 
 const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, updateHabit, archiveHabit }: HabitComProps) => {
     const [habit, setHabit] = useState<HabitProps>();
+    const [consecCompletedHabits, setConsecCompletedHabits] = useState<CompletedHabitsProps[]>([])
     const [habitEdit, setHabitEdit] = useState<HabitEditProps>();
     const [edit, setEdit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [scrollEnabled, setScrollEnabled] = useState(true);
+    const [showNotes, setShowNotes] = useState(false);
     const mount = useRef(false);
 
     useLayoutEffect(() => {
@@ -130,6 +136,8 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
 
         setHabit(foundHabit);
 
+        setTotalConsecutiveCompletedHabits(foundHabit);
+
         setHabitEdit({
             docId: foundHabit.docId,
             startTime: foundHabit.startTime,
@@ -143,6 +151,20 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
 
     }, [habits, route.params])
 
+    const setTotalConsecutiveCompletedHabits = (foundHabit: HabitProps) => {
+        //need to get all the completed habits from consecutive
+        let consecutiveTotal: CompletedHabitsProps[] = [];
+
+        Object.keys(foundHabit.consecutive).forEach((goalKey, i) => {
+            const { count } = foundHabit.consecutive[goalKey];
+            if (count.length > 0) {
+                consecutiveTotal = consecutiveTotal.concat(count)
+            }
+        })
+
+        setConsecCompletedHabits(consecutiveTotal);
+    }
+
     const handleAddCompletedHabit = () => {
         if (!habit) {
             setBanner('error', "Sorry, couldn't found the habit id.");
@@ -152,6 +174,8 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
         }
     }
 
+    const onNotesClose = () => setShowNotes(showNotes ? false : true);
+
     if (!habit || !habitEdit) {
         return (
             <View style={styles.loadingContainer}>
@@ -160,6 +184,9 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
         )
     }
 
+    const onUpdateNotes = (text: string) => setHabitEdit({ ...habitEdit, notes: text })
+
+
     return (
         <LinearGradient
             style={{ flex: 1 }}
@@ -167,25 +194,41 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
         >
+            <ShootingStars count={consecCompletedHabits.length} />
+            <Congrats message={'Wow!'} />
             <ScrollView
                 style={styles.container}
                 disableScrollViewPanResponder={true}
                 contentContainerStyle={{ paddingBottom: 30 }}
+                scrollEnabled={scrollEnabled}
             >
                 <HabitHeader
                     habit={habit}
                     edit={edit}
                     setHabitEdit={setHabitEdit}
                     habitEdit={habitEdit}
+                    showNotes={showNotes}
+                    setShowNotes={setShowNotes}
                 />
                 <View style={styles.habit}>
-                    <Galaxy
-                        completedHabits={habit.completedHabits}
+                    <DropBallJar
+                        setScrollEnabled={setScrollEnabled}
+                        completedHabits={consecCompletedHabits}
                         handleAddCompletedHabit={handleAddCompletedHabit}
                         activeDay={route.params.activeDay}
                     />
                 </View>
             </ScrollView>
+            {
+                showNotes &&
+                <Notes
+                    notes={habit.notes}
+                    onClose={onNotesClose}
+                    edit={edit}
+                    editNotes={habitEdit.notes}
+                    updateNotes={onUpdateNotes}
+                />
+            }
         </LinearGradient>
     )
 }
@@ -199,7 +242,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: 10,
-        marginTop: normalizeHeight(10)
+        marginTop: normalizeHeight(15)
     },
     bell: {
         position: 'absolute',

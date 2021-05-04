@@ -10,18 +10,21 @@ import { formatTime, renderSequenceValue } from '../utils/tools';
 import { ScrollView } from 'react-native-gesture-handler';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import { Picker } from '@react-native-picker/picker';
-import { arrayOfNums } from '../screens/utils';
-
+import { arrayOfNums, charLimitNotes } from '../screens/utils';
+import HabitBadges from './badges/HabitBadges';
 
 interface HabitHeader {
     habit: HabitProps;
     edit: boolean;
     setHabitEdit: (habit: HabitEditProps) => void;
     habitEdit: HabitEditProps;
+    setShowNotes?: (show: boolean) => void;
+    showNotes?: boolean;
 }
 
 
-export default ({ habit, edit, setHabitEdit, habitEdit }: HabitHeader) => {
+export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes }: HabitHeader) => {
+
     const renderNotificationEdit = () => {
         if (edit) {
             return <Picker
@@ -37,12 +40,16 @@ export default ({ habit, edit, setHabitEdit, habitEdit }: HabitHeader) => {
             return <AsapText style={styles.totalMinsText}>{habit.notificationTime.totalMins ? habit.notificationTime.totalMins : '0'}</AsapText>
         }
     }
+
+    const onShowNotes = () => setShowNotes && setShowNotes(showNotes ? false : true);
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <View>
-                    <AsapText style={styles.headerText}>{habit.name}</AsapText>
                     <LatoText style={styles.headerSubText}>{habit.remove}</LatoText>
+                    <AsapText style={styles.headerText}>{habit.name}</AsapText>
+                    <HabitBadges consecutive={habit.consecutive} size={normalizeWidth(20)} infoText='Complete 21 consecutive days to earn your first star' />
                 </View>
             </View>
             <View style={styles.data}>
@@ -86,9 +93,12 @@ export default ({ habit, edit, setHabitEdit, habitEdit }: HabitHeader) => {
 
                 <View style={styles.dataItem}>
                     {
-                        habitEdit.notificationOn
-                            ? <Entypo name="bell" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
-                            : <Entypo name="sound-mute" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
+                        edit ?
+                            habitEdit.notificationOn
+                                ? <Entypo name="bell" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
+                                : <Entypo name="sound-mute" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
+                            : habit.notificationOn ? <Entypo name="bell" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
+                                : <Entypo name="sound-mute" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
                     }
                     <View style={{ alignItems: 'center', flexDirection: 'row' }}>
                         <LatoText style={styles.dataText}>Notify </LatoText>
@@ -98,8 +108,8 @@ export default ({ habit, edit, setHabitEdit, habitEdit }: HabitHeader) => {
                 </View>
 
                 <View style={styles.dataItem}>
-                    <Entypo name="bar-graph" size={normalizeHeight(30)} color={Colors.white} />
-                    <LatoText style={styles.dataText}>{habit.consecutive} day(s) in a row!</LatoText>
+                    <MaterialCommunityIcons name="sigma" size={normalizeHeight(30)} color={Colors.white} />
+                    <LatoText style={styles.dataText}>{habit.completedHabits.length}</LatoText>
                 </View>
 
                 <View style={styles.dataItem}>
@@ -133,12 +143,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit }: HabitHeader) => {
                 </View>
 
                 <View style={styles.dataItem}>
-                    <MaterialCommunityIcons name="sigma" size={normalizeHeight(30)} color={Colors.white} />
-                    <LatoText style={styles.dataText}>{habit.totalCount ? habit.totalCount : 0}</LatoText>
-                </View>
-
-                <View style={styles.dataItem}>
-                    <Entypo name="text-document" size={normalizeHeight(30)} color={Colors.white} />
+                    <Entypo name="text-document" size={normalizeHeight(30)} color={Colors.white} onPress={onShowNotes} />
                     {
                         edit ?
                             <StyledTextInput
@@ -147,6 +152,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit }: HabitHeader) => {
                                 onChangeText={(text) => setHabitEdit({ ...habitEdit, notes: text })}
                                 autoCorrect={true}
                                 multiline={true}
+                                maxLength={charLimitNotes}
                             />
                             : <ScrollView style={{ maxHeight: normalizeHeight(20) }}>
                                 <LatoText style={styles.dataText}>{habit.notes}</LatoText>
@@ -162,6 +168,9 @@ const styles = StyleSheet.create({
     container: {
         paddingLeft: 20,
         paddingRight: 20,
+    },
+    header: {
+        alignItems: 'center'
     },
     pickerItemStyle: {
         fontSize: normalizeHeight(60),
@@ -203,9 +212,6 @@ const styles = StyleSheet.create({
     },
     bell: {
 
-    },
-    header: {
-        alignItems: 'center'
     },
     headerText: {
         fontSize: normalizeHeight(15),

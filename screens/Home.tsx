@@ -21,6 +21,7 @@ import Superman from '../assets/svgs/superman';
 import Layout from '../constants/Layout';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Pay from './settings/Pay';
+import HomeBadges from '../components/badges/HomeBadges';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
 
@@ -181,7 +182,7 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
                     </View>
                 </View>
                 <View style={styles.headerRightContainer}>
-                    <Moon onPress={navToNew} />
+                    <HomeBadges habits={habits} navigation={navigation} />
                 </View>
             </View>
             <View style={styles.notificationContainer}>

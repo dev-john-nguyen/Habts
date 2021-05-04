@@ -306,7 +306,6 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                     setNotificationNum={setNotificationNum}
                     notificationOn={notificationOn}
                     setNotificationOn={setNotificationOn}
-                    startTime={startTime}
                     handlePreviousStep={handlePreviousStep}
                     handleNextStep={handleNextStep}
 
@@ -357,6 +356,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                                 name,
                                 sequence,
                                 notificationTime: genNotificationTime(),
+                                notificationOn,
                                 ...emptyHabitExtra
                             }}
                         />

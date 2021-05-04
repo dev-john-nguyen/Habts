@@ -38,7 +38,7 @@ export default ({ onPress, habit, active }: HabitPreviewProps) => {
 
                 <View style={styles.contentItem}>
                     <Entypo name="bar-graph" size={normalizeWidth(25)} color={iconColor} />
-                    <LatoText style={styles.contentItemText}>{habit.consecutive} day(s) in a row</LatoText>
+                    <LatoText style={styles.contentItemText}>{habit.consecutive.length} day(s) in a row</LatoText>
                 </View>
 
                 <View style={styles.contentItem}>

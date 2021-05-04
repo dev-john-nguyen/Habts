@@ -1,14 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { View, StyleSheet, Animated, PanResponder, ImageBackground, Easing, PanResponderGestureState, GestureResponderEvent } from 'react-native';
-import { AsapText } from './StyledText';
+import { AsapText, AsapTextBold } from './StyledText';
 import Colors from '../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { cloneDeep } from 'lodash'
 import { Entypo } from '@expo/vector-icons';
 import { CompletedHabitsProps } from '../services/habits/types';
 import { getDate, getMonthShort } from '../utils/tools';
-import Layout from '../constants/Layout';
-import { normalizeHeight } from '../utils/styles';
+import { normalizeHeight, normalizeWidth } from '../utils/styles';
 
 
 //notes: will need to update server/redux every time a user drops a ball into the container!
@@ -21,6 +20,8 @@ interface DropBallJarProps {
     handleAddCompletedHabit: () => void;
     activeDay: number;
 }
+
+const ballsPaddingBottom = normalizeHeight(15);
 
 export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, activeDay }: DropBallJarProps) => {
     const currentDate = new Date();
@@ -80,13 +81,13 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
 
     const handleDropBallAction = (xPosition: number) => {
         //figure out which position the ball will go to
-
-        const remainder = balls.length % 4
+        const remainder = balls.length % 6
 
         let ballToPositionX = 0;
-        let ballToPositionY = ((jarYOffSet.current + jarHeight.current) - (jarBallsHeight.current + 40)) //the 40 accounts for the padding bottom
+        let ballToPositionY = ((jarYOffSet.current + jarHeight.current) - (jarBallsHeight.current + ballsPaddingBottom - 1))
+        const jarBallsHalfWidth = (jarBallsWidth.current / 1.90) - (ballWidth.current / 1.6);
 
-        const jarBallsHalfWidth = (jarBallsWidth.current / 1.90) - (ballWidth.current / 1.2);
+        const ballsAdjustWidth = (ballWidth.current * remainder)
 
         switch (remainder) {
             case 0:
@@ -94,13 +95,25 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                 ballToPositionY = ballToPositionY - (ballHeight.current - 1);
                 break;
             case 1:
-                ballToPositionX = -(jarBallsHalfWidth / 3);
+                ballToPositionX = -(jarBallsHalfWidth - ballsAdjustWidth);
                 break;
             case 2:
-                ballToPositionX = (jarBallsHalfWidth / 3);
+                ballToPositionX = -(jarBallsHalfWidth - ballsAdjustWidth);
                 break;
             case 3:
-                ballToPositionX = jarBallsHalfWidth;
+                ballToPositionX = -(jarBallsHalfWidth - ballsAdjustWidth);
+                // if (xPosition < normalizeWidth(2)) {
+                //     ballToPositionY = ballToPositionY + ballHeight.current
+                // }
+                break;
+            case 4:
+                ballToPositionX = -(jarBallsHalfWidth - ballsAdjustWidth);
+                break;
+            case 5:
+                ballToPositionX = -(jarBallsHalfWidth - ballsAdjustWidth);
+                break;
+            case 6:
+                ballToPositionX = -(jarBallsHalfWidth - ballsAdjustWidth);
                 break;
             default:
                 ballToPositionX = -jarBallsHalfWidth;
@@ -157,10 +170,10 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                 }
             }
 
-            if (balls.length > 20) {
-                setBalls([...balls.splice(0, 20)])
+            if (balls.length >= 65) {
+                setBalls([...balls.splice(0, 65)])
             } else {
-                setBalls(balls)
+                setBalls([...balls])
             }
         }
 
@@ -172,15 +185,34 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
             }
         }
 
-    }, [completedHabits])
+    }, [])
 
-    const addBall = () => { handleAddCompletedHabit() }
+    const addBall = () => {
+        // dropBalls()
+        handleAddCompletedHabit()
+    }
+
+    const dropBalls = () => {
+        const toBallY = ballPositionY._value + ballHeight.current
+        Animated.parallel([
+            Animated.timing(jarBallsTransformY, {
+                useNativeDriver: false,
+                toValue: ballHeight.current,
+                duration: 1000
+            }),
+            Animated.timing(ballPositionY, {
+                useNativeDriver: false,
+                toValue: toBallY,
+                duration: 1000
+            })
+        ]).start()
+    }
 
     return (
         <View style={styles.container}>
             <Animated.View style={[styles.ballContainer, { zIndex: ballZIndex }]}>
                 {
-                    !completed && <Animated.View
+                    <Animated.View
                         style={{
                             transform: [{ translateX: ballPositionX }, { translateY: ballPositionY }]
                         }}
@@ -192,11 +224,18 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                                 ballWidth.current = width;
                                 ballHeight.current = height;
                             })}
-                        />
+                        >
+                            <AsapText style={styles.ballText}>{new Date().getDate()}</AsapText>
+                            <AsapText style={styles.ballSubText}>{getMonthShort(new Date())}</AsapText>
+                            <LinearGradient
+                                colors={[`rgba(255,255,255,.2)`, Colors.secondary, Colors.primary]}
+                                style={styles.ballGlare}
+                            />
+                        </View>
                     </Animated.View>
                 }
                 <View style={styles.messageContainer}>
-                    {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeHeight(30)} color={Colors.primary} />}
+                    {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeWidth(20)} color={Colors.white} />}
                     <AsapText style={styles.message}>{quotes.current.quote}</AsapText>
                 </View>
             </Animated.View>
@@ -207,6 +246,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                     jarHeight.current = height
                 })}
             >
+                <AsapText style={styles.count}>count: <AsapTextBold style={styles.count}>{completedHabits.length}</AsapTextBold></AsapText>
                 <ImageBackground
                     style={styles.jarBallsContainer}
                     source={require('../assets/svgs/jar.png')}
@@ -227,11 +267,11 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                             transform: [{ translateY: jarBallsTransformY }]
                         }}>
                             {balls.length > 0 && balls.map((item, index) => (
-                                <View style={[styles.jarBall]} key={index}>
+                                <View style={[styles.ball]} key={index}>
                                     <AsapText style={styles.ballText}>{item.dateCompleted.getDate()}</AsapText>
-                                    <AsapText style={styles.ballSubText}>{getMonthShort(item.dateCompleted)} {item.dateCompleted.getFullYear()}</AsapText>
+                                    <AsapText style={styles.ballSubText}>{getMonthShort(item.dateCompleted)}</AsapText>
                                     <LinearGradient
-                                        colors={[`rgba(255,255,255,.6)`, Colors.primary]}
+                                        colors={[`rgba(255,255,255,.2)`, Colors.secondary, Colors.primary]}
                                         style={styles.ballGlare}
                                     />
                                 </View>
@@ -254,12 +294,19 @@ const styles = StyleSheet.create({
         height: normalizeHeight(5),
         alignItems: 'center',
     },
+    count: {
+        color: Colors.white,
+        fontSize: normalizeWidth(30),
+        position: 'absolute',
+        right: normalizeWidth(20),
+        top: -normalizeHeight(10)
+    },
     ballGlare: {
         position: 'absolute',
-        right: 5,
-        top: 10,
+        right: 0,
+        top: 6,
         width: 25,
-        height: 10,
+        height: 5,
         borderRadius: 10,
         transform: [{ rotate: '45deg' }]
     },
@@ -273,33 +320,23 @@ const styles = StyleSheet.create({
         zIndex: -10
     },
     message: {
-        fontSize: normalizeHeight(50),
-        color: Colors.black,
+        fontSize: normalizeWidth(25),
+        color: Colors.white,
         marginLeft: 10,
         textTransform: 'capitalize',
         textAlign: 'center'
-    },
-    ball: {
-        backgroundColor: Colors.white,
-        borderRadius: 100,
-        alignSelf: 'center',
-        alignItems: 'center',
-        height: Layout.window.width / 15,
-        width: Layout.window.width / 15,
-    },
-    ballText: {
-        fontSize: normalizeHeight(35),
-        color: Colors.white
-    },
-    ballSubText: {
-        fontSize: normalizeHeight(80),
-        color: Colors.white
     },
     jar: {
         flex: 1,
         alignSelf: 'center',
         width: '100%',
-        height: Layout.window.height / 1.5
+        height: (() => {
+            const height = normalizeHeight(1)
+            if (height < 800) {
+                return normalizeHeight(.9)
+            }
+            return normalizeHeight(1)
+        })()
     },
     jarBallsContainer: {
         flex: 1,
@@ -307,23 +344,38 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         bottom: 0,
         width: '100%',
-        paddingBottom: 40,
-        height: Layout.window.height / 1.4
+        paddingBottom: ballsPaddingBottom,
+        height: (() => {
+            const height = normalizeHeight(1)
+            if (height < 800) {
+                return normalizeHeight(.85)
+            }
+            return normalizeHeight(.98)
+        })()
     },
     jarBalls: {
         flexDirection: 'row',
         flexWrap: 'wrap-reverse',
-        paddingLeft: 20,
         maxHeight: '100%',
         overflow: 'hidden',
         alignSelf: 'center',
-        width: '94%'
+        width: '90%'
     },
-    jarBall: {
+    ball: {
         backgroundColor: Colors.primary,
+        height: normalizeWidth(7),
+        width: normalizeWidth(7),
         borderRadius: 100,
-        padding: 20,
-        marginLeft: 5,
+        padding: 10,
+        alignContent: 'center',
         alignItems: 'center'
-    }
+    },
+    ballText: {
+        fontSize: normalizeWidth(20),
+        color: Colors.white
+    },
+    ballSubText: {
+        fontSize: normalizeWidth(30),
+        color: Colors.white
+    },
 })

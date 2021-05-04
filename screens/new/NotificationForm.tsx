@@ -9,7 +9,6 @@ import { Picker } from '@react-native-picker/picker';
 import { arrayOfNums } from '../utils';
 
 interface Props {
-    startTime: Date;
     notificationOn: boolean;
     setNotificationOn: (on: boolean) => void;
     notificationNum: number;
@@ -18,7 +17,7 @@ interface Props {
     handleNextStep: () => void;
 }
 
-export default ({ notificationNum, notificationOn, setNotificationOn, setNotificationNum, startTime, handlePreviousStep, handleNextStep }: Props) => {
+export default ({ notificationNum, notificationOn, setNotificationOn, setNotificationNum, handlePreviousStep, handleNextStep }: Props) => {
 
     return (
         <View style={styles.step}>

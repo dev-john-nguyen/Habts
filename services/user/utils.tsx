@@ -106,7 +106,11 @@ function convertHabitDates(habitsStorage: HabitProps[]) {
         habit.startTime.date = new Date(habit.startTime.date);
         habit.createdAt = new Date(habit.createdAt);
         habit.archivedAt = habit.archivedAt ? new Date(habit.archivedAt) : habit.archivedAt;
-        habit.completedHabits.forEach((d, i) => habit.completedHabits[i] = { dateCompleted: new Date(d.dateCompleted) })
+        habit.completedHabits.forEach((d, i) => habit.completedHabits[i] = { dateCompleted: new Date(d.dateCompleted) });
+
+        Object.keys(habit.consecutive).forEach((key, i) => {
+            habit.consecutive[key].count.forEach((d, i) => habit.consecutive[key].count[i] = { dateCompleted: new Date(d.dateCompleted) })
+        })
     });
 
     return habitsStorage;

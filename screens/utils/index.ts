@@ -1,4 +1,5 @@
 import { SequenceType, HabitEditProps } from "../../services/habits/types";
+import { dailyGoals } from "../../services/habits/utils/variables";
 
 export const currentDate = new Date();
 
@@ -28,11 +29,10 @@ export const emptyHabitEdit: HabitEditProps = {
 
 export const emptyHabitExtra = {
     totalCount: 0,
-    consecutive: 0,
+    consecutive: dailyGoals,
     docId: '',
     startDate: currentDate,
     endDate: currentDate,
-    notificationOn: true,
     createdAt: currentDate,
     updatedAt: currentDate,
     completedHabits: []
@@ -40,7 +40,7 @@ export const emptyHabitExtra = {
 
 export const charLimitHabitName = 25;
 export const charLimitLocation = 25
-export const charLimitNotes = 200;
+export const charLimitNotes = 500;
 export const charCue = 100;
 
 export const arrayOfNums = (len: number) => {

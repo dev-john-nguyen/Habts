@@ -65,6 +65,14 @@ export interface CompletedHabitsProps {
     dateCompleted: Date;
 }
 
+export interface ConsecutiveProps {
+    [goalType: string]: {
+        count: CompletedHabitsProps[];
+        goal: number;
+        total: number;
+    }
+}
+
 export interface HabitProps {
     docId: string;
     startDate: Date;
@@ -77,7 +85,7 @@ export interface HabitProps {
     remove: string;
     name: string;
     totalCount: number;
-    consecutive: number;
+    consecutive: ConsecutiveProps;
     archivedAt?: Date;
     notificationOn: boolean;
     notificationTime: Time & { totalMins: number };
@@ -94,7 +102,7 @@ export interface HabitsProps {
 
 export interface HabitsActionsProps {
     addHabit: (habit: NewHabitProps) => Promise<void | boolean>;
-    addCompletedHabit: (habitDocId: string) => void | undefined;
+    addCompletedHabit: (habitDocId: string) => Promise<void | undefined>;
     updateHabit: (updatedHabit: HabitEditProps) => Promise<void | undefined | boolean>;
     archiveHabit: (docId: string) => Promise<boolean>
 }

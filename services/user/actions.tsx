@@ -89,11 +89,17 @@ export const signIn = (email: string, password: string) => async (dispatch: AppD
 
     try {
         const { user } = await firebaseDb.auth().signInWithEmailAndPassword(email, password);
-        if (!user) throw 'Failed to get your user information.'
+        if (!user) {
+            dispatch(setBanner('error', 'Failed to get your profile information.'))
+            return;
+        }
 
         const userData = await firestoreDb.collection(Database.Users).doc(user.uid).get();
 
-        if (!userData.exists) throw 'Failed to get your profile information.'
+        if (!userData.exists) {
+            dispatch(setBanner('error', 'Failed to get your profile information.'))
+            return;
+        }
 
         const { createdAt, notificationToken, expiredAt } = userData.data() as { createdAt: Date, notificationToken: string, expiredAt: Date }
 

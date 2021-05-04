@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { View, StyleSheet, Animated, Keyboard } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, StyleSheet, Animated, Keyboard, ActivityIndicator } from 'react-native';
 import { StyledTextInput } from './StyledTextInput';
 import Colors from '../constants/Colors';
 import { UserActionsProps } from '../services/user/types';
@@ -8,12 +8,10 @@ import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import RotateGalaxy from './galaxy/RotateGalaxy';
 import Superman from '../assets/svgs/superman';
-import Layout from '../constants/Layout';
 import { isEqual } from 'lodash';
 import { validateEmail } from './utils';
 import { BannerActionsProps } from '../services/banner/types';
 import { AsapTextBold } from './StyledText';
-import { LinearGradient } from 'expo-linear-gradient';
 
 interface Props {
     setBanner: BannerActionsProps['setBanner'];
@@ -26,23 +24,15 @@ export default ({ signUp, signIn, setBanner }: Props) => {
     const [password, setPassword] = useState('');
     const [showSignUp, setShowSignUp] = useState(false);
     const [password2, setPassword2] = useState('');
-    const supermanRefTop = useRef(new Animated.Value(normalizeHeight(3))).current;
-    const supermanRefLeft = useRef(new Animated.Value(0)).current;
+    const [loading, setLoading] = useState(false);
+    const isMount = useRef(false)
 
-    const handleSupermanAnimatation = () => [
-        Animated.parallel([
-            Animated.timing(supermanRefTop, {
-                useNativeDriver: false,
-                toValue: 0,
-                duration: 2000
-            }),
-            Animated.timing(supermanRefLeft, {
-                useNativeDriver: false,
-                toValue: normalizeWidth(1),
-                duration: 2000
-            })
-        ]).start()
-    ]
+    useEffect(() => {
+        isMount.current = true;
+        return () => {
+            isMount.current = false;
+        }
+    }, [])
 
     const inValidateForm = () => {
         if (!email || !password) {
@@ -57,7 +47,6 @@ export default ({ signUp, signIn, setBanner }: Props) => {
             return 'Invalid Email';
         }
 
-        handleSupermanAnimatation()
     }
 
     const handleOnSubmit = () => {
@@ -73,18 +62,24 @@ export default ({ signUp, signIn, setBanner }: Props) => {
     }
 
     const onSignIn = () => {
+        setLoading(true)
         signIn(email, password)
+            .then(() => {
+                isMount.current && setLoading(false)
+            })
             .catch(() => {
-                supermanRefTop.stopAnimation()
-                supermanRefLeft.stopAnimation()
+                isMount.current && setLoading(false)
             })
     }
 
     const onSignUp = () => {
+        setLoading(true)
         signUp(email, password, password2)
+            .then(() => {
+                isMount.current && setLoading(false)
+            })
             .catch((err) => {
-                supermanRefTop.stopAnimation()
-                supermanRefLeft.stopAnimation()
+                isMount.current && setLoading(false)
             })
     }
 
@@ -126,7 +121,7 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                     />
                 }
                 <StyledPrimaryButton
-                    text='Submit'
+                    text={loading ? <ActivityIndicator size='small' color={Colors.white} /> : 'Submit'}
                     style={styles.buttons}
                     onPress={handleOnSubmit}
                 />
@@ -138,15 +133,9 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                 <View style={styles.galaxy}>
                     <RotateGalaxy balls={[]} login={true} />
                 </View>
-                <Animated.View style={[
-                    styles.superman,
-                    {
-                        top: supermanRefTop,
-                        left: supermanRefLeft
-                    }
-                ]}>
+                <View style={styles.superman}>
                     <Superman />
-                </Animated.View>
+                </View>
             </View>
         </SafeAreaView>
     )
@@ -172,6 +161,8 @@ const styles = StyleSheet.create({
     },
     superman: {
         position: 'absolute',
+        top: normalizeHeight(3),
+        left: normalizeWidth(20),
         height: normalizeWidth(4),
         width: normalizeWidth(4),
         transform: [{ scaleX: -1 }, { rotate: '-45deg' }],

@@ -36,7 +36,7 @@ export default ({ habit }: { habit: HabitProps }) => {
 
                 <View style={styles.dataItem}>
                     <Entypo name="bar-graph" size={normalizeHeight(30)} color={Colors.primary} />
-                    <LatoText style={styles.dataText}>{consecutive.toString()} days in a row!</LatoText>
+                    <LatoText style={styles.dataText}>{consecutive.length} days in a row!</LatoText>
                 </View>
 
                 <View style={styles.dataItem}>

@@ -1,6 +1,6 @@
 import NetInfo from "@react-native-community/netinfo";
 import { AppDispatch } from "../../App";
-import { NewHabitProps, HabitEditProps, TimeDataProps } from "./types";
+import { NewHabitProps, HabitEditProps, TimeDataProps, SequenceType } from "./types";
 import { setBanner } from "../banner/actions";
 import { realtimeDb } from "../../firebase";
 import Database from "../../constants/Database";
@@ -10,12 +10,13 @@ import { processArchiveHabit, saveNotificationData, orderAndFormatHabits, handle
 import { isInvalidTime, convertTimeToInt, formatTimeForNotification } from "../../utils/tools";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AutoId } from "../../utils/styles";
+import { dailyGoals, otherGoals } from "./utils/variables";
 
 export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
     let k: keyof NewHabitProps;
 
     for (k in habit) {
-        if (k !== 'notes' && k !== 'remove') {
+        if (k !== 'notes' && k !== 'remove' && k == 'notificationTime' && k == 'notificationTime') {
             if (!habit[k]) {
                 dispatch(setBanner('warning', 'Please make sure all the required fields are filled out.'))
                 return;
@@ -43,7 +44,10 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
 
     const { uid, notificationToken } = getState().user;
 
-    const dateNow = new Date()
+    const dateNow = new Date();
+
+    //determine what kind of habit // reference sequence ....
+
 
     const newHabit: any = {
         ...habit,
@@ -51,6 +55,7 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
         createdAt: dateNow,
         updatedAt: dateNow,
         completedHabits: [],
+        consecutive: habit.sequence.type == SequenceType.daily ? dailyGoals : otherGoals(habit.sequence.value.length),
         docId: AutoId.newId()
     }
 
@@ -96,19 +101,51 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
     return true;
 }
 
-export const addCompletedHabit = (habitDocId: string) => (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+export const addCompletedHabit = (habitDocId: string) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
     if (!habitDocId) {
         dispatch(setBanner('error', "Sorry, I couldn't find your habit id."))
         return;
     }
 
-    const newDate = new Date();
+    // const newDate = new Date(new Date().getDate() - 1);
+
+    // let count = 66;
+
+    // while (0 <= count) {
+
+    //     const date = new Date()
+    //     var yesterday = new Date(date.getTime());
+    //     let numDate;
+    //     let newDate;
+
+    //     numDate = yesterday.setDate(date.getDate() - count);
+    //     newDate = new Date(numDate);
+
+    //     const { habits, user } = getState();
+
+    //     const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
+
+    //     await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
+    //         .then(() => {
+    //             dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //             dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
+    //         })
+
+    //     count--
+    // }
+
+    const d = new Date();
+    const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 4);
 
     const { habits, user } = getState();
 
     const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
 
-    AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
+
+    await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
         .then(() => {
             dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
         })
@@ -116,6 +153,24 @@ export const addCompletedHabit = (habitDocId: string) => (dispatch: AppDispatch,
             console.log(err)
             dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
         })
+
+
+
+    // const newDate = new Date()
+
+    // const { habits, user } = getState();
+
+    // const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
+
+
+    // await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
+    //     .then(() => {
+    //         dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
+    //     })
+    //     .catch((err) => {
+    //         console.log(err)
+    //         dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
+    //     })
 }
 
 export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
