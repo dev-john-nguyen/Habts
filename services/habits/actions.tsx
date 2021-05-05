@@ -55,7 +55,7 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
         createdAt: dateNow,
         updatedAt: dateNow,
         completedHabits: [],
-        consecutive: habit.sequence.type == SequenceType.daily ? dailyGoals : otherGoals(habit.sequence.value.length),
+        consecutive: habit.sequence.type == SequenceType.daily ? dailyGoals() : otherGoals(habit.sequence.value.length),
         docId: AutoId.newId()
     }
 
@@ -107,9 +107,7 @@ export const addCompletedHabit = (habitDocId: string) => async (dispatch: AppDis
         return;
     }
 
-    // const newDate = new Date(new Date().getDate() - 1);
-
-    // let count = 66;
+    // let count = 19;
 
     // while (0 <= count) {
 
@@ -137,8 +135,10 @@ export const addCompletedHabit = (habitDocId: string) => async (dispatch: AppDis
     //     count--
     // }
 
+
+
     const d = new Date();
-    const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 4);
+    const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
 
     const { habits, user } = getState();
 

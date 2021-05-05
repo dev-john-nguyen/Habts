@@ -1,17 +1,17 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native'
-import { AsapText, LatoText } from '../components/StyledText';
-import Colors from '../constants/Colors';
+import { AsapText, LatoText } from '../StyledText';
+import Colors from '../../constants/Colors';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { HabitProps, HabitEditProps } from '../services/habits/types';
-import { StyledTextInput } from './StyledTextInput';
-import { formatTime, renderSequenceValue } from '../utils/tools';
+import { HabitProps, HabitEditProps } from '../../services/habits/types';
+import { StyledTextInput } from '../StyledTextInput';
+import { formatTime, renderSequenceValue } from '../../utils/tools';
 import { ScrollView } from 'react-native-gesture-handler';
-import { normalizeHeight, normalizeWidth } from '../utils/styles';
+import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import { Picker } from '@react-native-picker/picker';
-import { arrayOfNums, charLimitNotes } from '../screens/utils';
-import HabitBadges from './badges/HabitBadges';
+import { arrayOfNums, charLimitNotes } from '../../screens/utils';
+import HabitBadges from '../badges/HabitBadges';
 
 interface HabitHeader {
     habit: HabitProps;
@@ -46,11 +46,13 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <View>
-                    <LatoText style={styles.headerSubText}>{habit.remove}</LatoText>
-                    <AsapText style={styles.headerText}>{habit.name}</AsapText>
-                    <HabitBadges consecutive={habit.consecutive} size={normalizeWidth(20)} infoText='Complete 21 consecutive days to earn your first star' />
-                </View>
+                <ScrollView horizontal={true}>
+                    <View>
+                        <LatoText style={styles.headerSubText}>{habit.remove}</LatoText>
+                        <AsapText style={styles.headerText}>{habit.name}</AsapText>
+                        <HabitBadges consecutive={habit.consecutive} size={normalizeWidth(20)} infoText='Complete 21 consecutive days to earn your first star' />
+                    </View>
+                </ScrollView>
             </View>
             <View style={styles.data}>
                 <View style={styles.dataItem}>

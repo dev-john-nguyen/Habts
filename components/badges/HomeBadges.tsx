@@ -1,14 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
+import { StyleSheet, Pressable } from 'react-native';
 import { HabitProps } from '../../services/habits/types';
-import Colors from '../../constants/Colors';
 import { normalizeWidth } from '../../utils/styles';
-import { AsapText } from '../StyledText';
 import { ScrollView } from 'react-native-gesture-handler';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/types';
-import { dailyGoals } from '../../services/habits/utils/variables';
 import HabitBadges from './HabitBadges';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
@@ -32,7 +28,7 @@ const HomeBadges = ({ habits, navigation }: Props) => {
             {habits.filter((habit) => {
                 const { goal, count } = habit.consecutive[Object.keys(habit.consecutive)[0]];
                 return count.length >= goal
-            }).map((habit) => <Pressable key={habit.docId} onPress={() => onNavigate(habit.docId)}><HabitBadges consecutive={habit.consecutive} size={normalizeWidth(10)} name={habit.name} home={true} /></Pressable>)}
+            }).map((habit) => <Pressable key={habit.docId} onPress={() => onNavigate(habit.docId)} style={styles.star}><HabitBadges consecutive={habit.consecutive} size={normalizeWidth(10)} name={habit.name} home={true} /></Pressable>)}
         </ScrollView>
     )
 }

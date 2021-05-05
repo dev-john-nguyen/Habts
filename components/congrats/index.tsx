@@ -1,7 +1,6 @@
 import React, { useRef, useEffect } from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
-import { AsapText, AsapTextBold } from '../StyledText';
-import { dailyGoals } from '../utils';
+import { StyleSheet, Animated } from 'react-native';
+import { AsapTextBold } from '../StyledText';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import Colors from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';

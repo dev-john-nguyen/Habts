@@ -43,12 +43,12 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: normalizeHeight(5),
         maxHeight: normalizeHeight(2),
+        width: normalizeWidth(1.1),
         alignSelf: 'center',
         backgroundColor: Colors.primary,
         zIndex: 100,
         padding: 20,
-        borderRadius: 20,
-        margin: 10
+        borderRadius: 20
     },
     content: {
 

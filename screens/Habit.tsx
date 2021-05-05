@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Layout from '../constants/Layout';
 import { BottomTabParamList, RootStackParamList } from '../navigation/types';
 import { StackNavigationProp } from '@react-navigation/stack';
-import HabitHeader from '../components/HabitHeader';
+import HabitHeader from '../components/habit/Header';
 import { RouteProp } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../services';
@@ -19,8 +19,9 @@ import { normalizeHeight } from '../utils/styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import DropBallJar from '../components/DropBallJar';
 import ShootingStars from '../components/shootingstars';
-import Congrats from '../components/congrats';
 import Notes from '../components/habit/Notes';
+import CongratsStar from '../components/congrats/Star';
+import { cloneDeep, isEqual } from 'lodash';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
 type HabitComRouteProps = RouteProp<RootStackParamList, 'Habit'>
@@ -44,6 +45,8 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
     const [showModal, setShowModal] = useState(false);
     const [scrollEnabled, setScrollEnabled] = useState(true);
     const [showNotes, setShowNotes] = useState(false);
+    const [resetBalls, setResetBalls] = useState(0);
+    const [congratsIndex, setCongratsIndex] = useState<number>();
     const mount = useRef(false);
 
     useLayoutEffect(() => {
@@ -127,16 +130,20 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
         };
 
         const { habitDocId } = route.params;
-        const foundHabit = habits.find((item) => item.docId === habitDocId)
+        const foundHabit = habits.find((item) => item.docId === habitDocId);
 
         if (!foundHabit) {
             navigation.goBack();
             return;
         }
 
-        setHabit(foundHabit);
+        if (habit) {
+            checkResetConsecutive(habit.consecutive, foundHabit.consecutive);
+        }
 
-        setTotalConsecutiveCompletedHabits(foundHabit);
+        setHabit(cloneDeep(foundHabit));
+
+        setConsecCompletedHabits(getTotalConsecutive(foundHabit.consecutive));
 
         setHabitEdit({
             docId: foundHabit.docId,
@@ -151,18 +158,57 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
 
     }, [habits, route.params])
 
-    const setTotalConsecutiveCompletedHabits = (foundHabit: HabitProps) => {
+    const getTotalConsecutive = (consecutive: HabitProps['consecutive']) => {
         //need to get all the completed habits from consecutive
         let consecutiveTotal: CompletedHabitsProps[] = [];
 
-        Object.keys(foundHabit.consecutive).forEach((goalKey, i) => {
-            const { count } = foundHabit.consecutive[goalKey];
+        Object.keys(consecutive).forEach((goalKey, i) => {
+            const { count } = consecutive[goalKey];
             if (count.length > 0) {
                 consecutiveTotal = consecutiveTotal.concat(count)
             }
         })
 
-        setConsecCompletedHabits(consecutiveTotal);
+        return consecutiveTotal;
+    }
+
+    const checkResetConsecutive = (prevConsec: HabitProps['consecutive'], newConsec: HabitProps['consecutive']) => {
+        if (isEqual(prevConsec, newConsec)) return;
+
+        const keys = Object.keys(newConsec);
+
+        for (let i = 0; i < keys.length; i++) {
+            const newGoal = newConsec[keys[i]];
+            const oldGoal = prevConsec[keys[i]];
+
+            if (newGoal.count.length != oldGoal.count.length) {
+                if (newGoal.count.length == newGoal.goal) {
+                    //accomplished star
+                    setCongratsIndex(i)
+                    return;
+                }
+
+                if (newGoal.count.length < newGoal.goal || i == keys.length - 1) {
+                    if (newGoal.count.length < oldGoal.count.length) {
+                        const diff = oldGoal.count.length - newGoal.count.length;
+                        if (diff < 7) {
+                            setResetBalls(1);
+                        } else {
+                            const amt = Math.round(diff / 6);
+                            setResetBalls(amt ? amt : 1);
+                        }
+                        return;
+                    }
+                    break;
+                }
+            }
+        }
+
+        const consecTotalLen = getTotalConsecutive(newConsec).length;
+        const reminder = consecTotalLen % 6;
+        if (reminder < 1) {
+            setResetBalls(1);
+        }
     }
 
     const handleAddCompletedHabit = () => {
@@ -176,6 +222,8 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
 
     const onNotesClose = () => setShowNotes(showNotes ? false : true);
 
+    const onUpdateNotes = (text: string) => habitEdit && setHabitEdit({ ...habitEdit, notes: text });
+
     if (!habit || !habitEdit) {
         return (
             <View style={styles.loadingContainer}>
@@ -183,9 +231,6 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
             </View>
         )
     }
-
-    const onUpdateNotes = (text: string) => setHabitEdit({ ...habitEdit, notes: text })
-
 
     return (
         <LinearGradient
@@ -195,11 +240,11 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
             end={{ x: 1, y: 1 }}
         >
             <ShootingStars count={consecCompletedHabits.length} />
-            <Congrats message={'Wow!'} />
+            {congratsIndex != undefined && <CongratsStar goalIndex={congratsIndex} />}
             <ScrollView
                 style={styles.container}
                 disableScrollViewPanResponder={true}
-                contentContainerStyle={{ paddingBottom: 30 }}
+                contentContainerStyle={{ paddingBottom: 20 }}
                 scrollEnabled={scrollEnabled}
             >
                 <HabitHeader
@@ -216,6 +261,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                         completedHabits={consecCompletedHabits}
                         handleAddCompletedHabit={handleAddCompletedHabit}
                         activeDay={route.params.activeDay}
+                        resetBalls={resetBalls}
                     />
                 </View>
             </ScrollView>

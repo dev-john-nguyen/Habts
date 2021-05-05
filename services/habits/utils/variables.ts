@@ -1,23 +1,30 @@
-export const dailyGoals = {
-    one: {
-        count: [],
-        goal: 21,
-        total: 21,
-    },
-    two: {
-        count: [],
-        goal: 20,
-        total: 41
-    },
-    three: {
-        count: [],
-        goal: 20,
-        total: 51
-    },
-    four: {
-        count: [],
-        goal: 26,
-        total: 66
+export function dailyGoals() {
+    return {
+        one: {
+            count: [],
+            goal: 21,
+            total: 21,
+        },
+        two: {
+            count: [],
+            goal: 15,
+            total: 36
+        },
+        three: {
+            count: [],
+            goal: 15,
+            total: 51
+        },
+        four: {
+            count: [],
+            goal: 15,
+            total: 66
+        },
+        five: {
+            count: [],
+            goal: 0,
+            total: 0
+        }
     }
 }
 
@@ -35,18 +42,23 @@ export function otherGoals(len: number) {
         },
         two: {
             count: [],
-            goal: 3 * len,
+            goal: goal,
             total: goal * 2
         },
         three: {
             count: [],
-            goal: 3,
+            goal: goal,
             total: goal * 3
         },
         four: {
             count: [],
-            goal: 3,
+            goal: goal,
             total: goal * 4
+        },
+        five: {
+            count: [],
+            goal: 0,
+            total: 0
         }
     }
 }

@@ -45,12 +45,12 @@ const Stars = ({ count }: { count: number }) => {
 
     const renderStar = () => {
         let randNum;
-
-        if (count >= dailyGoals.four.total) {
+        const dailyGoalsObj = dailyGoals();
+        if (count >= dailyGoalsObj.four.total) {
             randNum = randomIntFromInterval(1, 4)
-        } else if (count >= dailyGoals.three.total) {
+        } else if (count >= dailyGoalsObj.three.total) {
             randNum = randomIntFromInterval(1, 3)
-        } else if (count >= dailyGoals.two.total) {
+        } else if (count >= dailyGoalsObj.two.total) {
             randNum = randomIntFromInterval(1, 2)
         } else {
             randNum = 1

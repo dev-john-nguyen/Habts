@@ -20,7 +20,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
     const mappedBadges = [];
 
     //should be order
-    for (let i = 0; i < goalKeys.length; i++) {
+    for (let i = 0; i < goalKeys.length - 1; i++) {
         const { count, goal, total } = consecutive[goalKeys[i]];
         if (count.length >= goal) {
             const star = (i % 2) < 1 ? 'star-o' : 'star';
@@ -28,7 +28,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
             mappedBadges.push(
                 <View style={styles.star} key={i}>
                     <FontAwesome name={star} size={size} color={color} />
-                    <AsapText style={[styles.text, { color: color }]}>{name ? name : total}</AsapText>
+                    <AsapText style={[styles.text, { color: color }]} numberOfLines={1}>{name ? name : total}</AsapText>
                 </View>
             )
         }
@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
         fontSize: normalizeWidth(40)
     },
     info: {
-        width: '50%',
         flexDirection: 'row',
         alignSelf: 'center'
     }

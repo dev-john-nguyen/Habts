@@ -9,7 +9,7 @@ import { ReducerStateProps } from '../services';
 import { connect } from 'react-redux';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import RotateGalaxy from '../components/galaxy/RotateGalaxy';
-import HabitHeader from '../components/HabitHeader';
+import HabitHeader from '../components/habit/Header';
 import { emptyHabitEdit } from './utils';
 
 

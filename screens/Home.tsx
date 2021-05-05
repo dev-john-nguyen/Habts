@@ -3,7 +3,7 @@ import { View, StyleSheet, FlatList, AppState, AppStateStatus } from 'react-nati
 import { AsapText, LatoText } from '../components/StyledText'
 import Colors from '../constants/Colors';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
-import HabitPreview from '../components/HabitPreview';
+import HabitPreview from '../components/habit/Preview';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/types';
 import BottomTab from '../navigation/BottomTab';
@@ -198,7 +198,6 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
             <FlatList
                 data={todayHabits}
                 extraData={activeDate}
-                style={{ zIndex: -1 }}
                 ref={ref => listRef.current = ref}
                 ListHeaderComponentStyle={styles.listHeader}
                 renderItem={({ item, index }) => (

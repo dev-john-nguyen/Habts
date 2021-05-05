@@ -19,11 +19,12 @@ interface DropBallJarProps {
     setScrollEnabled: (value: boolean) => void;
     handleAddCompletedHabit: () => void;
     activeDay: number;
+    resetBalls: number;
 }
 
 const ballsPaddingBottom = normalizeHeight(15);
 
-export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, activeDay }: DropBallJarProps) => {
+export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, activeDay, resetBalls }: DropBallJarProps) => {
     const currentDate = new Date();
     const [balls, setBalls] = useState<CompletedHabitsProps[]>([]);
     const [completed, setCompleted] = useState(false);
@@ -37,7 +38,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
     const jarBallsHeight = useRef(0)
     const jarBallsWidth = useRef(0);
     const jarBallsTransformY = useRef(new Animated.Value(0)).current;
-    const quotes = useRef({ thumb: false, quote: 'One day at a time!' })
+    const quotes = useRef({ thumb: false, quote: 'One day at a time!' });
 
     const panResponder = PanResponder.create({
         onMoveShouldSetPanResponder: (e, gestureState) => true,
@@ -149,7 +150,6 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
 
     const ballResponder = useRef(panResponder);
 
-
     useEffect(() => {
         ballResponder.current = panResponder;
     }, [balls])
@@ -171,7 +171,8 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
             }
 
             if (balls.length >= 65) {
-                setBalls([...balls.splice(0, 65)])
+                //get reminder and determine what amount to splice
+                handleSpliceBalls(balls);
             } else {
                 setBalls([...balls])
             }
@@ -187,13 +188,42 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
 
     }, [])
 
-    const addBall = () => {
-        // dropBalls()
-        handleAddCompletedHabit()
+    useEffect(() => {
+        if (resetBalls) {
+            dropBalls(resetBalls)
+        }
+    }, [resetBalls])
+
+    const handleSpliceBalls = (newBalls: CompletedHabitsProps[]) => {
+        const reminderBalls = newBalls.length % 6;
+        switch (reminderBalls) {
+            case 0:
+                setBalls([...newBalls.splice((newBalls.length - 60), 60)])
+                break;
+            case 1:
+                setBalls([...newBalls.splice((newBalls.length - 61), 61)])
+                break;
+            case 2:
+                setBalls([...newBalls.splice((newBalls.length - 62), 62)])
+                break;
+            case 3:
+                setBalls([...newBalls.splice((newBalls.length - 63), 63)])
+                break;
+            case 4:
+                setBalls([...newBalls.splice((newBalls.length - 64), 64)])
+                break;
+            case 5:
+                setBalls([...newBalls.splice((newBalls.length - 65), 65)])
+                break;
+            default:
+                setBalls([...newBalls.splice((newBalls.length - 60), 60)])
+        }
     }
 
-    const dropBalls = () => {
-        const toBallY = ballPositionY._value + ballHeight.current
+    const addBall = () => handleAddCompletedHabit()
+
+    const dropBalls = (depth: number) => {
+        const toBallY = (ballPositionY._value + ballHeight.current) * depth;
         Animated.parallel([
             Animated.timing(jarBallsTransformY, {
                 useNativeDriver: false,
@@ -212,7 +242,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
         <View style={styles.container}>
             <Animated.View style={[styles.ballContainer, { zIndex: ballZIndex }]}>
                 {
-                    <Animated.View
+                    !completed && <Animated.View
                         style={{
                             transform: [{ translateX: ballPositionX }, { translateY: ballPositionY }]
                         }}
@@ -235,8 +265,8 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                     </Animated.View>
                 }
                 <View style={styles.messageContainer}>
-                    {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeWidth(20)} color={Colors.white} />}
                     <AsapText style={styles.message}>{quotes.current.quote}</AsapText>
+                    {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeHeight(20)} color={Colors.white} />}
                 </View>
             </Animated.View>
             <View
@@ -311,7 +341,7 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '45deg' }]
     },
     messageContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         alignItems: 'center',
         position: 'absolute',
         top: -50,
@@ -320,9 +350,10 @@ const styles = StyleSheet.create({
         zIndex: -10
     },
     message: {
-        fontSize: normalizeWidth(25),
+        fontSize: normalizeHeight(50),
         color: Colors.white,
         marginLeft: 10,
+        marginBottom: 20,
         textTransform: 'capitalize',
         textAlign: 'center'
     },

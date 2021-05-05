@@ -1,11 +1,11 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native'
-import { AsapText, LatoText } from './StyledText';
-import Colors from '../constants/Colors';
+import { AsapText, LatoText } from '../StyledText';
+import Colors from '../../constants/Colors';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
-import { HabitProps } from '../services/habits/types';
-import { formatTime } from '../utils/tools';
-import { normalizeHeight } from '../utils/styles';
+import { HabitProps } from '../../services/habits/types';
+import { formatTime } from '../../utils/tools';
+import { normalizeHeight } from '../../utils/styles';
 
 export default ({ habit }: { habit: HabitProps }) => {
     const {

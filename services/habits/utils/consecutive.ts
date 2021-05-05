@@ -34,7 +34,12 @@ export class ConsecutiveTools {
             const currentGoal = consecutive[goalKeys[i]];
             const { count, goal } = currentGoal;
             //find current goal
-            if (count.length < goal || i == goalKeys.length - 1) {
+            if (i == goalKeys.length - 1) {
+                currentGoal.count.push({ dateCompleted: newCompletedHabit })
+                break;
+            }
+
+            if (count.length < goal) {
                 //check consecutive
                 //make sure there's an item
                 if (count.length < 2) {
@@ -77,8 +82,14 @@ export class ConsecutiveTools {
                 count,
                 goal
             } = currentGoal;
+
+            if (i == goalKeys.length - 1) {
+                currentGoal.count.push({ dateCompleted: newCompletedHabit })
+                break;
+            }
+
             //find current goal
-            if (count.length < goal || i == goalKeys.length - 1) {
+            if (count.length < goal) {
                 //check consecutive
                 //make sure there's an item
                 if (count.length < 2) {
@@ -173,8 +184,14 @@ export class ConsecutiveTools {
                 count,
                 goal
             } = currentGoal;
+
+            if (i == goalKeys.length - 1) {
+                currentGoal.count.push({ dateCompleted: newCompletedHabit })
+                break;
+            }
+
             //find current goal
-            if (count.length < goal || i == goalKeys.length - 1) {
+            if (count.length < goal) {
                 //check consecutive
                 //make sure there's an item
                 if (count.length < 2) {

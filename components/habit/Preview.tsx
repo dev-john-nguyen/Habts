@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
-import Colors from '../constants/Colors';
-import { AsapText, LatoText } from './StyledText';
-import { HabitProps } from '../services/habits/types';
+import Colors from '../../constants/Colors';
+import { AsapText, LatoText } from '../StyledText';
+import { HabitProps } from '../../services/habits/types';
 import { DateTime } from 'luxon';
-import { formatTime } from '../utils/tools';
-import { normalizeWidth } from '../utils/styles';
+import { formatTime } from '../../utils/tools';
+import { normalizeWidth } from '../../utils/styles';
 
 interface HabitPreviewProps {
     onPress: () => void;

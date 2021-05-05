@@ -5,7 +5,7 @@ import { AsapText, LatoText } from '../components/StyledText';
 import Colors from '../constants/Colors';
 import { StyledPrimaryButton, StyledSecondaryButton, StyledDisabledButton } from '../components/StyledButton';
 import { StyledTextInput } from '../components/StyledTextInput';
-import HabitHeader from '../components/HabitHeader';
+import HabitHeader from '../components/habit/Header';
 import { NewHabitProps, HabitsActionsProps, HabitProps, Time, TimeDataProps, SequenceProps, SequenceType } from '../services/habits/types';
 import { addHabit } from '../services/habits/actions';
 import { RootStackParamList } from '../navigation/types';
@@ -21,6 +21,7 @@ import ProgressRunner from './new/ProgressRunner';
 import BottomSvg from '../assets/svgs/bottom';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import NotificationForm from './new/NotificationForm';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type NewScreenNavProp = StackNavigationProp<RootStackParamList, 'New'>
 
@@ -333,34 +334,35 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
             default:
                 return (
                     <View style={styles.step}>
-                        <LatoText style={[styles.infoText, { alignSelf: 'center' }]}>Overview</LatoText>
-                        <HabitHeader
-                            setHabitEdit={() => undefined}
-                            habitEdit={emptyHabitEdit}
-                            edit={false}
-                            habit={{
-                                startTime: {
-                                    date: startTime,
-                                    hour: startTime.getHours(),
-                                    minute: startTime.getMinutes()
-                                },
-                                endTime: {
-                                    date: endTime,
-                                    hour: endTime.getHours(),
-                                    minute: endTime.getMinutes()
-                                },
-                                cue,
-                                locationDes,
-                                notes,
-                                remove,
-                                name,
-                                sequence,
-                                notificationTime: genNotificationTime(),
-                                notificationOn,
-                                ...emptyHabitExtra
-                            }}
-                        />
-                        <View style={{ flexDirection: 'row', width: '100%', justifyContent: 'space-around', zIndex: 100 }}>
+                        <View style={styles.overviewContainer}>
+                            <HabitHeader
+                                setHabitEdit={() => undefined}
+                                habitEdit={emptyHabitEdit}
+                                edit={false}
+                                habit={{
+                                    startTime: {
+                                        date: startTime,
+                                        hour: startTime.getHours(),
+                                        minute: startTime.getMinutes()
+                                    },
+                                    endTime: {
+                                        date: endTime,
+                                        hour: endTime.getHours(),
+                                        minute: endTime.getMinutes()
+                                    },
+                                    cue,
+                                    locationDes,
+                                    notes,
+                                    remove,
+                                    name,
+                                    sequence,
+                                    notificationTime: genNotificationTime(),
+                                    notificationOn,
+                                    ...emptyHabitExtra
+                                }}
+                            />
+                        </View>
+                        <View style={styles.overviewBtns}>
                             <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
                             <StyledPrimaryButton text={loading ? <ActivityIndicator color={Colors.white} /> : 'Save'} style={{ flex: .4, zIndex: 100 }} onPress={handleSave} />
                         </View>
@@ -431,6 +433,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginTop: 50
+    },
+    overviewBtns: {
+        flexDirection: 'row',
+        width: '100%',
+        justifyContent: 'space-around',
+        zIndex: 100
+    },
+    overviewContainer: {
+        justifyContent: 'center',
+        flex: .8
     }
 })
 
