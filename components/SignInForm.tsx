@@ -1,17 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Animated, Keyboard, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Image, Keyboard, ActivityIndicator } from 'react-native';
 import { StyledTextInput } from './StyledTextInput';
 import Colors from '../constants/Colors';
 import { UserActionsProps } from '../services/user/types';
 import { StyledPrimaryButton, StyledSecondaryButton } from './StyledButton';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import RotateGalaxy from './galaxy/RotateGalaxy';
 import Superman from '../assets/svgs/superman';
 import { isEqual } from 'lodash';
 import { validateEmail } from './utils';
 import { BannerActionsProps } from '../services/banner/types';
 import { AsapTextBold } from './StyledText';
+import BottomSvg from '../assets/svgs/bottom';
 
 interface Props {
     setBanner: BannerActionsProps['setBanner'];
@@ -86,6 +86,7 @@ export default ({ signUp, signIn, setBanner }: Props) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
+                <Image source={require('../assets/logo.png')} style={styles.logo} />
                 <AsapTextBold style={styles.header}>"We are what we repeatedly do"</AsapTextBold>
                 <StyledTextInput
                     value={email}
@@ -130,12 +131,12 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                     onPress={() => setShowSignUp(showSignUp ? false : true)}
                     style={styles.buttons}
                 />
-                <View style={styles.galaxy}>
-                    <RotateGalaxy balls={[]} login={true} />
-                </View>
                 <View style={styles.superman}>
                     <Superman />
                 </View>
+            </View>
+            <View style={styles.bottomSvg}>
+                <BottomSvg />
             </View>
         </SafeAreaView>
     )
@@ -151,7 +152,8 @@ const styles = StyleSheet.create({
     },
     header: {
         fontSize: normalizeWidth(10),
-        marginBottom: 20,
+        marginBottom: normalizeHeight(20),
+        marginTop: normalizeHeight(20),
         color: `rgba(${Colors.whiteRgb}, .8)`
     },
     galaxy: {
@@ -161,7 +163,7 @@ const styles = StyleSheet.create({
     },
     superman: {
         position: 'absolute',
-        top: normalizeHeight(3),
+        bottom: normalizeHeight(20),
         left: normalizeWidth(20),
         height: normalizeWidth(4),
         width: normalizeWidth(4),
@@ -174,9 +176,9 @@ const styles = StyleSheet.create({
         margin: 10
     },
     logo: {
-        borderRadius: 100,
-        height: normalizeWidth(5.5),
-        width: normalizeWidth(5.5),
+        borderRadius: 20,
+        height: normalizeHeight(10),
+        width: normalizeHeight(10),
     },
     textInput: {
         width: '100%',
@@ -187,5 +189,11 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         fontSize: normalizeHeight(60),
         color: Colors.white
+    },
+    bottomSvg: {
+        position: 'absolute',
+        width: '100%',
+        height: normalizeHeight(15),
+        bottom: 0
     },
 })

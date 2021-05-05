@@ -13,7 +13,6 @@ import { setBanner } from '../services/banner/actions';
 import { BannerActionsProps } from '../services/banner/types';
 import { ReducerStateProps } from '../services';
 import { getDayName, getDate, getMonthShort } from '../utils/tools';
-import Layout from '../constants/Layout';
 import { normalizeHeight } from '../utils/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ScrollView } from 'react-native-gesture-handler';

@@ -83,7 +83,7 @@ export default ({ navtoNew, navToReviewHistory, navToHabitHistory, navToSettings
             </View>
             <View style={styles.content}>
                 <View style={styles.logo}>
-                    <Image source={require('../assets/logo.png')} style={{ height: '70%', width: '35%', borderRadius: 20 }} />
+                    <Image source={require('../assets/logo.png')} style={{ height: normalizeHeight(13), width: normalizeHeight(13), borderRadius: 20 }} />
                 </View>
                 <View style={styles.rightContainer}>
                     <View style={{ marginRight: 30 }}>
@@ -99,12 +99,15 @@ export default ({ navtoNew, navToReviewHistory, navToHabitHistory, navToSettings
                             height: menuHeight
                         }]}>
                             <View style={styles.menu}>
-                                <Pressable onPress={() => handleOnPress('New')} hitSlop={5}>
-                                    <Entypo
-                                        name="add-to-list"
+                                <Pressable
+                                    onPress={() => handleOnPress('Settings')}
+                                    hitSlop={5}
+                                >
+                                    <FontAwesome
+                                        name="gear"
                                         size={normalizeHeight(30)}
                                         color={Colors.white}
-                                        onPress={() => handleOnPress('New')}
+                                        onPress={() => handleOnPress('Settings')}
                                     />
                                 </Pressable>
                                 <Pressable onPress={() => handleOnPress('ReviewHistory')} hitSlop={5}>
@@ -127,16 +130,12 @@ export default ({ navtoNew, navToReviewHistory, navToHabitHistory, navToSettings
                                         onPress={() => handleOnPress('HabitHistory')}
                                     />
                                 </Pressable>
-
-                                <Pressable
-                                    onPress={() => handleOnPress('Settings')}
-                                    hitSlop={5}
-                                >
-                                    <FontAwesome
-                                        name="gear"
+                                <Pressable onPress={() => handleOnPress('New')} hitSlop={5}>
+                                    <Entypo
+                                        name="add-to-list"
                                         size={normalizeHeight(30)}
                                         color={Colors.white}
-                                        onPress={() => handleOnPress('Settings')}
+                                        onPress={() => handleOnPress('New')}
                                     />
                                 </Pressable>
                             </View>
@@ -153,7 +152,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         width: Layout.window.width,
-        height: '13%'
+        height: normalizeHeight(10)
     },
     stargaze: {
         position: 'absolute',

@@ -185,8 +185,13 @@ export const signOut = () => async (dispatch: AppDispatch, getState: () => Reduc
     const { habits, user } = getState();
     try {
         await removeNotifys(habits.habits, user.uid);
-        const { ref } = getReviewDate(user.uid, user.createdAt)
-        await realtimeDb.ref(ref).remove()
+        try {
+            const { ref } = getReviewDate(user.uid, user.createdAt)
+            await realtimeDb.ref(ref).remove()
+        } catch (err) {
+            //getting permission denied because there isn't one that exists?
+            console.log(err)
+        }
         await AsyncStorage.removeItem(Database.currentUser);
         dispatch({ type: SIGN_OUT })
         dispatch({ type: SIGNOUT_HABITS })

@@ -14,14 +14,14 @@ import { setBanner } from '../services/banner/actions';
 import { BannerActionsProps } from '../services/banner/types';
 import { ReducerStateProps } from '../services';
 import { isInvalidTime } from '../utils/tools';
-import { emptyHabitEdit, emptyHabitExtra, charLimitHabitName, charLimitLocation, charLimitNotes, charCue } from './utils';
+import { emptyHabitEdit, emptyHabitExtra } from './utils';
 import SequenceForm from './new/SequenceForm';
 import TimeForm from './new/TimeForm';
 import ProgressRunner from './new/ProgressRunner';
 import BottomSvg from '../assets/svgs/bottom';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import NotificationForm from './new/NotificationForm';
-import { ScrollView } from 'react-native-gesture-handler';
+import Inputs from '../constants/Inputs';
 
 type NewScreenNavProp = StackNavigationProp<RootStackParamList, 'New'>
 
@@ -185,7 +185,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                             placeholder="Junk Food"
                             autoCorrect={true}
                             multiline={false}
-                            maxLength={charLimitHabitName}
+                            maxLength={Inputs.habitNameMaxChar}
                             blurOnSubmit={true}
                             onChangeText={(text) => setRemove(text)} />
                         <View style={styles.buttonContainer}>
@@ -219,7 +219,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                             placeholder="Meditation"
                             autoCorrect={true}
                             multiline={false}
-                            maxLength={charLimitHabitName}
+                            maxLength={Inputs.habitNameMaxChar}
                             blurOnSubmit={true}
                             onChangeText={(text) => setName(text)}
                         />
@@ -262,7 +262,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                             placeholder="Home - Living Room"
                             autoCorrect={true}
                             multiline={true}
-                            maxLength={charLimitLocation}
+                            maxLength={Inputs.habitLocationMaxChar}
                             blurOnSubmit={true}
                             onChangeText={(text) => setLocationDes(text)}
                         />
@@ -288,7 +288,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                             blurOnSubmit={true}
                             autoCorrect={true}
                             multiline={true}
-                            maxLength={charCue}
+                            maxLength={Inputs.habitCueMaxChar}
                             onChangeText={(text) => setCue(text)}
                         />
                         <View style={styles.buttonContainer}>
@@ -318,11 +318,11 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                         <LatoText style={styles.infoText}>Maybe include the reason WHY you want to implement this habit into your life.</LatoText>
                         <StyledTextInput
                             value={notes}
-                            style={[styles.responseInput, { minHeight: 200 }]}
+                            style={[styles.responseInput, { height: normalizeHeight(3) }]}
                             placeholder="I want to decrease my stress and anxiety, and at the same time increase my self-awareness."
                             autoCorrect={true}
                             multiline={true}
-                            maxLength={charLimitNotes}
+                            maxLength={Inputs.habitNotesMaxChar}
                             onChangeText={(text) => setNotes(text)}
                         />
                         <View style={styles.buttonContainer}>
@@ -438,11 +438,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'space-around',
-        zIndex: 100
+        zIndex: 100,
     },
     overviewContainer: {
         justifyContent: 'center',
-        flex: .8
+        flex: .6,
     }
 })
 

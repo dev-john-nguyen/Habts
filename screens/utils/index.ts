@@ -38,11 +38,6 @@ export const emptyHabitExtra = {
     completedHabits: []
 }
 
-export const charLimitHabitName = 25;
-export const charLimitLocation = 25
-export const charLimitNotes = 500;
-export const charCue = 100;
-
 export const arrayOfNums = (len: number) => {
     let arr: number[] = [];
     for (let i = 0; i < len; i += 5) {

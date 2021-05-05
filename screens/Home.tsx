@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, FlatList, AppState, AppStateStatus } from 'react-native';
-import { AsapText, LatoText } from '../components/StyledText'
+import { View, StyleSheet, FlatList, AppState, AppStateStatus, Pressable } from 'react-native';
+import { AsapText, LatoText, AsapTextBold } from '../components/StyledText'
 import Colors from '../constants/Colors';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import HabitPreview from '../components/habit/Preview';
@@ -200,6 +200,16 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
                 extraData={activeDate}
                 ref={ref => listRef.current = ref}
                 ListHeaderComponentStyle={styles.listHeader}
+                ListEmptyComponent={() => (
+                    <Pressable style={styles.empty} onPress={navToNew}>
+                        <Entypo
+                            name="add-to-list"
+                            size={normalizeHeight(25)}
+                            color={Colors.white}
+                            onPress={navToNew}
+                        />
+                    </Pressable>
+                )}
                 renderItem={({ item, index }) => (
                     <HabitPreview
                         onPress={() => navToHabit(item)}
@@ -263,15 +273,12 @@ const styles = StyleSheet.create({
         zIndex: 10
     },
     empty: {
-        borderWidth: 1,
-        borderColor: Colors.primary,
-        backgroundColor: 'transparent',
+        alignSelf: 'stretch',
+        backgroundColor: Colors.primary,
         borderRadius: 20,
         padding: 20,
-        alignItems: 'center',
         margin: 20,
-        flexDirection: 'row',
-        justifyContent: 'space-evenly'
+        alignItems: 'center'
     },
     listHeader: {
         position: 'absolute',

@@ -1,12 +1,12 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { AsapText, AsapTextBold } from '../StyledText';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import Colors from '../../constants/Colors';
 import { Feather } from '@expo/vector-icons';
 import { StyledTextInput } from '../StyledTextInput';
-import { charLimitNotes } from '../../screens/utils';
 import { ScrollView } from 'react-native-gesture-handler';
+import Inputs from '../../constants/Inputs';
 
 interface Props {
     notes: string;
@@ -17,7 +17,6 @@ interface Props {
 }
 
 const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
-
     return (
         <ScrollView style={styles.container} contentContainerStyle={styles.content}>
             <Feather name="x" size={normalizeWidth(20)} color={Colors.white} style={styles.x} onPress={onClose} />
@@ -30,7 +29,7 @@ const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
                     onChangeText={updateNotes}
                     autoCorrect={true}
                     multiline={true}
-                    maxLength={charLimitNotes}
+                    maxLength={Inputs.habitNotesMaxChar}
                 /> :
                 <AsapText style={styles.text}>{notes}</AsapText>
             }

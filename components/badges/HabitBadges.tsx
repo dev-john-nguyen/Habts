@@ -69,7 +69,8 @@ const styles = StyleSheet.create({
     },
     emptyText: {
         fontSize: normalizeWidth(35),
-        color: Colors.white
+        color: Colors.white,
+        marginLeft: 2
     },
     star: {
         marginLeft: 5,

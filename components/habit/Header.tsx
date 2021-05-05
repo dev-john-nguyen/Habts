@@ -10,8 +10,9 @@ import { formatTime, renderSequenceValue } from '../../utils/tools';
 import { ScrollView } from 'react-native-gesture-handler';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import { Picker } from '@react-native-picker/picker';
-import { arrayOfNums, charLimitNotes } from '../../screens/utils';
+import { arrayOfNums } from '../../screens/utils';
 import HabitBadges from '../badges/HabitBadges';
+import Inputs from '../../constants/Inputs';
 
 interface HabitHeader {
     habit: HabitProps;
@@ -124,6 +125,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                                 onChangeText={(text) => setHabitEdit({ ...habitEdit, cue: text })}
                                 autoCorrect={true}
                                 multiline={true}
+                                maxLength={Inputs.habitCueMaxChar}
                             />
                             : <LatoText style={styles.dataText}>{habit.cue}</LatoText>
                     }
@@ -139,6 +141,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                                 onChangeText={(text) => setHabitEdit({ ...habitEdit, locationDes: text })}
                                 autoCorrect={true}
                                 multiline={true}
+                                maxLength={Inputs.habitLocationMaxChar}
                             />
                             : <LatoText style={styles.dataText}>{habit.locationDes}</LatoText>
                     }
@@ -154,7 +157,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                                 onChangeText={(text) => setHabitEdit({ ...habitEdit, notes: text })}
                                 autoCorrect={true}
                                 multiline={true}
-                                maxLength={charLimitNotes}
+                                maxLength={Inputs.habitNotesMaxChar}
                             />
                             : <ScrollView style={{ maxHeight: normalizeHeight(20) }}>
                                 <LatoText style={styles.dataText}>{habit.notes}</LatoText>

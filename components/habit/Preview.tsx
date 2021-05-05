@@ -3,7 +3,7 @@ import { View, StyleSheet, Pressable } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { AsapText, LatoText } from '../StyledText';
-import { HabitProps } from '../../services/habits/types';
+import { HabitProps, CompletedHabitsProps } from '../../services/habits/types';
 import { DateTime } from 'luxon';
 import { formatTime } from '../../utils/tools';
 import { normalizeWidth } from '../../utils/styles';
@@ -16,7 +16,17 @@ interface HabitPreviewProps {
 
 export default ({ onPress, habit, active }: HabitPreviewProps) => {
     const styles = genStyles(active);
-    const iconColor = active ? Colors.white : Colors.mediumGrey
+    const iconColor = active ? Colors.white : Colors.mediumGrey;
+
+    let consecutiveTotal: CompletedHabitsProps[] = [];
+
+    Object.keys(habit.consecutive).forEach((goalKey, i) => {
+        const { count } = habit.consecutive[goalKey];
+        if (count.length > 0) {
+            consecutiveTotal = consecutiveTotal.concat(count)
+        }
+    })
+
     return (
         <Pressable style={styles.container} onPress={onPress}
         >
@@ -38,7 +48,7 @@ export default ({ onPress, habit, active }: HabitPreviewProps) => {
 
                 <View style={styles.contentItem}>
                     <Entypo name="bar-graph" size={normalizeWidth(25)} color={iconColor} />
-                    <LatoText style={styles.contentItemText}>{habit.consecutive.length} day(s) in a row</LatoText>
+                    <LatoText style={styles.contentItemText}>{consecutiveTotal.length} day(s) in a row</LatoText>
                 </View>
 
                 <View style={styles.contentItem}>

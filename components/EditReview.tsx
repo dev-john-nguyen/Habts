@@ -8,6 +8,7 @@ import { StyledPrimaryButton } from './StyledButton';
 import { ReviewProps } from '../services/reviews/types';
 import { BannerActionsProps } from '../services/banner/types';
 import { normalizeHeight } from '../utils/styles';
+import Inputs from '../constants/Inputs';
 
 interface ComponentProps {
     edit: boolean;
@@ -62,6 +63,7 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                     placeholder="I'm on a 20 day meditation streak ..."
                     autoCorrect={true}
                     multiline={true}
+                    maxLength={Inputs.reviewInputMaxChar}
                     onSubmitEditing={Keyboard.dismiss}
                 /> : <LatoText style={styles.text}>
                         {item.good}
@@ -77,6 +79,7 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                     placeholder="It's hard to maintain consistency in the gym ..."
                     autoCorrect={true}
                     multiline={true}
+                    maxLength={Inputs.reviewInputMaxChar}
                     onSubmitEditing={Keyboard.dismiss}
                 /> : <LatoText style={styles.text}>
                         {item.bad}
@@ -93,6 +96,7 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                     autoCorrect={true}
                     multiline={true}
                     onSubmitEditing={Keyboard.dismiss}
+                    maxLength={Inputs.reviewInputMaxChar}
                 /> : <LatoText style={styles.text}>
                         {item.learn}
                     </LatoText>}
