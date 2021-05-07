@@ -51,7 +51,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                     <View>
                         <LatoText style={styles.headerSubText}>{habit.remove}</LatoText>
                         <AsapText style={styles.headerText}>{habit.name}</AsapText>
-                        <HabitBadges consecutive={habit.consecutive} size={normalizeWidth(20)} infoText='Complete 21 consecutive days to earn your first star' />
+                        <HabitBadges consecutive={habit.consecutive} size={normalizeWidth(20)} infoText="Earn your first badge by completing 21 consecutive days." />
                     </View>
                 </ScrollView>
             </View>

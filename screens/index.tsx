@@ -41,7 +41,8 @@ const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationT
 
         (async () => {
             try {
-                await InAppPurchases.connectAsync()
+                await InAppPurchases.connectAsync().then(() => console.log('connected to the app store'))
+
 
                 InAppPurchases.setPurchaseListener(async ({ responseCode, results, errorCode }) => {
                     // Purchase was successful
@@ -83,9 +84,12 @@ const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationT
     }, [user.uid])
 
     useEffect(() => {
+        //ask for review
         if (!user.uid) return;
 
         const { createdAt, requestReview } = user
+
+        //add 2 to month because of how DateTime starts at 1 and JsDate starts at 0
         const requestReviewDate = DateTime.local(createdAt.getFullYear(), createdAt.getMonth() + 1, createdAt.getDate() + 7);
 
         if (requestReview) {

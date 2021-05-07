@@ -4,6 +4,7 @@ import { BannerActionsProps, BannerProps } from '../services/banner/types';
 import { AsapText } from './StyledText';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
+import { normalizeHeight } from '../utils/styles';
 
 interface Props {
     removeBanner: BannerActionsProps['removeBanner'];
@@ -20,7 +21,7 @@ export default ({ removeBanner, banner }: Props) => {
             Animated.sequence([
                 Animated.timing(topAdmin, {
                     useNativeDriver: false,
-                    toValue: 0,
+                    toValue: 20,
                     easing: Easing.out(Easing.circle),
                     duration: 1000
                 }),
@@ -50,11 +51,8 @@ export default ({ removeBanner, banner }: Props) => {
         switch (banner.type) {
             case 'error':
                 return Colors.red;
-            case 'warning':
-                return Colors.yellow;
-            case 'success':
             default:
-                return Colors.green;
+                return Colors.primary;
         }
     }
 
@@ -74,14 +72,15 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '90%',
         alignSelf: 'center',
-        minHeight: (Layout.window.height / 8),
-        borderBottomLeftRadius: 20,
-        borderBottomRightRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: normalizeHeight(10),
+        borderRadius: 20,
         zIndex: 100
     },
     messageContainer: {
         flex: 1,
-        justifyContent: 'flex-end',
+        justifyContent: 'center',
         alignItems: 'center',
         flexWrap: 'wrap',
         padding: 20,

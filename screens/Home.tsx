@@ -192,8 +192,8 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
                 </View>
             </View>
             <View style={styles.listTitleContainer}>
-                <AsapText style={styles.listTitleTimeText}>Time</AsapText>
-                <AsapText style={styles.listTitleHabitText}>Habit</AsapText>
+                <AsapTextBold style={styles.listTitleTimeText}>Time</AsapTextBold>
+                <AsapTextBold style={styles.listTitleHabitText}>Habit</AsapTextBold>
             </View>
             <FlatList
                 data={todayHabits}

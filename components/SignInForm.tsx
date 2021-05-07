@@ -88,6 +88,7 @@ export default ({ signUp, signIn, setBanner }: Props) => {
             <View style={styles.container}>
                 <Image source={require('../assets/logo.png')} style={styles.logo} />
                 <AsapTextBold style={styles.header}>"We are what we repeatedly do"</AsapTextBold>
+                <AsapTextBold style={styles.subHeader}>Get 1 month for free when you sign up!</AsapTextBold>
                 <StyledTextInput
                     value={email}
                     onChangeText={(text) => setEmail(text)}
@@ -152,8 +153,13 @@ const styles = StyleSheet.create({
     },
     header: {
         fontSize: normalizeWidth(10),
-        marginBottom: normalizeHeight(20),
-        marginTop: normalizeHeight(20),
+        marginTop: normalizeHeight(25),
+        color: `rgba(${Colors.whiteRgb}, .8)`
+    },
+    subHeader: {
+        fontSize: normalizeWidth(25),
+        marginTop: normalizeHeight(40),
+        marginBottom: normalizeHeight(30),
         color: `rgba(${Colors.whiteRgb}, .8)`
     },
     galaxy: {

@@ -61,7 +61,9 @@ export const signUp = (email: string, password: string, password2: string) => as
 
         await AsyncStorage.setItem(userStorage.uid + Database.Users, JSON.stringify({ ...userStorage, requestReview: true }))
 
-        dispatch({ type: SET_USER, payload: userStorage })
+        dispatch({ type: SET_USER, payload: userStorage });
+
+        dispatch(setBanner('success', "Your 1 month free trail starts now!"))
     } catch (error) {
         var errorCode = error.code;
         switch (errorCode) {
@@ -86,6 +88,7 @@ export const signUp = (email: string, password: string, password2: string) => as
 }
 
 export const signIn = (email: string, password: string) => async (dispatch: AppDispatch) => {
+    //I removed notifications by using login date in the cloud schedule function
 
     try {
         const { user } = await firebaseDb.auth().signInWithEmailAndPassword(email, password);
@@ -255,10 +258,13 @@ export const saveNotificationToken = (token: string) => async (dispatch: AppDisp
 
 export const subscriptionPurchased = (productId: string, purchaseTime: number, orderId: string) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
     const { user } = getState();
-    if (user.uid) return;
+
+    if (!user.uid) return;
 
     const utcNow = DateTime.fromMillis(purchaseTime).toUTC();
     const expiredAt = DateTime.utc(utcNow.year, utcNow.month + 1, utcNow.day).toJSDate();
+
+    console.log(user.orderId, orderId);
 
     if (user.orderId == orderId) return;
 

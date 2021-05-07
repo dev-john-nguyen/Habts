@@ -36,6 +36,14 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
                 <Entypo name="chevron-right" size={24} color={Colors.white} style={styles.chevron} />
             </Pressable>
 
+            <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('ContactUs')}>
+                <View style={styles.item}>
+                    <Entypo name="phone" size={24} color={Colors.white} />
+                    <AsapText style={styles.itemText}>Contact</AsapText>
+                </View>
+                <Entypo name="chevron-right" size={24} color={Colors.white} style={styles.chevron} />
+            </Pressable>
+
 
         </View>
     )

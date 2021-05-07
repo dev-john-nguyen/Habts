@@ -14,6 +14,7 @@ export type RootStackParamList = {
   Account: undefined;
   Privacy: undefined;
   Subscription: undefined;
+  ContactUs: undefined;
 };
 
 export type BottomTabParamList = {
