@@ -7,6 +7,8 @@ import { HabitProps } from '../../services/habits/types';
 import { formatTime } from '../../utils/tools';
 import { normalizeHeight } from '../../utils/styles';
 
+///this is not used anymore
+
 export default ({ habit }: { habit: HabitProps }) => {
     const {
         startTime,
@@ -76,12 +78,12 @@ const styles = StyleSheet.create({
     },
     headerText: {
         fontSize: normalizeHeight(20),
-        color: Colors.primary,
+        color: Colors.white,
         alignSelf: 'center'
     },
     headerSubText: {
         fontSize: normalizeHeight(50),
-        color: Colors.grey,
+        color: Colors.veryLightGrey,
         textDecorationLine: 'line-through',
         alignSelf: 'flex-end'
     },

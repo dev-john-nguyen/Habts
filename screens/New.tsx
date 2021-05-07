@@ -318,7 +318,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                         <LatoText style={styles.infoText}>Maybe include the reason WHY you want to implement this habit into your life.</LatoText>
                         <StyledTextInput
                             value={notes}
-                            style={[styles.responseInput, { height: normalizeHeight(3) }]}
+                            style={[styles.responseInput, { height: normalizeHeight(4) }]}
                             placeholder="I want to decrease my stress and anxiety, and at the same time increase my self-awareness."
                             autoCorrect={true}
                             multiline={true}

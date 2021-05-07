@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
-import { normalizeWidth } from '../../utils/styles';
+import { normalizeWidth, normalizeHeight } from '../../utils/styles';
 import { AsapText } from '../StyledText';
 import { HabitProps } from '../../services/habits/types';
 
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     text: {
-        fontSize: normalizeWidth(40)
+        fontSize: normalizeHeight(80)
     },
     info: {
         flexDirection: 'row',

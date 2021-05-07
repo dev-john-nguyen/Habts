@@ -1,10 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing, ActivityIndicator } from 'react-native';
-import { AsapText } from './StyledText';
-import Layout from '../constants/Layout';
-import { StyledPrimaryButton, StyledSecondaryButton, StyledRedButton } from './StyledButton';
-import Colors from '../constants/Colors';
-import { normalizeHeight } from '../utils/styles';
+import { AsapText } from '../StyledText';
+import Layout from '../../constants/Layout';
+import { StyledPrimaryButton, StyledSecondaryButton, StyledRedButton } from '../StyledButton';
+import Colors from '../../constants/Colors';
+import { normalizeHeight } from '../../utils/styles';
 
 export default ({ onModalResponse, headerText, showModal, loading }: { onModalResponse: () => void, headerText: string, showModal: boolean, loading: boolean }) => {
     const modalWidth = useRef(new Animated.Value(0)).current;

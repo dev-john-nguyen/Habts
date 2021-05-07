@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { AsapText, AsapTextBold } from '../../components/StyledText';
 import Colors from '../../constants/Colors';
-import { normalizeWidth, normalizeHeight } from '../../utils/styles';
+import { normalizeHeight } from '../../utils/styles';
 
 const ContactUs = () => {
 
@@ -32,12 +32,12 @@ const styles = StyleSheet.create({
     },
     headerText: {
         textAlign: 'center',
-        fontSize: normalizeWidth(20),
+        fontSize: normalizeHeight(40),
         color: Colors.white,
         padding: 20
     },
     text: {
-        fontSize: normalizeWidth(15),
+        fontSize: normalizeHeight(35),
         color: Colors.white,
         margin: 20
     },

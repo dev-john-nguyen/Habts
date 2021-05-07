@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Keyboard } from 'react-native';
-import { AsapText, LatoText } from './StyledText';
-import Colors from '../constants/Colors';
-import StarRating from './StarRating';
-import { StyledTextInput } from './StyledTextInput';
-import { StyledPrimaryButton } from './StyledButton';
-import { ReviewProps } from '../services/reviews/types';
-import { BannerActionsProps } from '../services/banner/types';
-import { normalizeHeight } from '../utils/styles';
-import Inputs from '../constants/Inputs';
+import { AsapText, LatoText } from '../StyledText';
+import Colors from '../../constants/Colors';
+import StarRating from '../StarRating';
+import { StyledTextInput } from '../StyledTextInput';
+import { StyledPrimaryButton } from '../StyledButton';
+import { ReviewProps } from '../../services/reviews/types';
+import { BannerActionsProps } from '../../services/banner/types';
+import { normalizeHeight } from '../../utils/styles';
+import Inputs from '../../constants/Inputs';
 
 interface ComponentProps {
     edit: boolean;

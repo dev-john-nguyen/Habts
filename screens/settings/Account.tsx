@@ -13,7 +13,7 @@ import { signOut } from '../../services/user/actions';
 import { connect } from 'react-redux';
 import { UserActionsProps } from '../../services/user/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { normalizeHeight, normalizeWidth } from '../../utils/styles';
+import { normalizeHeight } from '../../utils/styles';
 import Database from '../../constants/Database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SIGN_OUT } from '../../services/user/actionTypes';
@@ -149,13 +149,13 @@ const styles = StyleSheet.create({
         margin: 10
     },
     headerText: {
-        fontSize: normalizeWidth(15),
+        fontSize: normalizeHeight(30),
         margin: 10,
         textAlign: 'center',
         color: Colors.white
     },
     subText: {
-        fontSize: normalizeWidth(25),
+        fontSize: normalizeHeight(50),
         textAlign: 'center',
         margin: 10,
         color: Colors.white
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         borderWidth: 1,
         borderColor: Colors.primary,
-        fontSize: 12,
+        fontSize: normalizeHeight(50),
         padding: 10,
         paddingTop: 10,
         color: Colors.white,

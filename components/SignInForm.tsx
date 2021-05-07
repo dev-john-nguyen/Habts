@@ -10,7 +10,7 @@ import Superman from '../assets/svgs/superman';
 import { isEqual } from 'lodash';
 import { validateEmail } from './utils';
 import { BannerActionsProps } from '../services/banner/types';
-import { AsapTextBold } from './StyledText';
+import { AsapTextBold, AsapText } from './StyledText';
 import BottomSvg from '../assets/svgs/bottom';
 
 interface Props {
@@ -88,7 +88,11 @@ export default ({ signUp, signIn, setBanner }: Props) => {
             <View style={styles.container}>
                 <Image source={require('../assets/logo.png')} style={styles.logo} />
                 <AsapTextBold style={styles.header}>"We are what we repeatedly do"</AsapTextBold>
-                <AsapTextBold style={styles.subHeader}>Get 1 month for free when you sign up!</AsapTextBold>
+                <View style={styles.infoContainer}>
+                    <AsapTextBold style={styles.subHeader}>Get 1 month for free when you sign up!</AsapTextBold>
+                    <AsapText style={styles.subSubHeader}>No payment information needed upon signing up.</AsapText>
+                    <AsapText style={styles.subSubHeader}>Free trail starts after you sign up.</AsapText>
+                </View>
                 <StyledTextInput
                     value={email}
                     onChangeText={(text) => setEmail(text)}
@@ -148,18 +152,25 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         flexDirection: 'column',
-        marginTop: 20,
+        marginTop: 10,
         padding: 20
     },
+    infoContainer: {
+        marginTop: normalizeHeight(45),
+        marginBottom: normalizeHeight(30),
+    },
     header: {
-        fontSize: normalizeWidth(10),
-        marginTop: normalizeHeight(25),
+        fontSize: normalizeHeight(19),
+        marginTop: normalizeHeight(30),
         color: `rgba(${Colors.whiteRgb}, .8)`
     },
     subHeader: {
-        fontSize: normalizeWidth(25),
-        marginTop: normalizeHeight(40),
-        marginBottom: normalizeHeight(30),
+        fontSize: normalizeHeight(50),
+        marginBottom: 5,
+        color: `rgba(${Colors.whiteRgb}, .8)`
+    },
+    subSubHeader: {
+        fontSize: normalizeHeight(60),
         color: `rgba(${Colors.whiteRgb}, .8)`
     },
     galaxy: {
@@ -169,7 +180,7 @@ const styles = StyleSheet.create({
     },
     superman: {
         position: 'absolute',
-        bottom: normalizeHeight(20),
+        top: normalizeHeight(20),
         left: normalizeWidth(20),
         height: normalizeWidth(4),
         width: normalizeWidth(4),
@@ -193,7 +204,7 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         padding: 10,
         marginBottom: 20,
-        fontSize: normalizeHeight(60),
+        fontSize: normalizeHeight(50),
         color: Colors.white
     },
     bottomSvg: {

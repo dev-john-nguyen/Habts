@@ -14,10 +14,10 @@ import { HabitProps, HabitsActionsProps, HabitEditProps, CompletedHabitsProps } 
 import { setBanner } from '../services/banner/actions';
 import { BannerActionsProps } from '../services/banner/types';
 import { addCompletedHabit, updateHabit, archiveHabit } from '../services/habits/actions';
-import Modal from '../components/ArchiveModal';
+import Modal from '../components/habit/ArchiveModal';
 import { normalizeHeight } from '../utils/styles';
 import { LinearGradient } from 'expo-linear-gradient';
-import DropBallJar from '../components/DropBallJar';
+import DropBallJar from '../components/habit/DropBallJar';
 import ShootingStars from '../components/shootingstars';
 import Notes from '../components/habit/Notes';
 import CongratsStar from '../components/congrats/Star';

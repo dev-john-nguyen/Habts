@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { View, StyleSheet, Animated, PanResponder, ImageBackground, Easing, PanResponderGestureState, GestureResponderEvent } from 'react-native';
-import { AsapText, AsapTextBold } from './StyledText';
-import Colors from '../constants/Colors';
+import { AsapText, AsapTextBold } from '../StyledText';
+import Colors from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { cloneDeep } from 'lodash'
 import { Entypo } from '@expo/vector-icons';
-import { CompletedHabitsProps } from '../services/habits/types';
-import { getDate, getMonthShort } from '../utils/tools';
-import { normalizeHeight, normalizeWidth } from '../utils/styles';
+import { CompletedHabitsProps } from '../../services/habits/types';
+import { getDate, getMonthShort } from '../../utils/tools';
+import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 
 
 //notes: will need to update server/redux every time a user drops a ball into the container!
@@ -279,7 +279,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                 <AsapText style={styles.count}>count: <AsapTextBold style={styles.count}>{completedHabits.length}</AsapTextBold></AsapText>
                 <ImageBackground
                     style={styles.jarBallsContainer}
-                    source={require('../assets/svgs/jar.png')}
+                    source={require('../../assets/svgs/jar.png')}
                     imageStyle={{
                         resizeMode: 'stretch'
                     }}

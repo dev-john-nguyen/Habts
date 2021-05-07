@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Keyboard } from 'react-native';
 import { AsapText } from '../components/StyledText';
 import Colors from '../constants/Colors';
-import EditReview from '../components/EditReview';
+import EditReview from '../components/review/EditReview';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/types';
 import { FontAwesome } from '@expo/vector-icons';

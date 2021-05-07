@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { AsapText, LatoText } from '../../components/StyledText';
 import Colors from '../../constants/Colors';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { normalizeHeight, normalizeWidth } from '../../utils/styles';
+import { normalizeHeight } from '../../utils/styles';
 import { ScrollView } from 'react-native-gesture-handler';
 
 export default () => {
@@ -33,13 +33,13 @@ const styles = StyleSheet.create({
         margin: 10
     },
     headerText: {
-        fontSize: normalizeWidth(15),
+        fontSize: normalizeHeight(30),
         margin: 10,
         textAlign: 'center',
         color: Colors.white
     },
     subText: {
-        fontSize: normalizeWidth(25),
+        fontSize: normalizeHeight(50),
         textAlign: 'left',
         margin: 10,
         color: Colors.white

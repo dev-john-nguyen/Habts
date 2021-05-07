@@ -85,7 +85,7 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
         .then(() => {
             dispatch({ type: ADD_HABIT, payload: updatedHabits })
             if (timeInterfereWarning) {
-                dispatch(setBanner('warning', `${timeInterfereWarning}. ${habit.name} succcessfully saved!`));
+                dispatch(setBanner('warning', `${timeInterfereWarning} ${habit.name} succcessfully saved!`));
             } else if (notificationWarning) {
                 dispatch(setBanner('warning', `${notificationWarning} ${habit.name} succcessfully saved!`));
             } else {
@@ -106,55 +106,6 @@ export const addCompletedHabit = (habitDocId: string) => async (dispatch: AppDis
         dispatch(setBanner('error', "Sorry, I couldn't find your habit id."))
         return;
     }
-
-    // let count = 19;
-
-    // while (0 <= count) {
-
-    //     const date = new Date()
-    //     var yesterday = new Date(date.getTime());
-    //     let numDate;
-    //     let newDate;
-
-    //     numDate = yesterday.setDate(date.getDate() - count);
-    //     newDate = new Date(numDate);
-
-    //     const { habits, user } = getState();
-
-    //     const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
-
-    //     await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
-    //         .then(() => {
-    //             dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
-    //         })
-    //         .catch((err) => {
-    //             console.log(err)
-    //             dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
-    //         })
-
-    //     count--
-    // }
-
-
-
-    // const d = new Date();
-    // const newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1);
-
-    // const { habits, user } = getState();
-
-    // const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
-
-
-    // await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
-    //     .then(() => {
-    //         dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
-    //     })
-    //     .catch((err) => {
-    //         console.log(err)
-    //         dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
-    //     })
-
-
 
     const newDate = new Date()
 

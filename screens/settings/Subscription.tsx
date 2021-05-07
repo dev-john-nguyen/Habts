@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { ReducerStateProps } from '../../services';
 import { UserProps } from '../../services/user/types';
 import { DateTime } from 'luxon';
-import { normalizeWidth, normalizeHeight } from '../../utils/styles';
+import { normalizeHeight } from '../../utils/styles';
 import Pay from './Pay';
 import Database from '../../constants/Database';
 
@@ -62,12 +62,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     headerText: {
-        fontSize: normalizeWidth(20),
+        fontSize: normalizeHeight(40),
         color: Colors.white,
         padding: 20
     },
     text: {
-        fontSize: normalizeWidth(15),
+        fontSize: normalizeHeight(35),
         color: Colors.white,
         margin: 20
     },

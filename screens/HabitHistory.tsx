@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, Pressable, Animated, Easing, SafeAreaView, ScrollView } from 'react-native';
+import { View, StyleSheet, Pressable, Animated, Easing, SafeAreaView } from 'react-native';
 import { AsapText } from '../components/StyledText';
 import Colors from '../constants/Colors';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
@@ -7,8 +7,7 @@ import { getDayName, getMonthShort } from '../utils/tools';
 import { HabitProps, HabitsProps } from '../services/habits/types';
 import { ReducerStateProps } from '../services';
 import { connect } from 'react-redux';
-import { normalizeHeight, normalizeWidth } from '../utils/styles';
-import RotateGalaxy from '../components/galaxy/RotateGalaxy';
+import { normalizeHeight } from '../utils/styles';
 import HabitHeader from '../components/habit/Header';
 import { emptyHabitEdit } from './utils';
 
@@ -116,55 +115,28 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                     <AsapText style={styles.headerTitle}>Habit</AsapText>
                 </View>
                 {renderHeader()}
-            </View>
-
-            <ScrollView
-                style={styles.scrollContainer}
-                disableScrollViewPanResponder={true}
-                contentContainerStyle={{ paddingBottom: 30 }}
-            >
-                {targetHabit && <HabitHeader
-                    setHabitEdit={() => undefined}
-                    habitEdit={emptyHabitEdit}
-                    edit={false}
-                    habit={targetHabit}
-                />
-                }
-                <View style={styles.galaxy}>
-                    <RotateGalaxy balls={targetHabit ? targetHabit.completedHabits : []} />
+                <View style={styles.habitContainer}>
+                    {targetHabit && <HabitHeader
+                        habit={targetHabit}
+                        edit={false}
+                        setHabitEdit={() => undefined}
+                        habitEdit={emptyHabitEdit}
+                    />}
                 </View>
-            </ScrollView>
+            </View>
         </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: .3,
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: normalizeHeight(20)
-    },
-    scrollContainer: {
         flex: 1,
-        zIndex: -10
+        paddingTop: 20
     },
-    galaxy: {
+    habitContainer: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    gradientBorder: {
-        height: normalizeWidth(1),
-        width: normalizeWidth(1),
-        borderRadius: normalizeWidth(2),
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    gradientGalaxy: {
-        height: normalizeWidth(1.05),
-        width: normalizeWidth(1.05),
-        borderRadius: normalizeWidth(1.05) / 2,
+        bottom: 0,
+        width: '100%',
     },
     emptyText: {
         alignSelf: 'center',
@@ -194,7 +166,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     filterItemText: {
-        fontSize: normalizeHeight(40),
+        fontSize: normalizeHeight(50),
         color: Colors.white
     },
     edit: {
@@ -203,7 +175,7 @@ const styles = StyleSheet.create({
         right: -10
     },
     header: {
-        flex: 1,
+        flex: .1,
         alignSelf: 'center'
     },
     headerSubText: {
@@ -218,7 +190,7 @@ const styles = StyleSheet.create({
         top: -10
     },
     filterContainer: {
-        flex: 1,
+        flex: .2,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -242,12 +214,12 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     dateDay: {
-        fontSize: normalizeHeight(20),
+        fontSize: normalizeHeight(25),
         color: Colors.white,
         marginRight: 10
     },
     dateMonYr: {
-        fontSize: normalizeHeight(55),
+        fontSize: normalizeHeight(65),
         color: Colors.white
     },
 })

@@ -7,11 +7,11 @@ import { getDayName, getDate, getMonthShort } from '../utils/tools';
 import { ReviewProps, ReviewsActionsProps } from '../services/reviews/types';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../services';
-import EditReview from '../components/EditReview';
+import EditReview from '../components/review/EditReview';
 import { BannerActionsProps } from '../services/banner/types';
 import { setBanner } from '../services/banner/actions';
 import { updateReview } from '../services/reviews/actions';
-import { normalizeHeight } from '../utils/styles';
+import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ReviewHistoryProps {
@@ -73,7 +73,7 @@ const ReviewHistory = ({ reviews, setBanner, updateReview }: ReviewHistoryProps)
             Animated.parallel([
                 Animated.timing(listWidth, {
                     useNativeDriver: false,
-                    toValue: normalizeHeight(4),
+                    toValue: normalizeWidth(2.2),
                     easing: Easing.inOut(Easing.circle),
                     duration: 500,
                 }),
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingLeft: 20,
         paddingRight: 20,
-        marginTop: normalizeHeight(20)
+        marginTop: normalizeHeight(30)
     },
     filterList: {
         position: 'absolute',
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     filterItemText: {
-        fontSize: normalizeHeight(40),
+        fontSize: normalizeHeight(50),
         color: Colors.white
     },
     edit: {
@@ -228,12 +228,12 @@ const styles = StyleSheet.create({
         zIndex: -10
     },
     headerDateDay: {
-        fontSize: normalizeHeight(20),
+        fontSize: normalizeHeight(25),
         color: Colors.white,
         marginRight: 10
     },
     headerDateMonYr: {
-        fontSize: normalizeHeight(55),
+        fontSize: normalizeHeight(60),
         color: Colors.white
     },
     filterContainer: {
