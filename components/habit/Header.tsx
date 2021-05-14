@@ -57,11 +57,11 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
             </View>
             <View style={styles.data}>
                 <View style={styles.dataItem}>
-                    <Entypo name="calendar" size={normalizeHeight(30)} color={Colors.white} />
+                    <Entypo name="calendar" size={normalizeHeight(40)} color={Colors.white} />
                     <LatoText style={styles.dataText}>{habit.sequence.type} {renderSequenceValue(habit)}</LatoText>
                 </View>
                 <View style={styles.dataItem}>
-                    <Entypo name="clock" size={normalizeHeight(30)} color={Colors.white} />
+                    <Entypo name="clock" size={normalizeHeight(40)} color={Colors.white} />
                     {edit ?
                         <View style={styles.timeContainer}>
                             <View style={styles.time}>
@@ -98,10 +98,10 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                     {
                         edit ?
                             habitEdit.notificationOn
-                                ? <Entypo name="bell" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
-                                : <Entypo name="sound-mute" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
-                            : habit.notificationOn ? <Entypo name="bell" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
-                                : <Entypo name="sound-mute" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
+                                ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
+                                : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
+                            : habit.notificationOn ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
+                                : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.white} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
                     }
                     <View style={{ alignItems: 'center', flexDirection: 'row' }}>
                         <LatoText style={styles.dataText}>Notify </LatoText>
@@ -111,12 +111,12 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                 </View>
 
                 <View style={styles.dataItem}>
-                    <MaterialCommunityIcons name="sigma" size={normalizeHeight(30)} color={Colors.white} />
+                    <MaterialCommunityIcons name="sigma" size={normalizeHeight(40)} color={Colors.white} />
                     <LatoText style={styles.dataText}>{habit.completedHabits.length}</LatoText>
                 </View>
 
                 <View style={styles.dataItem}>
-                    <Entypo name="link" size={normalizeHeight(30)} color={Colors.white} />
+                    <Entypo name="link" size={normalizeHeight(40)} color={Colors.white} />
                     {
                         edit ?
                             <StyledTextInput
@@ -132,7 +132,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                 </View>
 
                 <View style={styles.dataItem}>
-                    <Entypo name="location-pin" size={normalizeHeight(30)} color={Colors.white} />
+                    <Entypo name="location-pin" size={normalizeHeight(40)} color={Colors.white} />
                     {
                         edit ?
                             <StyledTextInput
@@ -148,7 +148,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                 </View>
 
                 <View style={styles.dataItem}>
-                    <Entypo name="text-document" size={normalizeHeight(30)} color={Colors.white} onPress={onShowNotes} />
+                    <Entypo name="text-document" size={normalizeHeight(40)} color={Colors.white} onPress={onShowNotes} />
                     {
                         edit ?
                             <StyledTextInput
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     },
     textInput: {
         fontSize: normalizeHeight(60),
-        color: Colors.white,
+        color: Colors.primary,
         marginLeft: 10,
         borderRadius: 20,
         borderWidth: 1,
@@ -213,7 +213,8 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingTop: 10,
         flex: 1,
-        maxHeight: 100
+        maxHeight: 100,
+        backgroundColor: Colors.veryLightGrey
     },
     bell: {
 

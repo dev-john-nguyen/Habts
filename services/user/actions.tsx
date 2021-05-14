@@ -52,7 +52,8 @@ export const signUp = (email: string, password: string, password2: string) => as
             createdAt: new Date(),
             expiredAt: expiredAt,
             loginAt: utcNow.toJSDate(),
-            subscription: Database.oneMonthFreeTrail
+            subscription: Database.oneMonthFreeTrail,
+            updatedAt: utcNow.toJSDate()
         }
 
         await firestoreDb.collection(Database.Users).doc(userStorage.uid).set(userStorage)
@@ -114,7 +115,8 @@ export const signIn = (email: string, password: string) => async (dispatch: AppD
             createdAt: createdAt.toDate(),
             notificationToken,
             loginAt: updatedAt.toJSDate(),
-            expiredAt: expiredAt.toDate()
+            expiredAt: expiredAt.toDate(),
+            updatedAt: updatedAt.toJSDate()
         }
 
         await firestoreDb.collection(Database.Users).doc(user.uid).set({
@@ -264,17 +266,14 @@ export const subscriptionPurchased = (productId: string, purchaseTime: number, o
     const utcNow = DateTime.fromMillis(purchaseTime).toUTC();
     const expiredAt = DateTime.utc(utcNow.year, utcNow.month + 1, utcNow.day).toJSDate();
 
-    console.log(user.orderId, orderId);
-
     if (user.orderId == orderId) return;
-
-    console.log(`Successfully purchased ${productId}`);
 
     try {
         await firestoreDb.collection(Database.Users).doc(user.uid).set({
             expiredAt,
             subscription: productId,
-            orderId: orderId
+            orderId: orderId,
+            updatedAt: DateTime.utc()
         }, { merge: true })
 
         await AsyncStorage.setItem(user.uid + Database.Users, JSON.stringify({

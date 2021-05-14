@@ -65,9 +65,12 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                     multiline={true}
                     maxLength={Inputs.reviewInputMaxChar}
                     onSubmitEditing={Keyboard.dismiss}
-                /> : <LatoText style={styles.text}>
-                        {item.good}
-                    </LatoText>}
+                /> : <View style={styles.textContainer}>
+                        <LatoText style={styles.text}>
+                            {item.good}
+                        </LatoText>
+                    </View>
+                }
             </View>
 
             <View style={styles.questionContainer}>
@@ -81,9 +84,12 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                     multiline={true}
                     maxLength={Inputs.reviewInputMaxChar}
                     onSubmitEditing={Keyboard.dismiss}
-                /> : <LatoText style={styles.text}>
-                        {item.bad}
-                    </LatoText>}
+                /> : <View style={styles.textContainer}>
+                        <LatoText style={styles.text}>
+                            {item.bad}
+                        </LatoText>
+                    </View>
+                }
             </View>
 
             <View style={styles.questionContainer}>
@@ -97,9 +103,12 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                     multiline={true}
                     onSubmitEditing={Keyboard.dismiss}
                     maxLength={Inputs.reviewInputMaxChar}
-                /> : <LatoText style={styles.text}>
-                        {item.learn}
-                    </LatoText>}
+                /> : <View style={styles.textContainer}>
+                        <LatoText style={styles.text}>
+                            {item.learn}
+                        </LatoText>
+                    </View>
+                }
             </View>
 
             {edit && <StyledPrimaryButton text='Save' onPress={handleSubmit} />}
@@ -113,10 +122,17 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingBottom: 20,
     },
+    textContainer: {
+        borderRadius: 10,
+        backgroundColor: Colors.veryLightGrey,
+        borderWidth: 1,
+        borderColor: Colors.primary,
+        minHeight: 200
+    },
     text: {
         fontSize: normalizeHeight(60),
-        color: Colors.white,
-        padding: 10
+        color: Colors.primary,
+        padding: 10,
     },
     questionContainer: {
         marginBottom: 50
@@ -128,13 +144,14 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     answerInput: {
-        borderRadius: 20,
+        borderRadius: 10,
         borderWidth: 1,
         borderColor: Colors.primary,
         minHeight: 200,
         fontSize: normalizeHeight(60),
         padding: 10,
         paddingTop: 10,
-        color: Colors.white
+        color: Colors.primary,
+        backgroundColor: Colors.veryLightGrey
     }
 })

@@ -19,6 +19,6 @@ function checkItalic(style: any) {
 }
 
 export function LatoText(props: TextProps) {
-  return <Text {...props} style={[props.style, { fontFamily: checkItalic(props.style) }]} />;
+  return <Text {...props} style={[props.style, { fontFamily: checkItalic(props.style), letterSpacing: .9 }]} />;
 }
 

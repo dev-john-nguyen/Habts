@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { View, StyleSheet, Animated, PanResponder, ImageBackground, Easing, PanResponderGestureState, GestureResponderEvent } from 'react-native';
+import { View, StyleSheet, Animated, PanResponder, ImageBackground, Easing } from 'react-native';
 import { AsapText, AsapTextBold } from '../StyledText';
 import Colors from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,6 +8,7 @@ import { Entypo } from '@expo/vector-icons';
 import { CompletedHabitsProps } from '../../services/habits/types';
 import { getDate, getMonthShort } from '../../utils/tools';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
+import Ball from './Ball';
 
 
 //notes: will need to update server/redux every time a user drops a ball into the container!
@@ -23,11 +24,20 @@ interface DropBallJarProps {
 }
 
 const ballsPaddingBottom = normalizeHeight(15);
+const calcJarHeight = (() => {
+    const height = normalizeHeight(1)
+    if (height < 800) {
+        return normalizeHeight(.9)
+    }
+    return normalizeHeight(1)
+})()
 
 export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, activeDay, resetBalls }: DropBallJarProps) => {
     const currentDate = new Date();
     const [balls, setBalls] = useState<CompletedHabitsProps[]>([]);
+    const [innerJarHeight, setInnerJarHeight] = useState<number>(calcJarHeight);
     const [completed, setCompleted] = useState(false);
+    const [enableBall, setEnableBall] = useState(false);
     const ballPositionY: any = useRef(new Animated.Value(0)).current;
     const ballPositionX: any = useRef(new Animated.Value(0)).current;
     const ballZIndex: any = useRef(new Animated.Value(0)).current;
@@ -186,12 +196,29 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
             }
         }
 
-    }, [])
+    }, [resetBalls])
 
     useEffect(() => {
-        if (resetBalls) {
-            dropBalls(resetBalls)
+        setEnableBall(false);
+        setInnerJarHeight(calcJarHeight);
+
+        let timer;
+
+        if (completedHabits.length >= 60) {
+            timer = 6000;
+        } else if (completedHabits.length < 6) {
+            timer = 2000;
+        } else if (completedHabits.length < 12) {
+            timer = 3000;
+        } else {
+            timer = completedHabits.length * 150
         }
+
+        setTimeout(() => {
+            setInnerJarHeight(0);
+            setEnableBall(true);
+        }, timer)
+
     }, [resetBalls])
 
     const handleSpliceBalls = (newBalls: CompletedHabitsProps[]) => {
@@ -222,27 +249,11 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
 
     const addBall = () => handleAddCompletedHabit()
 
-    const dropBalls = (depth: number) => {
-        const toBallY = (ballPositionY._value + ballHeight.current) * depth;
-        Animated.parallel([
-            Animated.timing(jarBallsTransformY, {
-                useNativeDriver: false,
-                toValue: ballHeight.current,
-                duration: 1000
-            }),
-            Animated.timing(ballPositionY, {
-                useNativeDriver: false,
-                toValue: toBallY,
-                duration: 1000
-            })
-        ]).start()
-    }
-
     return (
         <View style={styles.container}>
             <Animated.View style={[styles.ballContainer, { zIndex: ballZIndex }]}>
                 {
-                    !completed && <Animated.View
+                    !completed && enableBall && <Animated.View
                         style={{
                             transform: [{ translateX: ballPositionX }, { translateY: ballPositionY }]
                         }}
@@ -265,7 +276,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                     </Animated.View>
                 }
                 <View style={styles.messageContainer}>
-                    <AsapText style={styles.message}>{quotes.current.quote}</AsapText>
+                    <AsapText style={styles.message}>{!enableBall ? 'filling container' : quotes.current.quote}</AsapText>
                     {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeHeight(20)} color={Colors.white} />}
                 </View>
             </Animated.View>
@@ -294,17 +305,11 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                             flex: 1, flexDirection: 'row',
                             flexWrap: 'wrap-reverse',
                             justifyContent: 'flex-start',
-                            transform: [{ translateY: jarBallsTransformY }]
+                            transform: [{ translateY: jarBallsTransformY }],
+                            height: innerJarHeight ? innerJarHeight : undefined
                         }}>
                             {balls.length > 0 && balls.map((item, index) => (
-                                <View style={[styles.ball]} key={index}>
-                                    <AsapText style={styles.ballText}>{item.dateCompleted.getDate()}</AsapText>
-                                    <AsapText style={styles.ballSubText}>{getMonthShort(item.dateCompleted)}</AsapText>
-                                    <LinearGradient
-                                        colors={[`rgba(255,255,255,.2)`, Colors.secondary, Colors.primary]}
-                                        style={styles.ballGlare}
-                                    />
-                                </View>
+                                <Ball key={index} index={index} jarHeight={styles.jar.height} dateCompleted={item.dateCompleted} resetBalls={resetBalls} />
                             ))}
                         </Animated.View>
                     </View>

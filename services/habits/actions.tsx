@@ -107,21 +107,71 @@ export const addCompletedHabit = (habitDocId: string) => async (dispatch: AppDis
         return;
     }
 
-    const newDate = new Date()
+    let count = 35;
 
-    const { habits, user } = getState();
+    while (0 <= count) {
 
-    const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
+        const date = new Date()
+        var yesterday = new Date(date.getTime());
+        let numDate;
+        let newDate;
+
+        numDate = yesterday.setDate(date.getDate() - count);
+        newDate = new Date(numDate);
+
+        const { habits, user } = getState();
+
+        const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
+
+        await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
+            .then(() => {
+                dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
+            })
+            .catch((err) => {
+                console.log(err)
+                dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
+            })
+
+        count--
+    }
 
 
-    await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
-        .then(() => {
-            dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
-        })
-        .catch((err) => {
-            console.log(err)
-            dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
-        })
+    // const date = new Date()
+    // var yesterday = new Date(date.getTime());
+    // let numDate;
+    // let newDate;
+
+    // numDate = yesterday.setDate(date.getDate() + 5);
+    // newDate = new Date(numDate);
+
+    // const { habits, user } = getState();
+
+    // const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
+
+    // await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
+    //     .then(() => {
+    //         dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
+    //     })
+    //     .catch((err) => {
+    //         console.log(err)
+    //         dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
+    //     })
+
+    // const newDate = new Date()
+
+    // const { habits, user } = getState();
+
+    // const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
+
+
+    // await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
+    //     .then(() => {
+    //         dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
+    //     })
+    //     .catch((err) => {
+    //         console.log(err)
+    //         dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
+    //     })
 }
 
 export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {

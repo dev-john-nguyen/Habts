@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     text: {
-        fontSize: normalizeWidth(20),
+        fontSize: normalizeHeight(45),
         color: Colors.white
     },
     container: {
@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
     bell: {},
     pickerItemStyle: {
-        fontSize: normalizeWidth(10),
+        fontSize: normalizeHeight(30),
         color: Colors.white,
         padding: normalizeWidth(10),
         height: normalizeHeight(30),

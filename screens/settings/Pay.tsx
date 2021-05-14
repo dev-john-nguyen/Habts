@@ -52,36 +52,32 @@ export default () => {
 
     const handleRefresh = () => setRefresh(refresh + 1);
 
-    if (error) {
-        return (
-            <View style={styles.container}>
-                <AsapText style={styles.error}>Error Occured. Please try again.</AsapText>
-                <Pressable onPress={handleRefresh} style={styles.buttons}>
-                    <AsapText style={styles.buttonText}>Refresh</AsapText>
-                </Pressable>
-            </View>
-        )
-    }
+    // if (error) {
+    //     return (
+    //         <View style={styles.container}>
+    //             <AsapText style={styles.error}>Error Occured. Please try again.</AsapText>
+    //             <Pressable onPress={handleRefresh} style={styles.buttons}>
+    //                 <AsapText style={styles.buttonText}>Refresh</AsapText>
+    //             </Pressable>
+    //         </View>
+    //     )
+    // }
 
-    if (loading.com) {
-        return (
-            <View style={styles.container}>
-                <ActivityIndicator size='large' color={Colors.white} />
-            </View>
-        )
-    }
+    // if (loading.com) {
+    //     return (
+    //         <View style={styles.container}>
+    //             <ActivityIndicator size='large' color={Colors.white} />
+    //         </View>
+    //     )
+    // }
 
     return (
         <View style={styles.container}>
             <AsapTextBold style={styles.header}>Subscription Expired</AsapTextBold>
-            <AsapText style={styles.subHeader}>Please subscribe to one of the following. Thanks 😁</AsapText>
+            <AsapText style={styles.subHeader}>Please consider subscribing to support our efforts and to continue to use our service. Thanks 😁</AsapText>
             <AsapText style={styles.info}>If you are unable to access the app after purchase, please try to close and open the app again.</AsapText>
             <Pressable onPress={purchaseMonthly} style={styles.buttons}>
                 <AsapText style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : 'Monthly @ $1.99'}</AsapText>
-            </Pressable>
-
-            <Pressable onPress={purchaseYearly} style={styles.buttons}>
-                <AsapText style={styles.buttonText}>{loading.year ? <ActivityIndicator size='small' color={Colors.white} /> : 'Yearly @ $10.99'}</AsapText>
             </Pressable>
         </View>
     )
@@ -90,14 +86,14 @@ export default () => {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        bottom: 0,
+        top: 0,
         height: normalizeHeight(2.5),
         width: normalizeWidth(1),
         backgroundColor: Colors.primary,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 5,
-        paddingBottom: 20
+        paddingTop: 50
     },
     error: {
         fontSize: normalizeWidth(20),

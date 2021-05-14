@@ -29,12 +29,13 @@ interface HomeProps {
     navigation: HomeScreenNavProp;
     habits: HabitsProps['habits'];
     user: UserProps;
+    archivedHabits: HabitsProps['habits'];
 }
 
 
 //note: to scroll to current position I can see how many habit preview items there are to determine where to scroll to
 
-const Home = ({ navigation, habits, user }: HomeProps) => {
+const Home = ({ navigation, habits, user, archivedHabits }: HomeProps) => {
     const appState = useRef(AppState.currentState);
     const [activeTime, setActiveTime] = useState(0);
     const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([])
@@ -150,7 +151,7 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
         }
     }
 
-    const navToSettings = () => !expired && navigation.navigate('Settings');
+    const navToSettings = () => navigation.navigate('Settings');
 
     const navToHabit = (item: HabitProps) => !expired && navigation.navigate('Habit', { habitDocId: item.docId, activeDay: activeDate.getDate() });
 
@@ -182,7 +183,7 @@ const Home = ({ navigation, habits, user }: HomeProps) => {
                     </View>
                 </View>
                 <View style={styles.headerRightContainer}>
-                    <HomeBadges habits={habits} navigation={navigation} />
+                    <HomeBadges habits={[...habits, ...archivedHabits]} navigation={navigation} />
                 </View>
             </View>
             <View style={styles.notificationContainer}>
@@ -337,6 +338,7 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (state: ReducerStateProps) => ({
     habits: state.habits.habits,
+    archivedHabits: state.habits.archivedHabits,
     user: state.user
 })
 

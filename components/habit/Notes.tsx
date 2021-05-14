@@ -18,8 +18,8 @@ interface Props {
 
 const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
     return (
-        <ScrollView style={styles.container} contentContainerStyle={styles.content}>
-            <Feather name="x" size={normalizeWidth(20)} color={Colors.white} style={styles.x} onPress={onClose} />
+        <ScrollView style={[styles.container]} contentContainerStyle={styles.content}>
+            <Feather name="x" size={normalizeWidth(20)} color={Colors.black} style={styles.x} onPress={onClose} />
             <AsapTextBold style={styles.header}>Notes</AsapTextBold>
             {edit ?
 
@@ -40,35 +40,39 @@ const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        top: normalizeHeight(5),
+        top: normalizeHeight(9),
         maxHeight: normalizeHeight(2),
         width: normalizeWidth(1.1),
         alignSelf: 'center',
-        backgroundColor: Colors.primary,
+        backgroundColor: Colors.veryLightGrey,
         zIndex: 100,
         padding: 20,
-        borderRadius: 20
+        borderRadius: 20,
+        borderColor: Colors.primary,
+        borderWidth: 1
     },
     content: {
 
     },
     text: {
-        color: Colors.white,
+        color: Colors.primary,
         fontSize: normalizeHeight(50)
     },
     header: {
-        color: Colors.white,
+        color: Colors.primary,
         fontSize: normalizeHeight(40),
         alignSelf: 'center',
-        marginBottom: 10
+        marginBottom: 5,
+        marginTop: 10
     },
     x: {
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
+        position: 'absolute'
     },
     textInput: {
         fontSize: normalizeHeight(60),
         maxHeight: normalizeHeight(2),
-        color: Colors.white,
+        color: Colors.primary,
     }
 })
 

@@ -425,7 +425,8 @@ const styles = StyleSheet.create({
         fontSize: normalizeWidth(25),
         padding: 10,
         paddingTop: 10,
-        color: Colors.white,
+        color: Colors.primary,
+        backgroundColor: Colors.veryLightGrey,
         marginTop: 50
     },
     buttonContainer: {

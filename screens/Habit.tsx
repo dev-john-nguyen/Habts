@@ -190,12 +190,15 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
 
                 if (newGoal.count.length < newGoal.goal || i == keys.length - 1) {
                     if (newGoal.count.length < oldGoal.count.length) {
-                        const diff = oldGoal.count.length - newGoal.count.length;
+                        //go to previous goal count
+                        const diff = oldGoal.count.length;
+
                         if (diff < 7) {
                             setResetBalls(1);
                         } else {
-                            const amt = Math.round(diff / 6);
+                            const amt = Math.ceil(diff / 6);
                             setResetBalls(amt ? amt : 1);
+                            setBanner('warning', 'Missed two or more days. Resetting to the previous goal reached.')
                         }
                         return;
                     }
@@ -204,10 +207,13 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
             }
         }
 
+        //if count is over 60 then drop balls at 66
         const consecTotalLen = getTotalConsecutive(newConsec).length;
-        const reminder = consecTotalLen % 6;
-        if (reminder < 1) {
-            setResetBalls(1);
+        if (consecTotalLen > 60) {
+            const reminder = consecTotalLen % 6;
+            if (reminder < 1) {
+                setResetBalls(1);
+            }
         }
     }
 

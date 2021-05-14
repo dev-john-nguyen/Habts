@@ -27,7 +27,7 @@ export default ({ removeBanner, banner }: Props) => {
                 }),
                 Animated.timing(topAdmin, {
                     useNativeDriver: false,
-                    delay: 2500,
+                    delay: 3000,
                     toValue: -120,
                     easing: Easing.inOut(Easing.circle),
                     duration: 500
@@ -52,7 +52,7 @@ export default ({ removeBanner, banner }: Props) => {
             case 'error':
                 return Colors.red;
             default:
-                return Colors.primary;
+                return Colors.veryLightGrey;
         }
     }
 
@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
         zIndex: 120
     },
     messageText: {
-        fontSize: 16,
-        color: Colors.white
+        fontSize: normalizeHeight(55),
+        color: Colors.primary
     }
 })
 
