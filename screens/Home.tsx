@@ -16,9 +16,7 @@ import { DateTime } from 'luxon';
 import Calendar from '../components/Calendar';
 import * as Notifications from 'expo-notifications';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
-import Moon from '../components/Moon';
 import Superman from '../assets/svgs/superman';
-import Layout from '../constants/Layout';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Pay from './settings/Pay';
 import HomeBadges from '../components/badges/HomeBadges';
@@ -164,13 +162,16 @@ const Home = ({ navigation, habits, user, archivedHabits }: HomeProps) => {
     const navToHabitHistory = () => !expired && navigation.navigate('HabitHistory');
 
     const renderReviewTxt = () => {
-        const daysTilReview = getDateDiffInDays(calcMonthsInAdvance(DateTime.fromJSDate(user.createdAt), 1), DateTime.now());
-        const { days, text, months } = daysTilReview;
+        // const daysTilReview = getDateDiffInDays(calcMonthsInAdvance(DateTime.fromJSDate(user.createdAt), 1), DateTime.now());
+        // const { days, text, months } = daysTilReview;
 
-        if ((days && days < 1) || (months && months < 2)) {
-            return "Take some time today to reflect.";
-        }
-        return text + ' until next review.';
+        // if ((!days || days < 1) && (months)) {
+        //     return "Take some time today to reflect.";
+        // }
+
+        // return text + ' until next review.';
+
+        return "Take some time today to reflect.";
     }
 
     return (

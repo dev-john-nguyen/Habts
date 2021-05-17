@@ -162,8 +162,9 @@ export function isValidTime(t: Time) {
 export function formatTimeForNotification(t: Time) {
     //get date
     // add 5 minutes to every time...
-    const dateNow = DateTime.now()
-    const dateUTC = DateTime.local(dateNow.year, dateNow.month, dateNow.day, t.hour, t.minute + 5).toUTC()
+    const d = new Date()
+    const updatedJSDate = new Date(d.getFullYear(), d.getMonth(), d.getDate(), t.hour, t.minute + 5);
+    const dateUTC = DateTime.fromJSDate(updatedJSDate).toUTC();
 
     const minStr = dateUTC.minute < 10 ? ('0' + dateUTC.minute) : dateUTC.minute
     const hourStr = dateUTC.hour < 10 ? ('0' + dateUTC.hour) : dateUTC.hour

@@ -32,7 +32,7 @@ const Subscription = ({ user }: { user: UserProps }) => {
             </View>
 
             <View style={styles.section}>
-                <AsapText style={styles.headerText}>Subscription Expiration Date:</AsapText>
+                <AsapText style={styles.headerText}>Subscription Expiration Date (will update on renewal date):</AsapText>
                 <AsapTextBold style={styles.text}>{expiredAt.toFormat('LLL dd yyyy')}</AsapTextBold>
             </View>
 
