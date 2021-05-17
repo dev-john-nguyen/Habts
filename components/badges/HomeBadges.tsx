@@ -56,8 +56,7 @@ const styles = StyleSheet.create({
     },
     star: {
         alignItems: 'center',
-        marginLeft: 5,
-        width: normalizeHeight(19)
+        width: normalizeHeight(17)
     },
     infoContainer: {
         flexDirection: 'row',

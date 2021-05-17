@@ -65,17 +65,17 @@ export function getDateDiffInDays(a: DateTime, b: DateTime) {
     const diffObj = a.diff(b, ['months', 'days']).toObject()
 
     let resString = ''
+    const { months, days } = diffObj;
 
     if (diffObj) {
-        const { months, days } = diffObj;
         if (months) {
-            resString = months + ' months(s) and ' + Math.ceil(days ? days : 0) + ' day(s)';
+            resString = months + ' month(s) and ' + Math.ceil(days ? days : 0) + ' day(s)';
         } else {
             resString = Math.ceil(days ? days : 0) + ' day(s)';
         }
     }
 
-    return resString
+    return { text: resString, months, days }
 }
 
 export function daysInMonth(month: number, year: number) {

@@ -3,7 +3,7 @@ import { View, StyleSheet } from 'react-native';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { normalizeWidth, normalizeHeight } from '../../utils/styles';
-import { AsapText } from '../StyledText';
+import { AsapText, AsapTextBold } from '../StyledText';
 import { HabitProps } from '../../services/habits/types';
 
 interface Props {
@@ -15,9 +15,13 @@ interface Props {
 }
 
 const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
+    const [showInfo, setShowInfo] = useState(false);
+
     const goalKeys = Object.keys(consecutive);
 
+
     const mappedBadges = [];
+    let fourStars = true;
 
     //should be order
     for (let i = 0; i < goalKeys.length - 1; i++) {
@@ -31,39 +35,42 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
                     <AsapText style={[styles.text, { color: color }]} numberOfLines={1}>{name ? name : total}</AsapText>
                 </View>
             )
-        }
-    }
-
-    if (mappedBadges.length < 1 && infoText) {
-        return (
-            <View style={styles.stars}>
-                <View style={styles.info} key={mappedBadges.length + 1}>
-                    <Entypo name="info-with-circle" size={normalizeWidth(30)} color={Colors.white} />
-                    <AsapText style={styles.emptyText}> {infoText}</AsapText>
+        } else {
+            fourStars = false;
+            mappedBadges.push(
+                <View style={styles.nextGoalContainer} key={i}>
+                    <AsapTextBold style={styles.nextGoal} numberOfLines={1}>{count.length}<AsapText style={styles.nextGoal}> / {goal}</AsapText></AsapTextBold>
                 </View>
-            </View>
-        )
+            )
+            break;
+        }
     }
 
     if (home) {
         //display the last badge completed
         return (
-            <View style={styles.stars}>
-                {mappedBadges[mappedBadges.length - 1]}
+            <View style={styles.content}>
+                {mappedBadges[mappedBadges.length - (fourStars ? 1 : 2)]}
             </View>
         )
     }
 
     return (
-        <View style={styles.stars}>
-            {mappedBadges}
+        <View style={styles.container}>
+            <View style={styles.content}>
+                {mappedBadges}
+            </View>
         </View>
     )
 }
 
 const styles = StyleSheet.create({
-    stars: {
+    container: {
+        alignSelf: 'flex-start',
+    },
+    content: {
         flexDirection: 'row',
+        margin: 2,
         alignSelf: 'flex-start',
         alignItems: 'center'
     },
@@ -75,6 +82,14 @@ const styles = StyleSheet.create({
     star: {
         marginLeft: 5,
         alignItems: 'center'
+    },
+    nextGoalContainer: {
+        marginLeft: 10,
+        bottom: 5
+    },
+    nextGoal: {
+        fontSize: normalizeHeight(60),
+        color: Colors.white
     },
     text: {
         fontSize: normalizeHeight(80)

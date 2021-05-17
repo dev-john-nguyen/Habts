@@ -6,7 +6,7 @@ import { realtimeDb } from "../../firebase";
 import Database from "../../constants/Database";
 import { ReducerStateProps } from "..";
 import { ADD_HABIT, ADD_COMPLETED_HABIT, UPDATE_HABIT, ARCHIVE_HABIT } from "./actionTypes";
-import { processArchiveHabit, saveNotificationData, orderAndFormatHabits, handleCompletedHabit } from "./utils";
+import { processArchiveHabit, saveNotificationData, orderAndFormatHabits, handleCompletedHabit, removeNotification } from "./utils";
 import { isInvalidTime, convertTimeToInt, formatTimeForNotification } from "../../utils/tools";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AutoId } from "../../utils/styles";
@@ -107,71 +107,21 @@ export const addCompletedHabit = (habitDocId: string) => async (dispatch: AppDis
         return;
     }
 
-    let count = 35;
+    const newDate = new Date()
 
-    while (0 <= count) {
+    const { habits, user } = getState();
 
-        const date = new Date()
-        var yesterday = new Date(date.getTime());
-        let numDate;
-        let newDate;
-
-        numDate = yesterday.setDate(date.getDate() - count);
-        newDate = new Date(numDate);
-
-        const { habits, user } = getState();
-
-        const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
-
-        await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
-            .then(() => {
-                dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
-            })
-            .catch((err) => {
-                console.log(err)
-                dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
-            })
-
-        count--
-    }
+    const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
 
 
-    // const date = new Date()
-    // var yesterday = new Date(date.getTime());
-    // let numDate;
-    // let newDate;
-
-    // numDate = yesterday.setDate(date.getDate() + 5);
-    // newDate = new Date(numDate);
-
-    // const { habits, user } = getState();
-
-    // const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
-
-    // await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
-    //     .then(() => {
-    //         dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
-    //     })
-    //     .catch((err) => {
-    //         console.log(err)
-    //         dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
-    //     })
-
-    // const newDate = new Date()
-
-    // const { habits, user } = getState();
-
-    // const updatedHabitsStore = handleCompletedHabit([...habits.habits], { habitDocId, newDate });
-
-
-    // await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
-    //     .then(() => {
-    //         dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
-    //     })
-    //     .catch((err) => {
-    //         console.log(err)
-    //         dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
-    //     })
+    await AsyncStorage.setItem(user.uid + Database.Habits, JSON.stringify(updatedHabitsStore))
+        .then(() => {
+            dispatch({ type: ADD_COMPLETED_HABIT, payload: updatedHabitsStore })
+        })
+        .catch((err) => {
+            console.log(err)
+            dispatch(setBanner('error', "Sorry, looks like we are having trouble saving your completed habit. Keep going tho!"))
+        })
 }
 
 export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
@@ -314,10 +264,7 @@ export const archiveHabit = (docId: string) => async (dispatch: AppDispatch, get
         if (archivedHabit && archivedHabit.notificationOn) {
             const state = await NetInfo.fetch();
             if (state.isConnected) {
-                let timeString = formatTimeForNotification(archivedHabit.startTime)
-                const baseRef = Database.NotificationRealDb.habits;
-                const habitTimeRef = `${baseRef}/${timeString}/${uid}`;
-                await realtimeDb.ref(habitTimeRef).remove()
+                await removeNotification(archivedHabit.startTime, uid, archivedHabit.docId)
             } else {
                 throw new Error('No connected to internet')
             }

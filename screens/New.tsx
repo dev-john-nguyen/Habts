@@ -17,7 +17,7 @@ import { isInvalidTime } from '../utils/tools';
 import { emptyHabitEdit, emptyHabitExtra } from './utils';
 import SequenceForm from './new/SequenceForm';
 import TimeForm from './new/TimeForm';
-import ProgressRunner from './new/ProgressRunner';
+import ProgressAvatar from './new/ProgressAvatar';
 import BottomSvg from '../assets/svgs/bottom';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import NotificationForm from './new/NotificationForm';
@@ -382,7 +382,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
             <View style={styles.bottomSvg}>
                 <BottomSvg />
             </View>
-            <ProgressRunner step={step} />
+            <ProgressAvatar step={step} />
         </>
     )
 }

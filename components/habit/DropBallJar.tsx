@@ -35,9 +35,9 @@ const calcJarHeight = (() => {
 export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, activeDay, resetBalls }: DropBallJarProps) => {
     const currentDate = new Date();
     const [balls, setBalls] = useState<CompletedHabitsProps[]>([]);
-    const [innerJarHeight, setInnerJarHeight] = useState<number>(calcJarHeight);
+    const [innerJarHeight, setInnerJarHeight] = useState<number>(0);
     const [completed, setCompleted] = useState(false);
-    const [enableBall, setEnableBall] = useState(false);
+    const [enableBall, setEnableBall] = useState(true);
     const ballPositionY: any = useRef(new Animated.Value(0)).current;
     const ballPositionX: any = useRef(new Animated.Value(0)).current;
     const ballZIndex: any = useRef(new Animated.Value(0)).current;
@@ -49,6 +49,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
     const jarBallsWidth = useRef(0);
     const jarBallsTransformY = useRef(new Animated.Value(0)).current;
     const quotes = useRef({ thumb: false, quote: 'One day at a time!' });
+    const mount = useRef(false);
 
     const panResponder = PanResponder.create({
         onMoveShouldSetPanResponder: (e, gestureState) => true,
@@ -148,7 +149,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                 useNativeDriver: false
             }),
         ]).start(() => {
-            addBall()
+            handleAddCompletedHabit()
         })
 
         quotes.current = {
@@ -176,7 +177,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                 setCompleted(true);
                 quotes.current = {
                     thumb: true,
-                    quote: 'Today has been completed! Good job!'
+                    quote: "Today's already been completed."
                 }
             }
 
@@ -192,33 +193,41 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
             setCompleted(true);
             quotes.current = {
                 thumb: false,
-                quote: "Go back to today to complete your habit!"
+                quote: "Go back to today to complete your habit."
             }
         }
 
     }, [resetBalls])
 
     useEffect(() => {
-        setEnableBall(false);
-        setInnerJarHeight(calcJarHeight);
+        if (mount.current) {
+            setEnableBall(false);
+            setInnerJarHeight(calcJarHeight);
 
-        let timer;
+            let timer = 0;
 
-        if (completedHabits.length >= 60) {
-            timer = 6000;
-        } else if (completedHabits.length < 6) {
-            timer = 2000;
-        } else if (completedHabits.length < 12) {
-            timer = 3000;
+            const result = Math.ceil(completedHabits.length / 6);
+            const habitsLen = completedHabits.length;
+            if (habitsLen < 1) {
+                setInnerJarHeight(0);
+                setEnableBall(true);
+                return;
+            }
+            timer = habitsLen < 7 ? 2000 : habitsLen >= 60 ? 6000 : ((result * 700) + 2000);
+
+            setTimeout(() => {
+                if (mount.current) {
+                    setInnerJarHeight(0);
+                    setEnableBall(true);
+                }
+            }, timer)
         } else {
-            timer = completedHabits.length * 150
+            mount.current = true
         }
 
-        setTimeout(() => {
-            setInnerJarHeight(0);
-            setEnableBall(true);
-        }, timer)
-
+        return () => {
+            mount.current = false;
+        }
     }, [resetBalls])
 
     const handleSpliceBalls = (newBalls: CompletedHabitsProps[]) => {
@@ -247,8 +256,6 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
         }
     }
 
-    const addBall = () => handleAddCompletedHabit()
-
     return (
         <View style={styles.container}>
             <Animated.View style={[styles.ballContainer, { zIndex: ballZIndex }]}>
@@ -276,7 +283,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                     </Animated.View>
                 }
                 <View style={styles.messageContainer}>
-                    <AsapText style={styles.message}>{!enableBall ? 'filling container' : quotes.current.quote}</AsapText>
+                    <AsapText style={styles.message}>{!enableBall ? 'Refilling Jar' : quotes.current.quote}</AsapText>
                     {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeHeight(20)} color={Colors.white} />}
                 </View>
             </Animated.View>
@@ -287,7 +294,9 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                     jarHeight.current = height
                 })}
             >
-                <AsapText style={styles.count}>count: <AsapTextBold style={styles.count}>{completedHabits.length}</AsapTextBold></AsapText>
+                <View style={styles.progressInfo}>
+                    <AsapText style={styles.progressInfoText}>count: <AsapTextBold style={styles.progressInfoText}>{completedHabits.length}</AsapTextBold></AsapText>
+                </View>
                 <ImageBackground
                     style={styles.jarBallsContainer}
                     source={require('../../assets/svgs/jar.png')}
@@ -329,12 +338,14 @@ const styles = StyleSheet.create({
         height: normalizeHeight(5),
         alignItems: 'center',
     },
-    count: {
-        color: Colors.white,
-        fontSize: normalizeWidth(30),
+    progressInfo: {
         position: 'absolute',
         right: normalizeWidth(20),
         top: -normalizeHeight(10)
+    },
+    progressInfoText: {
+        color: Colors.white,
+        fontSize: normalizeWidth(30),
     },
     ballGlare: {
         position: 'absolute',

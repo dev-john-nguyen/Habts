@@ -163,6 +163,16 @@ const Home = ({ navigation, habits, user, archivedHabits }: HomeProps) => {
 
     const navToHabitHistory = () => !expired && navigation.navigate('HabitHistory');
 
+    const renderReviewTxt = () => {
+        const daysTilReview = getDateDiffInDays(calcMonthsInAdvance(DateTime.fromJSDate(user.createdAt), 1), DateTime.now());
+        const { days, text, months } = daysTilReview;
+
+        if ((days && days < 1) || (months && months < 2)) {
+            return "Take some time today to reflect.";
+        }
+        return text + ' until next review.';
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.superman}>
@@ -189,7 +199,7 @@ const Home = ({ navigation, habits, user, archivedHabits }: HomeProps) => {
             <View style={styles.notificationContainer}>
                 <View style={styles.notificationContent}>
                     <FontAwesome name="file-text" size={normalizeWidth(20)} color={Colors.white} onPress={navToReview} />
-                    <LatoText style={styles.reviewText}>{getDateDiffInDays(calcMonthsInAdvance(DateTime.fromJSDate(user.createdAt), 1), DateTime.now())} until next review</LatoText>
+                    <LatoText style={styles.reviewText}>{renderReviewTxt()}</LatoText>
                 </View>
             </View>
             <View style={styles.listTitleContainer}>
@@ -241,10 +251,10 @@ const styles = StyleSheet.create({
     },
     superman: {
         position: 'absolute',
-        top: Layout.window.height / 2,
+        top: normalizeHeight(2),
         right: 10,
-        height: Layout.window.width / 4,
-        width: Layout.window.width / 4,
+        height: normalizeHeight(10),
+        width: normalizeHeight(10),
         transform: [{ rotate: '-45deg' }]
     },
     dayContainer: {

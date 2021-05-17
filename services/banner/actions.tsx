@@ -1,5 +1,4 @@
 import { SET_BANNER, REMOVE_BANNER } from "./actionTypes";
-import { AppDispatch } from "../../App";
 
 export function setBanner(type: string, message: string) {
     return {

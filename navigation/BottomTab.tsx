@@ -156,9 +156,9 @@ const styles = StyleSheet.create({
     },
     stargaze: {
         position: 'absolute',
-        height: Layout.window.width / 4,
-        width: Layout.window.width / 4,
-        top: -(Layout.window.width / 4.3),
+        height: normalizeHeight(10),
+        width: normalizeHeight(10),
+        top: -normalizeHeight(10.9),
         left: 70
     },
     menu: {

@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
         fontSize: normalizeHeight(60),
         color: Colors.veryLightGrey,
         textDecorationLine: 'line-through',
-        alignSelf: 'flex-start'
+        alignSelf: 'flex-end'
     },
     data: {
         marginTop: 10,

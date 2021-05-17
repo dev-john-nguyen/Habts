@@ -114,3 +114,9 @@ export async function saveNotificationData(habit: HabitProps, uid: string, notif
 
     return realtimeDb.ref().update(timesRef)
 }
+
+export async function removeNotification(previousTime: Time, uid: string, docId: string) {
+    const prevTimeString = formatTimeForNotification(previousTime)
+    const removeRef = `${Database.NotificationRealDb.habits}/${prevTimeString}/${uid}/${docId}`;
+    await realtimeDb.ref(removeRef).remove()
+}

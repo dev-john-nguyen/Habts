@@ -14,27 +14,33 @@ interface Props {
 }
 
 export default ({ index, jarHeight, dateCompleted, resetBalls }: Props) => {
-    const ballPositionY: any = useRef(new Animated.Value(-jarHeight)).current;
+    const ballPositionY: any = useRef(new Animated.Value(0)).current;
     const ballPositionX: any = useRef(new Animated.Value(0)).current;
+    const mount = useRef(false);
 
     useEffect(() => {
-        ballPositionY.setValue(-jarHeight);
-        ballPositionX.setValue(0);
-        Animated.parallel([
-            Animated.timing(ballPositionX, {
-                toValue: 0,
-                delay: index * 50,
-                duration: 2000,
-                useNativeDriver: false
-            }),
-            Animated.timing(ballPositionY, {
-                toValue: 0,
-                delay: index * 50,
-                duration: 2000,
-                easing: Easing.bounce,
-                useNativeDriver: false
-            })
-        ]).start()
+        if (mount.current) {
+            ballPositionY.setValue(-jarHeight);
+            ballPositionX.setValue(0);
+            Animated.parallel([
+                Animated.timing(ballPositionX, {
+                    toValue: 0,
+                    delay: index * 50,
+                    duration: 2000,
+                    useNativeDriver: false
+                }),
+                Animated.timing(ballPositionY, {
+                    toValue: 0,
+                    delay: index * 50,
+                    duration: 2000,
+                    easing: Easing.bounce,
+                    useNativeDriver: false
+                })
+            ]).start()
+        } else {
+            mount.current = true
+        }
+
     }, [resetBalls])
 
     return (

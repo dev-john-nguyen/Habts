@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
         height: normalizeHeight(19)
     },
     runner: {
-        height: normalizeWidth(4),
-        width: normalizeWidth(4),
+        height: normalizeHeight(9),
+        width: normalizeHeight(9),
         transform: [{ scaleX: -1 }, { rotate: '-80deg' }],
         top: normalizeHeight(5)
     },
