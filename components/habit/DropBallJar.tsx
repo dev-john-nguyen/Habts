@@ -177,7 +177,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                 setCompleted(true);
                 quotes.current = {
                     thumb: true,
-                    quote: "Today's already been completed."
+                    quote: "You completed today's task."
                 }
             }
 

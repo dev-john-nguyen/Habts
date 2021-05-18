@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { View, StyleSheet, ActivityIndicator } from 'react-native'
+import { View, StyleSheet, ActivityIndicator, Pressable } from 'react-native'
 import Colors from '../constants/Colors';
 import { Entypo } from '@expo/vector-icons';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -22,6 +22,7 @@ import ShootingStars from '../components/shootingstars';
 import Notes from '../components/habit/Notes';
 import CongratsStar from '../components/congrats/Star';
 import { cloneDeep, isEqual } from 'lodash';
+import { AsapText } from '../components/StyledText';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
 type HabitComRouteProps = RouteProp<RootStackParamList, 'Habit'>
@@ -47,6 +48,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
     const [showNotes, setShowNotes] = useState(false);
     const [resetBalls, setResetBalls] = useState(0);
     const [congratsIndex, setCongratsIndex] = useState<number>();
+    const [showInfo, setShowInfo] = useState(false);
     const mount = useRef(false);
 
     useLayoutEffect(() => {
@@ -261,6 +263,10 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                     showNotes={showNotes}
                     setShowNotes={setShowNotes}
                 />
+                <Pressable style={styles.infoContainer} onPress={() => setShowInfo(showInfo ? false : true)} hitSlop={2}>
+                    <Entypo name="info-with-circle" size={normalizeHeight(60)} color={Colors.white} onPress={() => setShowInfo(showInfo ? false : true)} />
+                    {showInfo && <AsapText style={styles.text}>If miss more than one day, the jar will reset to previous goal met.</AsapText>}
+                </Pressable>
                 <View style={styles.habit}>
                     <DropBallJar
                         setScrollEnabled={setScrollEnabled}
@@ -339,10 +345,15 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    dataText: {
-        fontSize: 12,
-        color: Colors.black,
+    infoContainer: {
+        width: '50%',
+        flexDirection: 'row',
         marginLeft: 10
+    },
+    text: {
+        fontSize: normalizeHeight(60),
+        color: Colors.veryLightGrey,
+        marginLeft: 5
     },
     habit: {
         flex: 1

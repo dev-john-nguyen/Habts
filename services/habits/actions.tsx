@@ -2,7 +2,6 @@ import NetInfo from "@react-native-community/netinfo";
 import { AppDispatch } from "../../App";
 import { NewHabitProps, HabitEditProps, TimeDataProps, SequenceType } from "./types";
 import { setBanner } from "../banner/actions";
-import { realtimeDb } from "../../firebase";
 import Database from "../../constants/Database";
 import { ReducerStateProps } from "..";
 import { ADD_HABIT, ADD_COMPLETED_HABIT, UPDATE_HABIT, ARCHIVE_HABIT } from "./actionTypes";
@@ -264,7 +263,7 @@ export const archiveHabit = (docId: string) => async (dispatch: AppDispatch, get
         if (archivedHabit && archivedHabit.notificationOn) {
             const state = await NetInfo.fetch();
             if (state.isConnected) {
-                await removeNotification(archivedHabit.startTime, uid, archivedHabit.docId)
+                await removeNotification(archivedHabit.notificationTime, uid, archivedHabit.docId)
             } else {
                 throw new Error('No connected to internet')
             }
