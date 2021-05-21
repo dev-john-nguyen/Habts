@@ -37,7 +37,8 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
     const [balls, setBalls] = useState<CompletedHabitsProps[]>([]);
     const [innerJarHeight, setInnerJarHeight] = useState<number>(0);
     const [completed, setCompleted] = useState(false);
-    const [enableBall, setEnableBall] = useState(true);
+    const [showBall, setShowBall] = useState(true);
+    const [enableTouchBall, setEnableTouchBall] = useState(true);
     const ballPositionY: any = useRef(new Animated.Value(0)).current;
     const ballPositionX: any = useRef(new Animated.Value(0)).current;
     const ballZIndex: any = useRef(new Animated.Value(0)).current;
@@ -52,7 +53,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
     const mount = useRef(false);
 
     const panResponder = PanResponder.create({
-        onMoveShouldSetPanResponder: (e, gestureState) => true,
+        onStartShouldSetPanResponderCapture: () => enableTouchBall,
         onPanResponderGrant: () => {
             setScrollEnabled(false)
 
@@ -71,6 +72,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
         ,
         onPanResponderRelease: (evt, gestureState) => {
             if (ballPositionY._value > jarYOffSet.current) {
+                setEnableTouchBall(false)
                 handleDropBallAction(gestureState.moveX)
             } else {
                 Animated.parallel([
@@ -86,7 +88,6 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
 
                 quotes.current.quote = 'Almost got it!'
             }
-
             setScrollEnabled(true)
         }
     })
@@ -163,7 +164,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
 
     useEffect(() => {
         ballResponder.current = panResponder;
-    }, [balls])
+    }, [balls, enableTouchBall])
 
     useEffect(() => {
         if (completedHabits && completedHabits.length > 0) {
@@ -201,7 +202,9 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
 
     useEffect(() => {
         if (mount.current) {
-            setEnableBall(false);
+            //this already has the completed item in jar.
+            console.log('hiding')
+            setShowBall(false);
             setInnerJarHeight(calcJarHeight);
 
             let timer = 0;
@@ -210,7 +213,6 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
             const habitsLen = completedHabits.length;
             if (habitsLen < 1) {
                 setInnerJarHeight(0);
-                setEnableBall(true);
                 return;
             }
             timer = habitsLen < 7 ? 2000 : habitsLen >= 60 ? 6000 : ((result * 700) + 2000);
@@ -218,7 +220,6 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
             setTimeout(() => {
                 if (mount.current) {
                     setInnerJarHeight(0);
-                    setEnableBall(true);
                 }
             }, timer)
         } else {
@@ -260,7 +261,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
         <View style={styles.container}>
             <Animated.View style={[styles.ballContainer, { zIndex: ballZIndex }]}>
                 {
-                    !completed && enableBall && <Animated.View
+                    !completed && showBall && <Animated.View
                         style={{
                             transform: [{ translateX: ballPositionX }, { translateY: ballPositionY }]
                         }}
@@ -283,7 +284,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                     </Animated.View>
                 }
                 <View style={styles.messageContainer}>
-                    <AsapText style={styles.message}>{!enableBall ? 'Refilling Jar' : quotes.current.quote}</AsapText>
+                    <AsapText style={styles.message}>{!showBall ? 'Refilling Jar' : quotes.current.quote}</AsapText>
                     {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeHeight(20)} color={Colors.white} />}
                 </View>
             </Animated.View>
@@ -370,7 +371,6 @@ const styles = StyleSheet.create({
         color: Colors.white,
         marginLeft: 10,
         marginBottom: 20,
-        textTransform: 'capitalize',
         textAlign: 'center'
     },
     jar: {

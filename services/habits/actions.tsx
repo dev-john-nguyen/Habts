@@ -197,22 +197,36 @@ export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: Ap
         ...updatedHabit
     }
 
-    if (updateNotificationData && updatedHabit.notificationOn) {
-        try {
-            const state = await NetInfo.fetch();
+    const state = await NetInfo.fetch();
+    const warningMsg = "Unable to update notification data. Please check your mobile connection"
 
+    if (originalHabit.notificationOn && !updatedHabit.notificationOn) {
+        //notification was turned off, so remove notification
+        try {
+            if (state.isConnected) {
+                await removeNotification(originalHabit.notificationTime, uid, originalHabit.docId)
+            } else {
+                notificationWarning = warningMsg;
+                habits[habitIndex].notificationOn = true
+            }
+        } catch (err) {
+            console.log(err)
+            notificationWarning = warningMsg;
+            habits[habitIndex].notificationOn = true;
+        }
+    } else if (updateNotificationData && updatedHabit.notificationOn) {
+        try {
             if (state.isConnected) {
                 await saveNotificationData(habits[habitIndex], uid, notificationToken, originalHabit.notificationTime);
             } else {
-                notificationWarning = "Unable to turn on notification. Looks like your offline.";
+                notificationWarning = warningMsg;
                 habits[habitIndex].notificationOn = false
             }
         } catch (err) {
             console.log(err)
-            notificationWarning = "Unable to turn on notification. Please check your mobile connection.";
+            notificationWarning = warningMsg;
             habits[habitIndex].notificationOn = false;
         }
-
     }
 
     const updatedHabits = orderAndFormatHabits(habits);

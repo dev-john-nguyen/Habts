@@ -40,6 +40,12 @@ export class ConsecutiveTools {
             }
 
             if (count.length < goal) {
+
+                //check if day already exists
+                const duplicate = count.find(item => this.datesAreOnSameDay(item.dateCompleted, newCompletedHabit))
+                //duplicate item break from loop
+                if (duplicate) break;
+
                 //check consecutive
                 //make sure there's an item
                 if (count.length < 2) {
