@@ -102,7 +102,6 @@ export async function saveNotificationData(habit: HabitProps, uid: string, notif
 
     timesRef[habitTimeRef] = habit.notificationOn ? {
         name: habit.name,
-        cue: habit.cue,
         notificationTime: habit.notificationTime.date,
         notificationTotalMins: habit.notificationTime.totalMins,
         notificationToken,
