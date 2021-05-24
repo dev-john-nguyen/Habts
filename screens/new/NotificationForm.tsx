@@ -27,8 +27,8 @@ export default ({ notificationNum, notificationOn, setNotificationOn, setNotific
 
                 {
                     notificationOn
-                        ? <Entypo name="bell" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => setNotificationOn(false)} />
-                        : <Entypo name="sound-mute" size={normalizeHeight(30)} color={Colors.white} style={styles.bell} onPress={() => setNotificationOn(true)} />
+                        ? <Entypo name="bell" size={normalizeHeight(35)} color={Colors.white} style={styles.bell} onPress={() => setNotificationOn(false)} />
+                        : <Entypo name="sound-mute" size={normalizeHeight(35)} color={Colors.white} style={styles.bell} onPress={() => setNotificationOn(true)} />
                 }
 
                 <Picker

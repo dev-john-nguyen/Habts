@@ -1,10 +1,11 @@
 import { firestoreDb } from "../../firebase";
 import Database from '../../constants/Database';
 import firebase from 'firebase';
-import { HabitProps } from "../habits/types";
+import { HabitProps, Time } from "../habits/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ReviewProps } from "../reviews/types";
 import { UserProps } from "./types";
+import { DateTime } from "luxon";
 
 const serverTimestamp = firebase.firestore.FieldValue.serverTimestamp()
 
@@ -13,6 +14,31 @@ function convertCompletedHabitsDate(dates: HabitProps['completedHabits']) {
     return dates.map((date: any) => {
         return { dateCompleted: date.dateCompleted.toDate() }
     })
+}
+
+function convertToCurrentZone(d: any): Time {
+    //date is a string
+    const luxNow = DateTime.now();
+
+    const storedDate = DateTime.fromISO(d.date, { zone: d.zoneName });
+
+    if (!storedDate.isValid) {
+        d.date = new Date(d.date);
+        return d;
+    }
+
+    const updatedDate = storedDate.setZone(luxNow.zoneName);
+
+    if (!updatedDate.isValid) {
+        d.date = new Date(d.date);
+        return d;
+    }
+
+    d.date = updatedDate.toJSDate();
+    d.hour = updatedDate.hour;
+    d.minute = updatedDate.minute
+
+    return d
 }
 
 export async function fetchUserData(uid: string, email: string | null) {
@@ -102,8 +128,8 @@ function convertHabitDates(habitsStorage: HabitProps[]) {
     habitsStorage.forEach(habit => {
         habit.startDate = new Date(habit.startDate);
         habit.endDate = new Date(habit.endDate);
-        habit.endTime.date = new Date(habit.endTime.date);
-        habit.startTime.date = new Date(habit.startTime.date);
+        habit.endTime = convertToCurrentZone(habit.endTime);
+        habit.startTime = convertToCurrentZone(habit.startTime);
         habit.createdAt = new Date(habit.createdAt);
         habit.archivedAt = habit.archivedAt ? new Date(habit.archivedAt) : habit.archivedAt;
         habit.completedHabits.forEach((d, i) => habit.completedHabits[i] = { dateCompleted: new Date(d.dateCompleted) });

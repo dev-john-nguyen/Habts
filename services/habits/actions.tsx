@@ -10,6 +10,7 @@ import { isInvalidTime, convertTimeToInt, formatTimeForNotification } from "../.
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AutoId } from "../../utils/styles";
 import { dailyGoals, otherGoals } from "./utils/variables";
+import { DateTime } from "luxon";
 
 export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
     let k: keyof NewHabitProps;
@@ -78,7 +79,9 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
     const { habits } = getState().habits;
 
     //add the new habit to store
-    const updatedHabits = orderAndFormatHabits([...habits, newHabit])
+    const updatedHabits = orderAndFormatHabits([...habits, newHabit]);
+
+    console.log(updatedHabits)
 
     await AsyncStorage.setItem(uid + Database.Habits, JSON.stringify(updatedHabits))
         .then(() => {
@@ -182,6 +185,7 @@ export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: Ap
             date: updatedNotificationDate,
             hour: updatedNotificationDate.getHours(),
             minute: updatedNotificationDate.getMinutes(),
+            zoneName: DateTime.now().zoneName,
             totalMins: updatedHabit.notificationTime.totalMins
         }
 

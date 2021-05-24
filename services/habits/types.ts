@@ -14,6 +14,7 @@ export interface Time {
     date: Date;
     hour: number;
     minute: number;
+    zoneName: string;
 }
 
 export interface HabitEditProps {

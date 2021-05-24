@@ -13,6 +13,7 @@ import { Picker } from '@react-native-picker/picker';
 import { arrayOfNums } from '../../screens/utils';
 import HabitBadges from '../badges/HabitBadges';
 import Inputs from '../../constants/Inputs';
+import { DateTime } from 'luxon';
 
 interface HabitHeader {
     habit: HabitProps;
@@ -25,6 +26,8 @@ interface HabitHeader {
 
 
 export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes }: HabitHeader) => {
+
+    const luxNow = DateTime.now()
 
     const renderNotificationEdit = () => {
         if (edit) {
@@ -72,7 +75,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                                     mode='time'
                                     is24Hour={true}
                                     display="default"
-                                    onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, startTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes() } })}
+                                    onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, startTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes(), zoneName: luxNow.zoneName } })}
                                     style={styles.datePicker}
                                 />
                             </View>
@@ -84,7 +87,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
                                     mode='time'
                                     is24Hour={true}
                                     display="default"
-                                    onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, endTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes() } })}
+                                    onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, endTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes(), zoneName: luxNow.zoneName } })}
                                     style={styles.datePicker}
                                     children
                                 />
@@ -172,7 +175,7 @@ export default ({ habit, edit, setHabitEdit, habitEdit, setShowNotes, showNotes 
 const styles = StyleSheet.create({
     container: {
         paddingLeft: 20,
-        paddingRight: 20,
+        paddingRight: 20
     },
     header: {
         alignItems: 'center'
@@ -233,7 +236,7 @@ const styles = StyleSheet.create({
     },
     data: {
         marginTop: 10,
-        marginBottom: 20,
+        marginBottom: 20
     },
     dataItem: {
         flexDirection: 'row',

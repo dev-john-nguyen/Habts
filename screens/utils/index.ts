@@ -7,12 +7,14 @@ export const emptyHabitEdit: HabitEditProps = {
     startTime: {
         date: currentDate,
         hour: 0,
-        minute: 0
+        minute: 0,
+        zoneName: ''
     },
     endTime: {
         date: currentDate,
         hour: 0,
-        minute: 0
+        minute: 0,
+        zoneName: ''
     },
     docId: '',
     cue: '',
@@ -21,6 +23,7 @@ export const emptyHabitEdit: HabitEditProps = {
     notificationOn: true,
     notificationTime: {
         date: currentDate,
+        zoneName: '',
         hour: 0,
         minute: 0,
         totalMins: 0

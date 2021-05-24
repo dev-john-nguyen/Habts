@@ -125,7 +125,7 @@ const Home = ({ navigation, habits, user, archivedHabits }: HomeProps) => {
         if (filterTodayHabits.length < 1) return;
 
         if (getDate(new Date()) == getDate(activeDate)) {
-            const formattedactiveDate = convertTimeToInt({ date: activeDate, hour: activeDate.getHours(), minute: activeDate.getMinutes() })
+            const formattedactiveDate = convertTimeToInt({ date: activeDate, hour: activeDate.getHours(), minute: activeDate.getMinutes(), zoneName: '' })
 
             let index = filterTodayHabits.findIndex((item) => convertTimeToInt(item.endTime) > formattedactiveDate)
 
@@ -256,7 +256,8 @@ const styles = StyleSheet.create({
         right: 10,
         height: normalizeHeight(10),
         width: normalizeHeight(10),
-        transform: [{ rotate: '-45deg' }]
+        transform: [{ rotate: '-45deg' }],
+        zIndex: 10
     },
     dayContainer: {
         marginRight: 5

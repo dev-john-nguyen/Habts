@@ -22,6 +22,7 @@ import BottomSvg from '../assets/svgs/bottom';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import NotificationForm from './new/NotificationForm';
 import Inputs from '../constants/Inputs';
+import { DateTime } from 'luxon';
 
 type NewScreenNavProp = StackNavigationProp<RootStackParamList, 'New'>
 
@@ -76,24 +77,42 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
         }
     }
 
+    const getTimeDate = () => {
+        const luxStartTime = DateTime.fromJSDate(startTime);
+
+        const startTimeObj: Time = {
+            date: luxStartTime.toJSDate(),
+            zoneName: luxStartTime.zoneName,
+            hour: luxStartTime.hour,
+            minute: luxStartTime.minute
+        }
+
+        const luxEndTime = DateTime.fromJSDate(endTime);
+
+        const endTimeObj: Time = {
+            date: luxEndTime.toJSDate(),
+            zoneName: luxEndTime.zoneName,
+            hour: luxEndTime.hour,
+            minute: luxEndTime.minute
+        }
+
+        return {
+            startTime: startTimeObj,
+            endTime: endTimeObj
+        }
+    }
+
     const handleNextStep = () => {
         if (step == 5) {
-            const startTimeObj: Time = {
-                date: startTime,
-                hour: startTime.getHours(),
-                minute: startTime.getMinutes()
-            }
 
-            const endTimeObj: Time = {
-                date: endTime,
-                hour: endTime.getHours(),
-                minute: endTime.getMinutes()
-            }
+            const timeDate = getTimeDate();
+
             const preparedData: TimeDataProps = {
                 docId: '',
-                startTime: startTimeObj,
-                endTime: endTimeObj
+                startTime: timeDate.startTime,
+                endTime: timeDate.endTime
             }
+
             const { type, message } = isInvalidTime(preparedData, habits);
             if (type == 'error') return setBanner("error", message)
 
@@ -112,21 +131,11 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
 
     const handleSave = () => {
 
-        const startTimeObj: Time = {
-            date: startTime,
-            hour: startTime.getHours(),
-            minute: startTime.getMinutes()
-        }
-
-        const endTimeObj: Time = {
-            date: endTime,
-            hour: endTime.getHours(),
-            minute: endTime.getMinutes()
-        }
+        const timeDate = getTimeDate();
 
         const newHabit: NewHabitProps = {
-            startTime: startTimeObj,
-            endTime: endTimeObj,
+            startTime: timeDate.startTime,
+            endTime: timeDate.endTime,
             cue,
             locationDes,
             notes,
@@ -158,7 +167,8 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
             date: notificationDate,
             hour: notificationDate.getHours(),
             minute: notificationDate.getMinutes(),
-            totalMins: notificationNum
+            totalMins: notificationNum,
+            zoneName: DateTime.now().zoneName
         }
     }
 
@@ -343,12 +353,14 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                                     startTime: {
                                         date: startTime,
                                         hour: startTime.getHours(),
-                                        minute: startTime.getMinutes()
+                                        minute: startTime.getMinutes(),
+                                        zoneName: DateTime.now().zoneName
                                     },
                                     endTime: {
                                         date: endTime,
                                         hour: endTime.getHours(),
-                                        minute: endTime.getMinutes()
+                                        minute: endTime.getMinutes(),
+                                        zoneName: DateTime.now().zoneName
                                     },
                                     cue,
                                     locationDes,
