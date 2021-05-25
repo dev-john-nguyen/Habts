@@ -81,8 +81,6 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
     //add the new habit to store
     const updatedHabits = orderAndFormatHabits([...habits, newHabit]);
 
-    console.log(updatedHabits)
-
     await AsyncStorage.setItem(uid + Database.Habits, JSON.stringify(updatedHabits))
         .then(() => {
             dispatch({ type: ADD_HABIT, payload: updatedHabits })

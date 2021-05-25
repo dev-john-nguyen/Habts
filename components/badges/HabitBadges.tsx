@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { FontAwesome, Entypo } from '@expo/vector-icons';
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { normalizeWidth, normalizeHeight } from '../../utils/styles';
 import { AsapText, AsapTextBold } from '../StyledText';
@@ -15,8 +15,6 @@ interface Props {
 }
 
 const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
-    const [showInfo, setShowInfo] = useState(false);
-
     const goalKeys = Object.keys(consecutive);
 
 
@@ -39,6 +37,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
             fourStars = false;
             mappedBadges.push(
                 <View style={styles.nextGoalContainer} key={i}>
+                    <MaterialCommunityIcons name="target" size={normalizeHeight(60)} color={Colors.white} />
                     <AsapTextBold style={styles.nextGoal} numberOfLines={1}>{count.length}<AsapText style={styles.nextGoal}> / {goal}</AsapText></AsapTextBold>
                 </View>
             )
@@ -66,12 +65,16 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
 
 const styles = StyleSheet.create({
     container: {
-        alignSelf: 'flex-start',
+        alignSelf: 'center',
+        backgroundColor: Colors.primary,
+        borderRadius: 10,
+        width: '50%',
+        top: 20
     },
     content: {
         flexDirection: 'row',
-        margin: 2,
-        alignSelf: 'flex-start',
+        margin: 5,
+        justifyContent: 'space-evenly',
         alignItems: 'center'
     },
     emptyText: {
@@ -80,16 +83,17 @@ const styles = StyleSheet.create({
         marginLeft: 2
     },
     star: {
-        marginLeft: 5,
         alignItems: 'center'
     },
     nextGoalContainer: {
-        marginLeft: 10,
-        bottom: 5
+        flexDirection: 'row',
+        alignItems: 'center',
+        margin: 10,
     },
     nextGoal: {
         fontSize: normalizeHeight(60),
-        color: Colors.white
+        color: Colors.white,
+        marginLeft: 5
     },
     text: {
         fontSize: normalizeHeight(80)

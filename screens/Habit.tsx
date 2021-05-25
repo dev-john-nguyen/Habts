@@ -19,7 +19,6 @@ import { normalizeHeight } from '../utils/styles';
 import { LinearGradient } from 'expo-linear-gradient';
 import DropBallJar from '../components/habit/DropBallJar';
 import ShootingStars from '../components/shootingstars';
-import Notes from '../components/habit/Notes';
 import CongratsStar from '../components/congrats/Star';
 import { cloneDeep, isEqual } from 'lodash';
 import { AsapText } from '../components/StyledText';
@@ -45,7 +44,6 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [scrollEnabled, setScrollEnabled] = useState(true);
-    const [showNotes, setShowNotes] = useState(false);
     const [resetBalls, setResetBalls] = useState(0);
     const [congratsIndex, setCongratsIndex] = useState<number>();
     const [showInfo, setShowInfo] = useState(false);
@@ -61,17 +59,17 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                         <View style={{ flexDirection: 'row' }}>
                             {
                                 loading ?
-                                    <ActivityIndicator size="small" color={Colors.white} style={{ marginRight: 5 }} />
+                                    <ActivityIndicator size="small" color={Colors.primary} style={{ marginRight: 5 }} />
                                     :
                                     <>
-                                        <Entypo name="save" size={normalizeHeight(30)} color={Colors.white} style={{ marginRight: 5 }} onPress={handleSaveEditHabit} />
-                                        <Entypo name="cross" size={normalizeHeight(30)} color={Colors.white} style={{ marginRight: 5 }} onPress={() => setEdit(false)} />
+                                        <Entypo name="save" size={normalizeHeight(30)} color={Colors.primary} style={{ marginRight: 5 }} onPress={handleSaveEditHabit} />
+                                        <Entypo name="cross" size={normalizeHeight(30)} color={Colors.primary} style={{ marginRight: 5 }} onPress={() => setEdit(false)} />
                                     </>
                             }
                         </View>
                     )
                 } else {
-                    return <Entypo name="pencil" size={normalizeHeight(30)} color={Colors.white} style={{ marginRight: 5 }} onPress={() => setEdit(true)} />
+                    return <Entypo name="pencil" size={normalizeHeight(30)} color={Colors.primary} style={{ marginRight: 5 }} onPress={() => setEdit(true)} />
                 }
             },
             headerTitle: () => {
@@ -228,10 +226,6 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
         }
     }
 
-    const onNotesClose = () => setShowNotes(showNotes ? false : true);
-
-    const onUpdateNotes = (text: string) => habitEdit && setHabitEdit({ ...habitEdit, notes: text });
-
     if (!habit || !habitEdit) {
         return (
             <View style={styles.loadingContainer}>
@@ -260,8 +254,6 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                     edit={edit}
                     setHabitEdit={setHabitEdit}
                     habitEdit={habitEdit}
-                    showNotes={showNotes}
-                    setShowNotes={setShowNotes}
                 />
                 <Pressable style={styles.infoContainer} onPress={() => setShowInfo(showInfo ? false : true)} hitSlop={2}>
                     <Entypo name="info-with-circle" size={normalizeHeight(60)} color={Colors.white} onPress={() => setShowInfo(showInfo ? false : true)} />
@@ -277,16 +269,6 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                     />
                 </View>
             </ScrollView>
-            {
-                showNotes &&
-                <Notes
-                    notes={habit.notes}
-                    onClose={onNotesClose}
-                    edit={edit}
-                    editNotes={habitEdit.notes}
-                    updateNotes={onUpdateNotes}
-                />
-            }
         </LinearGradient>
     )
 }
@@ -299,8 +281,6 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        paddingTop: 10,
-        marginTop: normalizeHeight(15)
     },
     bell: {
         position: 'absolute',
@@ -348,12 +328,16 @@ const styles = StyleSheet.create({
     infoContainer: {
         width: '50%',
         flexDirection: 'row',
-        marginLeft: 10
+        marginLeft: 10,
+        top: 20,
+        zIndex: 100
     },
     text: {
         fontSize: normalizeHeight(60),
         color: Colors.veryLightGrey,
-        marginLeft: 5
+        marginLeft: 20,
+        position: 'absolute',
+        width: '50%'
     },
     habit: {
         flex: 1

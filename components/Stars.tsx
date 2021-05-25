@@ -22,7 +22,7 @@ export default ({ quantity, rightMax, topMax }: Props) => {
         for (let i = 0; i <= quantity; i++) {
             let top = randomIntFromInterval(10, topMax);
             let right = randomIntFromInterval(10, rightMax);
-            let size = randomIntFromInterval(3, 4)
+            let size = randomIntFromInterval(2, 3)
             store.push({
                 top,
                 right,

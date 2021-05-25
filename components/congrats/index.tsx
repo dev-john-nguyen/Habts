@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         transform: [{ rotate: '-30deg' }],
-        zIndex: 100,
+        zIndex: 1000,
         padding: 10,
         borderRadius: 20,
         flexDirection: 'row',

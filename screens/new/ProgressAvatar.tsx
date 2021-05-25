@@ -32,13 +32,13 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         zIndex: -1,
         width: '100%',
-        height: normalizeHeight(19)
+        height: normalizeHeight(30)
     },
     runner: {
         height: normalizeHeight(9),
         width: normalizeHeight(9),
         transform: [{ scaleX: -1 }, { rotate: '-80deg' }],
-        top: normalizeHeight(5)
+        top: normalizeHeight(9)
     },
 })
 

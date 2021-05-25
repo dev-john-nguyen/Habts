@@ -346,6 +346,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                     <View style={styles.step}>
                         <View style={styles.overviewContainer}>
                             <HabitHeader
+                                newCom={true}
                                 setHabitEdit={() => undefined}
                                 habitEdit={emptyHabitEdit}
                                 edit={false}
@@ -452,6 +453,7 @@ const styles = StyleSheet.create({
         width: '100%',
         justifyContent: 'space-around',
         zIndex: 100,
+        marginTop: normalizeHeight(10)
     },
     overviewContainer: {
         justifyContent: 'center',

@@ -16,6 +16,7 @@
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" fixedFrame="YES" image="SplashScreenBackground" translatesAutoresizingMaskIntoConstraints="NO" id="s7c-xv-XhH">
                     <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
                 </imageView>
                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="transparentIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Qvq-RR-ukk">
                     <rect key="frame" x="153" y="75" width="170" height="170"/>
