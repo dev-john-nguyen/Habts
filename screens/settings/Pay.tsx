@@ -5,12 +5,13 @@ import Database from '../../constants/Database';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import Colors from '../../constants/Colors';
 import { AsapText, AsapTextBold } from '../../components/StyledText';
+import { UserActionsProps } from '../../services/user/types';
 
-export default () => {
+export default ({ subscriptionPurchased }: { subscriptionPurchased: UserActionsProps['subscriptionPurchased'] }) => {
     const [loading, setLoading] = useState({
         com: true,
         month: false,
-        year: false
+        free: false
     })
     const [error, setError] = useState('');
     const [refresh, setRefresh] = useState(0);
@@ -42,42 +43,44 @@ export default () => {
             .catch(() => setLoading({ ...loading, month: false }))
 
     }
-    const purchaseYearly = () => {
-        if (loading.year) return;
-        setLoading({ ...loading, year: true })
-        InAppPurchases.purchaseItemAsync(Database.monthlyPurchaseId)
-            .then(() => setLoading({ ...loading, year: false }))
-            .catch(() => setLoading({ ...loading, year: false }))
-    }
 
     const handleRefresh = () => setRefresh(refresh + 1);
 
-    // if (error) {
-    //     return (
-    //         <View style={styles.container}>
-    //             <AsapText style={styles.error}>Error Occured. Please try again.</AsapText>
-    //             <Pressable onPress={handleRefresh} style={styles.buttons}>
-    //                 <AsapText style={styles.buttonText}>Refresh</AsapText>
-    //             </Pressable>
-    //         </View>
-    //     )
-    // }
+    const continueForFree = () => {
+        setLoading({ ...loading, free: true })
+        subscriptionPurchased(Database.oneMonthFreeTrail, new Date().getTime(), new Date().toISOString())
+            .then(() => {
+                setLoading({ ...loading, free: false })
+            })
+            .catch((err) => {
+                console.log(err)
+                setLoading({ ...loading, free: false })
+            })
+    }
 
-    // if (loading.com) {
-    //     return (
-    //         <View style={styles.container}>
-    //             <ActivityIndicator size='large' color={Colors.white} />
-    //         </View>
-    //     )
-    // }
+    if (error) {
+        return (
+            <View style={styles.container}>
+                <AsapText style={styles.error}>Error Occured. Please try again.</AsapText>
+                <Pressable onPress={handleRefresh} style={styles.buttons}>
+                    <AsapText style={styles.buttonText}>Refresh</AsapText>
+                </Pressable>
+            </View>
+        )
+    }
 
     return (
         <View style={styles.container}>
             <AsapTextBold style={styles.header}>Subscription Expired</AsapTextBold>
-            <AsapText style={styles.subHeader}>Please consider subscribing to support our efforts and to continue to use our service. Thanks 😁</AsapText>
+            <AsapText style={styles.subHeader}>Please consider subscribing to support my efforts, but it's optional. Thanks 😁</AsapText>
             <AsapText style={styles.info}>If you are unable to access the app after purchase, please try to close and open the app again.</AsapText>
             <Pressable onPress={purchaseMonthly} style={styles.buttons}>
                 <AsapText style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : 'Monthly @ $1.99'}</AsapText>
+            </Pressable>
+
+
+            <Pressable onPress={continueForFree} style={styles.buttons}>
+                <AsapText style={styles.buttonText}>{loading.free ? <ActivityIndicator size='small' color={Colors.white} /> : 'Continue for free'}</AsapText>
             </Pressable>
         </View>
     )
@@ -87,7 +90,7 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         top: 0,
-        height: normalizeHeight(2.5),
+        height: normalizeHeight(2),
         width: normalizeWidth(1),
         backgroundColor: Colors.primary,
         alignItems: 'center',

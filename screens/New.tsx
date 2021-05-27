@@ -23,6 +23,7 @@ import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import NotificationForm from './new/NotificationForm';
 import Inputs from '../constants/Inputs';
 import { DateTime } from 'luxon';
+import { dailyGoals, otherGoals } from '../services/habits/utils/variables';
 
 type NewScreenNavProp = StackNavigationProp<RootStackParamList, 'New'>
 
@@ -371,6 +372,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                                     sequence,
                                     notificationTime: genNotificationTime(),
                                     notificationOn,
+                                    consecutive: sequence.type === SequenceType.daily ? dailyGoals() : otherGoals(sequence.value.length),
                                     ...emptyHabitExtra
                                 }}
                             />

@@ -264,7 +264,7 @@ export const subscriptionPurchased = (productId: string, purchaseTime: number, o
     if (!user.uid) return;
 
     const utcNow = DateTime.fromMillis(purchaseTime).toUTC();
-    const expiredAt = DateTime.utc(utcNow.year, utcNow.month + 1, utcNow.day).toJSDate();
+    const expiredAt = DateTime.utc(utcNow.year, utcNow.month + 1, utcNow.day + 2).toJSDate();
 
     if (user.orderId == orderId) return;
 
@@ -273,7 +273,7 @@ export const subscriptionPurchased = (productId: string, purchaseTime: number, o
             expiredAt,
             subscription: productId,
             orderId: orderId,
-            updatedAt: DateTime.utc()
+            updatedAt: DateTime.utc().toJSDate()
         }, { merge: true })
 
         await AsyncStorage.setItem(user.uid + Database.Users, JSON.stringify({

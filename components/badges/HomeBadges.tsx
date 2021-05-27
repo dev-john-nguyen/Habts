@@ -36,7 +36,7 @@ const HomeBadges = ({ habits, navigation }: Props) => {
     ))
 
     return (
-        <ScrollView style={styles.stars} horizontal={true}>
+        <ScrollView style={styles.container} horizontal={true}>
             {
                 mappedBadges.length ? mappedBadges :
                     <View style={styles.infoContainer}>
@@ -49,10 +49,11 @@ const HomeBadges = ({ habits, navigation }: Props) => {
 }
 
 const styles = StyleSheet.create({
-    stars: {
+    container: {
         flex: 1,
         flexDirection: 'row',
-        marginLeft: normalizeWidth(20)
+        marginLeft: normalizeWidth(20),
+        borderRadius: 10
     },
     star: {
         alignItems: 'center',

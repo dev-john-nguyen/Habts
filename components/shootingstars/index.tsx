@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         height: normalizeHeight(1),
         width: normalizeWidth(1),
-        zIndex: -1
+        zIndex: 1000
     }
 })
 

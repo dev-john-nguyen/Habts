@@ -10,8 +10,8 @@ import BottomTab from '../navigation/BottomTab';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../services';
 import { HabitsProps, HabitProps, SequenceType } from '../services/habits/types';
-import { getDateDiffInDays, calcMonthsInAdvance, convertTimeToInt, getDayName, getMonthShort, getDate } from '../utils/tools';
-import { UserProps } from '../services/user/types';
+import { convertTimeToInt, getDayName, getMonthShort, getDate } from '../utils/tools';
+import { UserProps, UserActionsProps } from '../services/user/types';
 import { DateTime } from 'luxon';
 import Calendar from '../components/Calendar';
 import * as Notifications from 'expo-notifications';
@@ -20,6 +20,7 @@ import Superman from '../assets/svgs/superman';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Pay from './settings/Pay';
 import HomeBadges from '../components/badges/HomeBadges';
+import { subscriptionPurchased } from '../services/user/actions';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
 
@@ -28,12 +29,13 @@ interface HomeProps {
     habits: HabitsProps['habits'];
     user: UserProps;
     archivedHabits: HabitsProps['habits'];
+    subscriptionPurchased: UserActionsProps['subscriptionPurchased']
 }
 
 
 //note: to scroll to current position I can see how many habit preview items there are to determine where to scroll to
 
-const Home = ({ navigation, habits, user, archivedHabits }: HomeProps) => {
+const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased }: HomeProps) => {
     const appState = useRef(AppState.currentState);
     const [activeTime, setActiveTime] = useState(0);
     const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([])
@@ -238,7 +240,7 @@ const Home = ({ navigation, habits, user, archivedHabits }: HomeProps) => {
                 navToReviewHistory={navToReviewHistory}
                 navToSettings={navToSettings}
             />
-            {expired && <Pay />}
+            {expired && <Pay subscriptionPurchased={subscriptionPurchased} />}
         </SafeAreaView>
     )
 }
@@ -354,5 +356,5 @@ const mapStateToProps = (state: ReducerStateProps) => ({
     user: state.user
 })
 
-export default connect(mapStateToProps, {})(Home);
+export default connect(mapStateToProps, { subscriptionPurchased })(Home);
 

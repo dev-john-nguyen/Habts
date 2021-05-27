@@ -32,7 +32,6 @@ export const emptyHabitEdit: HabitEditProps = {
 
 export const emptyHabitExtra = {
     totalCount: 0,
-    consecutive: dailyGoals(),
     docId: '',
     startDate: currentDate,
     endDate: currentDate,

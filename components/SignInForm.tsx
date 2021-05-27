@@ -89,9 +89,8 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                 <Image source={require('../assets/logo.png')} style={styles.logo} />
                 <AsapTextBold style={styles.header}>"We are what we repeatedly do"</AsapTextBold>
                 <View style={styles.infoContainer}>
-                    <AsapTextBold style={styles.subHeader}>Get 1 month for free when you sign up!</AsapTextBold>
-                    <AsapText style={styles.subSubHeader}>No payment information needed upon signing up.</AsapText>
-                    <AsapText style={styles.subSubHeader}>Free trail starts after you sign up.</AsapText>
+                    <AsapTextBold style={styles.subHeader}>Free when you sign up!</AsapTextBold>
+                    <AsapText style={styles.subSubHeader}>Please consider subscribing after the first month to support my efforts ($1.99/month), but you have an option to continue using the service for free.</AsapText>
                 </View>
                 <StyledTextInput
                     value={email}

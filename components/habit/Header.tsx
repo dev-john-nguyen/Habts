@@ -56,12 +56,10 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
     return (
         <View style={[styles.container, Colors.boxShadow, { borderRadius: newCom ? 20 : undefined }]}>
             <View style={styles.header}>
-                <ScrollView horizontal={true}>
-                    <View>
-                        <LatoText style={styles.headerSubText}>{habit.remove}</LatoText>
-                        <AsapText style={styles.headerText}>{habit.name}</AsapText>
-                    </View>
-                </ScrollView>
+                <View>
+                    <LatoText style={styles.headerSubText}>{habit.remove}</LatoText>
+                    <AsapText style={styles.headerText}>{habit.name}</AsapText>
+                </View>
             </View>
             {showNotes ?
                 <Notes
@@ -74,11 +72,11 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                 :
                 <View style={styles.data}>
                     <View style={styles.dataItem}>
-                        <Entypo name="calendar" size={normalizeHeight(40)} color={Colors.secondary} />
+                        <Entypo name="calendar" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
                         <LatoText style={styles.dataText}>{habit.sequence.type} {renderSequenceValue(habit)}</LatoText>
                     </View>
                     <View style={styles.dataItem}>
-                        <Entypo name="clock" size={normalizeHeight(40)} color={Colors.secondary} />
+                        <Entypo name="clock" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
                         {edit ?
                             <View style={styles.timeContainer}>
                                 <View style={styles.time}>
@@ -115,10 +113,10 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                         {
                             edit ?
                                 habitEdit.notificationOn
-                                    ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
-                                    : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
-                                : habit.notificationOn ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
-                                    : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
+                                    ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.veryLightGrey} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
+                                    : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.veryLightGrey} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
+                                : habit.notificationOn ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.veryLightGrey} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
+                                    : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.veryLightGrey} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
                         }
                         <View style={{ alignItems: 'center', flexDirection: 'row' }}>
                             <LatoText style={styles.dataText}>Notify </LatoText>
@@ -128,12 +126,12 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                     </View>
 
                     <View style={styles.dataItem}>
-                        <MaterialCommunityIcons name="sigma" size={normalizeHeight(40)} color={Colors.secondary} />
+                        <MaterialCommunityIcons name="sigma" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
                         <LatoText style={styles.dataText}>{habit.completedHabits.length}</LatoText>
                     </View>
 
                     <View style={styles.dataItem}>
-                        <Entypo name="link" size={normalizeHeight(40)} color={Colors.secondary} />
+                        <Entypo name="link" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
                         {
                             edit ?
                                 <StyledTextInput
@@ -149,7 +147,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                     </View>
 
                     <View style={styles.dataItem}>
-                        <Entypo name="location-pin" size={normalizeHeight(40)} color={Colors.secondary} />
+                        <Entypo name="location-pin" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
                         {
                             edit ?
                                 <StyledTextInput
@@ -165,7 +163,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                     </View>
 
                     <View style={styles.dataItem}>
-                        <Entypo name="text-document" size={normalizeHeight(40)} color={Colors.secondary} onPress={onShowNotes} />
+                        <Entypo name="text-document" size={normalizeHeight(40)} color={Colors.veryLightGrey} onPress={onShowNotes} />
                         {
                             edit ?
                                 <StyledTextInput
@@ -193,25 +191,27 @@ const styles = StyleSheet.create({
     container: {
         paddingLeft: 20,
         paddingRight: 20,
-        paddingTop: normalizeHeight(15),
+        paddingTop: normalizeHeight(14),
         minHeight: normalizeHeight(2),
-        backgroundColor: '#ffffff',
+        backgroundColor: Colors.primary,
         borderBottomEndRadius: 20,
         borderBottomLeftRadius: 20,
     },
     header: {
-        alignItems: 'center'
+        alignItems: 'center',
+        borderBottomColor: Colors.secondary,
+        borderBottomWidth: 1
     },
     pickerItemStyle: {
         fontSize: normalizeHeight(60),
-        color: Colors.primary,
+        color: Colors.white,
         padding: normalizeWidth(10),
         height: normalizeHeight(30),
         borderRadius: 10
     },
     timeText: {
         fontSize: normalizeHeight(60),
-        color: Colors.primary
+        color: Colors.white
     },
     timeContainer: {
         flex: 1,
@@ -232,9 +232,9 @@ const styles = StyleSheet.create({
         fontSize: normalizeHeight(60),
         color: Colors.primary,
         marginLeft: 10,
-        borderRadius: 20,
+        borderRadius: 10,
         borderWidth: 1,
-        borderColor: Colors.primary,
+        borderColor: Colors.white,
         padding: 10,
         paddingTop: 10,
         flex: 1,
@@ -245,14 +245,14 @@ const styles = StyleSheet.create({
 
     },
     headerText: {
-        fontSize: normalizeHeight(15),
-        color: Colors.primary,
+        fontSize: normalizeHeight(20),
+        color: Colors.white,
         alignSelf: 'center',
         textTransform: 'capitalize'
     },
     headerSubText: {
-        fontSize: normalizeHeight(60),
-        color: Colors.primary,
+        fontSize: normalizeHeight(70),
+        color: Colors.white,
         textDecorationLine: 'line-through',
         alignSelf: 'flex-end'
     },
@@ -269,15 +269,15 @@ const styles = StyleSheet.create({
     },
     dataText: {
         fontSize: normalizeHeight(50),
-        color: Colors.primary,
+        color: Colors.white,
         marginLeft: 10
     },
     notifiedText: {
         fontSize: normalizeHeight(50),
-        color: Colors.primary,
+        color: Colors.white,
     },
     totalMinsText: {
         fontSize: normalizeHeight(50),
-        color: Colors.primary,
+        color: Colors.white,
     }
 })

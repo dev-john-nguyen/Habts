@@ -19,7 +19,7 @@ interface Props {
 const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
     return (
         <ScrollView style={[styles.container]} contentContainerStyle={styles.content}>
-            <Feather name="arrow-left" size={normalizeWidth(20)} color={Colors.black} style={styles.x} onPress={onClose} />
+            <Feather name="arrow-left" size={normalizeWidth(20)} color={Colors.veryLightGrey} style={styles.x} onPress={onClose} />
             {edit ?
 
                 <StyledTextInput
@@ -46,12 +46,12 @@ const styles = StyleSheet.create({
         paddingBottom: 20
     },
     text: {
-        color: Colors.primary,
+        color: Colors.white,
         fontSize: normalizeHeight(50),
         margin: 20
     },
     header: {
-        color: Colors.primary,
+        color: Colors.white,
         fontSize: normalizeHeight(40),
         alignSelf: 'center',
         marginBottom: 5,
@@ -62,10 +62,17 @@ const styles = StyleSheet.create({
         position: 'absolute'
     },
     textInput: {
-        fontSize: normalizeHeight(60),
+        fontSize: normalizeHeight(50),
         maxHeight: normalizeHeight(2),
         color: Colors.primary,
-        margin: 20
+        borderRadius: 10,
+        marginTop: 20,
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 10,
+        backgroundColor: Colors.veryLightGrey,
+        padding: 10,
+        paddingTop: 10,
     }
 })
 

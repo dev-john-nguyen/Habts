@@ -59,17 +59,17 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                         <View style={{ flexDirection: 'row' }}>
                             {
                                 loading ?
-                                    <ActivityIndicator size="small" color={Colors.primary} style={{ marginRight: 5 }} />
+                                    <ActivityIndicator size="small" color={Colors.white} style={{ marginRight: 5 }} />
                                     :
                                     <>
-                                        <Entypo name="save" size={normalizeHeight(30)} color={Colors.primary} style={{ marginRight: 5 }} onPress={handleSaveEditHabit} />
-                                        <Entypo name="cross" size={normalizeHeight(30)} color={Colors.primary} style={{ marginRight: 5 }} onPress={() => setEdit(false)} />
+                                        <Entypo name="save" size={normalizeHeight(30)} color={Colors.white} style={{ marginRight: 5 }} onPress={handleSaveEditHabit} />
+                                        <Entypo name="cross" size={normalizeHeight(30)} color={Colors.white} style={{ marginRight: 5 }} onPress={() => setEdit(false)} />
                                     </>
                             }
                         </View>
                     )
                 } else {
-                    return <Entypo name="pencil" size={normalizeHeight(30)} color={Colors.primary} style={{ marginRight: 5 }} onPress={() => setEdit(true)} />
+                    return <Entypo name="pencil" size={normalizeHeight(30)} color={Colors.white} style={{ marginRight: 5 }} onPress={() => setEdit(true)} />
                 }
             },
             headerTitle: () => {
@@ -326,10 +326,10 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     infoContainer: {
-        width: '50%',
+        width: '20%',
         flexDirection: 'row',
         marginLeft: 10,
-        top: 20,
+        top: normalizeHeight(8),
         zIndex: 100
     },
     text: {
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
         color: Colors.veryLightGrey,
         marginLeft: 20,
         position: 'absolute',
-        width: '50%'
+        width: '100%'
     },
     habit: {
         flex: 1

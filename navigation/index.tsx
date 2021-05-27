@@ -85,7 +85,7 @@ function RootNavigator() {
     >
       <Stack.Screen name="Home" component={Home} options={{ headerTitle: '', headerShown: false }} />
       <Stack.Screen name="New" component={New} />
-      <Stack.Screen name="Habit" component={Habit} options={{ headerTitle: '', headerTintColor: Colors.tertiary }} />
+      <Stack.Screen name="Habit" component={Habit} options={{ headerTitle: '', headerTintColor: Colors.veryLightGrey }} />
       <Stack.Screen name="Review" component={Review} />
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="ReviewHistory" component={ReviewHistory} />
