@@ -2,7 +2,7 @@
   "scripts": {
     "start": "react-native start",
     "android": "react-native run-android",
-    "ios": "react-native run-ios --simulator='iPhone 7'",
+    "ios": "react-native run-ios --simulator='iPhone 12'",
     "web": "expo start --web",
     "eject": "expo eject",
     "test": "jest --watchAll",

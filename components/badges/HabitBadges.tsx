@@ -26,7 +26,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
         const { count, goal, total } = consecutive[goalKeys[i]];
         if (count.length >= goal) {
             const star = (i % 2) < 1 ? 'star-o' : 'star';
-            const color = i < 2 ? Colors.primary : Colors.yellow
+            const color = i < 2 ? Colors.white : Colors.yellow
             mappedBadges.push(
                 <View style={styles.star} key={i}>
                     <FontAwesome name={star} size={size} color={color} />
@@ -37,7 +37,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
             fourStars = false;
             mappedBadges.push(
                 <View style={styles.nextGoalContainer} key={i}>
-                    <MaterialCommunityIcons name="target" size={normalizeHeight(60)} color={Colors.primary} />
+                    <MaterialCommunityIcons name="target" size={normalizeHeight(60)} color={Colors.white} />
                     <AsapTextBold style={styles.nextGoal} numberOfLines={1}>{count.length}<AsapText style={styles.nextGoal}> / {goal}</AsapText></AsapTextBold>
                 </View>
             )
@@ -66,7 +66,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
 const styles = StyleSheet.create({
     container: {
         alignSelf: 'center',
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.tertiary,
         borderRadius: 10,
         width: '60%',
         top: 20
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     },
     nextGoal: {
         fontSize: normalizeHeight(60),
-        color: Colors.primary,
+        color: Colors.white,
         marginLeft: 5
     },
     text: {

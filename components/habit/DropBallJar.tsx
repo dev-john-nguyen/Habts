@@ -33,7 +33,6 @@ const calcJarHeight = (() => {
 })()
 
 export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, activeDay, resetBalls }: DropBallJarProps) => {
-    const currentDate = new Date();
     const [balls, setBalls] = useState<CompletedHabitsProps[]>([]);
     const [innerJarHeight, setInnerJarHeight] = useState<number>(0);
     const [completed, setCompleted] = useState(false);
@@ -167,6 +166,9 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
     }, [balls, enableTouchBall])
 
     useEffect(() => {
+        const d = new Date()
+        const currentDate = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+
         if (completedHabits && completedHabits.length > 0) {
             var balls = cloneDeep(completedHabits);
 
@@ -179,6 +181,22 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                 quotes.current = {
                     thumb: true,
                     quote: "You completed today's task."
+                }
+            } else {
+                //check if miss a day
+                const { dateCompleted } = balls[balls.length - 1];
+                const lastCompletePlusOne = new Date(dateCompleted.getFullYear(), dateCompleted.getMonth(), dateCompleted.getDate() + 2);
+
+                if (currentDate.getTime() === lastCompletePlusOne.getTime()) {
+                    quotes.current = {
+                        thumb: false,
+                        quote: "Don't miss another day!"
+                    }
+                } else if (currentDate > lastCompletePlusOne) {
+                    quotes.current = {
+                        thumb: false,
+                        quote: "Lets get back on track!"
+                    }
                 }
             }
 

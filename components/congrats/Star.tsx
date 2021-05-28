@@ -17,7 +17,7 @@ export default ({ goalIndex }: Props) => {
     const rotateAdmin = useRef(new Animated.Value(0)).current;
     //should be order
     const star = (goalIndex % 2) < 1 ? 'star-o' : 'star';
-    const color = goalIndex < 2 ? Colors.primary : Colors.yellow;
+    const color = goalIndex < 2 ? Colors.white : Colors.yellow;
 
     var message = ''
 
@@ -26,7 +26,7 @@ export default ({ goalIndex }: Props) => {
             message = 'Congrats! You earn your first badge. Keep it going.';
             break;
         case 1:
-            message = 'Another badge! This habit will be get easier and easier.'
+            message = 'Your second badge! On to the next one!'
             break;
         case 2:
             message = 'Wow! This is a breeze for you. One more badge to go!';
@@ -106,7 +106,7 @@ export default ({ goalIndex }: Props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.tertiary,
         zIndex: 10000,
         position: 'absolute',
         top: normalizeHeight(2.5),
@@ -115,12 +115,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 10,
         padding: 10,
-        width: normalizeWidth(2)
+        width: '50%'
     },
     star: {
     },
     text: {
-        fontSize: normalizeHeight(60),
-        color: Colors.primary,
+        fontSize: normalizeHeight(50),
+        color: Colors.white,
     }
 })

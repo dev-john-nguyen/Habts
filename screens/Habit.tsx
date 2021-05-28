@@ -329,7 +329,7 @@ const styles = StyleSheet.create({
         width: '20%',
         flexDirection: 'row',
         marginLeft: 10,
-        top: normalizeHeight(8),
+        top: normalizeHeight(9),
         zIndex: 100
     },
     text: {
