@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Image, Keyboard, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Image, Keyboard, ActivityIndicator, Animated } from 'react-native';
 import { StyledTextInput } from './StyledTextInput';
 import Colors from '../constants/Colors';
 import { UserActionsProps } from '../services/user/types';
@@ -26,6 +26,27 @@ export default ({ signUp, signIn, setBanner }: Props) => {
     const [password2, setPassword2] = useState('');
     const [loading, setLoading] = useState(false);
     const isMount = useRef(false)
+    const keyboardRef: any = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener('keyboardWillShow', (key) => {
+            Animated.spring(keyboardRef, {
+                useNativeDriver: false,
+                toValue: key.endCoordinates.height / 2.1
+            }).start()
+        });
+        const keyboardDidHideListener = Keyboard.addListener('keyboardWillHide', () => {
+            Animated.spring(keyboardRef, {
+                useNativeDriver: false,
+                toValue: 0
+            }).start()
+        });
+
+        return () => {
+            keyboardDidShowListener.remove()
+            keyboardDidHideListener.remove()
+        }
+    }, [])
 
     useEffect(() => {
         isMount.current = true;
@@ -85,12 +106,12 @@ export default ({ signUp, signIn, setBanner }: Props) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={styles.container}>
+            <Animated.View style={[styles.container, { bottom: keyboardRef }]}>
                 <Image source={require('../assets/logo.png')} style={styles.logo} />
                 <AsapTextBold style={styles.header}>"We are what we repeatedly do"</AsapTextBold>
                 <View style={styles.infoContainer}>
                     <AsapTextBold style={styles.subHeader}>Free when you sign up!</AsapTextBold>
-                    <AsapText style={styles.subSubHeader}>Please consider subscribing after the first month to support my efforts ($1.99/month), but you have an option to continue using the service for free.</AsapText>
+                    <AsapText style={styles.subSubHeader}>Please consider subscribing after the first month to support my efforts ($1.99/month), but it's optional.</AsapText>
                 </View>
                 <StyledTextInput
                     value={email}
@@ -138,11 +159,11 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                 <View style={styles.superman}>
                     <Superman />
                 </View>
-            </View>
+            </Animated.View>
             <View style={styles.bottomSvg}>
                 <BottomSvg />
             </View>
-        </SafeAreaView>
+        </SafeAreaView >
     )
 }
 

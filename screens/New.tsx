@@ -291,7 +291,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 return (
                     <Pressable style={styles.step} onPress={Keyboard.dismiss}>
                         <AsapText style={styles.questionText}>What Cue Do You Want To Trigger The Habit?</AsapText>
-                        <LatoText style={styles.infoText}>Something that you will do before you start the habit. Example, “I will meditate after I drink my morning coffee.” The habit is meditating and the cue is drinking the morning coffee. Also, this will be your notification text!</LatoText>
+                        <LatoText style={styles.infoText}>Something that you will do before you start the habit. Example, “I will meditate after I drink my morning coffee.” The habit is meditating and the cue is drinking the morning coffee.</LatoText>
                         <StyledTextInput
                             value={cue}
                             style={styles.responseInput}
