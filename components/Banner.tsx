@@ -52,7 +52,7 @@ export default ({ removeBanner, banner }: Props) => {
             case 'error':
                 return Colors.red;
             default:
-                return Colors.veryLightGrey;
+                return Colors.tertiary;
         }
     }
 
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     },
     messageText: {
         fontSize: normalizeHeight(55),
-        color: Colors.primary
+        color: Colors.white
     }
 })
 
