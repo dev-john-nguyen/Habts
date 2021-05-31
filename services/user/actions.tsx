@@ -45,7 +45,7 @@ export const signUp = (email: string, password: string, password2: string) => as
         if (!user) throw 'Sorry, failed to get your user information'
 
         const utcNow = DateTime.utc()
-        const expiredAt = DateTime.utc(utcNow.year, utcNow.month + 1, utcNow.day).toJSDate();
+        const expiredAt = utcNow.plus({ month: 1 }).toJSDate();
 
         const userStorage = {
             uid: user.uid,
@@ -64,8 +64,9 @@ export const signUp = (email: string, password: string, password2: string) => as
 
         dispatch({ type: SET_USER, payload: userStorage });
 
-        dispatch(setBanner('success', "Your 1 month free trail starts now!"))
+        dispatch(setBanner('success', "By continuing, you agree to our Terms of Use (found under settings)."))
     } catch (error) {
+        console.log(error)
         var errorCode = error.code;
         switch (errorCode) {
             case 'auth/email-already-in-use':
@@ -264,7 +265,7 @@ export const subscriptionPurchased = (productId: string, purchaseTime: number, o
     if (!user.uid) return;
 
     const utcNow = DateTime.fromMillis(purchaseTime).toUTC();
-    const expiredAt = DateTime.utc(utcNow.year, utcNow.month + 1, utcNow.day + 2).toJSDate();
+    const expiredAt = utcNow.plus({ month: 1, days: 2 }).toJSDate();
 
     if (user.orderId == orderId) return;
 

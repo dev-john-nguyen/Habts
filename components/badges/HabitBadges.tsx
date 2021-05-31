@@ -30,7 +30,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
             mappedBadges.push(
                 <View style={styles.star} key={i}>
                     <FontAwesome name={star} size={size} color={color} />
-                    <AsapText style={[styles.text, { color: color }]} numberOfLines={1}>{name ? name : total}</AsapText>
+                    <AsapText style={[styles.text, { color: color }]} numberOfLines={1}>{name ? name.substring(0, 1) : total}</AsapText>
                 </View>
             )
         } else {

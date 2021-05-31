@@ -27,7 +27,7 @@ export default ({ removeBanner, banner }: Props) => {
                 }),
                 Animated.timing(topAdmin, {
                     useNativeDriver: false,
-                    delay: 3000,
+                    delay: 4000,
                     toValue: -120,
                     easing: Easing.inOut(Easing.circle),
                     duration: 500

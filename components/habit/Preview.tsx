@@ -118,7 +118,7 @@ const genStyles = (active: boolean) => StyleSheet.create({
     },
     contentHeader: {
         color: active ? Colors.white : Colors.mediumGrey,
-        fontSize: normalizeWidth(20),
+        fontSize: normalizeWidth(25),
         alignSelf: 'center',
         marginBottom: 5,
         width: '80%',
@@ -132,7 +132,7 @@ const genStyles = (active: boolean) => StyleSheet.create({
         alignItems: 'center'
     },
     contentItemText: {
-        fontSize: normalizeWidth(32),
+        fontSize: normalizeWidth(35),
         color: active ? Colors.white : Colors.mediumGrey,
         marginLeft: 10,
         flex: 1

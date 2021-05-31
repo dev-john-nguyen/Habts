@@ -7,7 +7,7 @@ import Colors from '../../constants/Colors';
 import { AsapText, AsapTextBold } from '../../components/StyledText';
 import { UserActionsProps } from '../../services/user/types';
 
-export default ({ subscriptionPurchased }: { subscriptionPurchased: UserActionsProps['subscriptionPurchased'] }) => {
+export default ({ subscriptionPurchased, onDirectToTerms }: { subscriptionPurchased: UserActionsProps['subscriptionPurchased'], onDirectToTerms: () => void }) => {
     const [loading, setLoading] = useState({
         com: true,
         month: false,
@@ -73,6 +73,7 @@ export default ({ subscriptionPurchased }: { subscriptionPurchased: UserActionsP
         <View style={styles.container}>
             <AsapTextBold style={styles.header}>Subscription Expired</AsapTextBold>
             <AsapText style={styles.subHeader}>Please consider subscribing to support my efforts, but it's optional. Thanks 😁</AsapText>
+            <AsapText style={styles.info}>By continuing, you agree to our <AsapTextBold style={styles.info} onPress={onDirectToTerms}>Terms of Use</AsapTextBold></AsapText>
             <AsapText style={styles.info}>If you are unable to access the app after purchase, please try to close and open the app again.</AsapText>
             <Pressable onPress={purchaseMonthly} style={styles.buttons}>
                 <AsapText style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : 'Monthly @ $1.99'}</AsapText>

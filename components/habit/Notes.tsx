@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: Colors.white,
-        fontSize: normalizeHeight(50),
+        fontSize: normalizeHeight(55),
         margin: 20
     },
     header: {
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
         position: 'absolute'
     },
     textInput: {
-        fontSize: normalizeHeight(50),
+        fontSize: normalizeHeight(55),
         maxHeight: normalizeHeight(2),
         color: Colors.primary,
         borderRadius: 10,

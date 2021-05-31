@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { AsapText } from '../../components/StyledText';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, FontAwesome } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { RootStackParamList } from '../../navigation/types';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -24,7 +24,16 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
             <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('Privacy')}>
                 <View style={styles.item}>
                     <Entypo name="lock" size={normalizeHeight(40)} color={Colors.white} />
-                    <AsapText style={styles.itemText}>Privacy</AsapText>
+                    <AsapText style={styles.itemText}>Privacy Policy</AsapText>
+                </View>
+                <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
+            </Pressable>
+
+
+            <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('Terms')}>
+                <View style={styles.item}>
+                    <FontAwesome name="file-text" size={normalizeHeight(40)} color={Colors.white} />
+                    <AsapText style={styles.itemText}>Terms of Use</AsapText>
                 </View>
                 <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
             </Pressable>

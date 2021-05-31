@@ -16,6 +16,7 @@ import Account from '../screens/settings/Account';
 import Privacy from '../screens/settings/Privacy';
 import Subscription from '../screens/settings/Subscription';
 import ContactUs from '../screens/settings/Contact';
+import Terms from '../screens/settings/Terms';
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -93,6 +94,7 @@ function RootNavigator() {
       <Stack.Screen name="Account" component={Account} />
       <Stack.Screen name="Privacy" component={Privacy} />
       <Stack.Screen name="Subscription" component={Subscription} />
+      <Stack.Screen name="Terms" component={Terms} />
       <Stack.Screen name="ContactUs" component={ContactUs} />
     </Stack.Navigator>
   );

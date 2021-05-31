@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
 
     },
     headerText: {
-        fontSize: normalizeHeight(20),
+        fontSize: normalizeHeight(25),
         color: Colors.white,
         alignSelf: 'center',
         textTransform: 'capitalize'
@@ -268,16 +268,16 @@ const styles = StyleSheet.create({
         paddingRight: 10
     },
     dataText: {
-        fontSize: normalizeHeight(50),
+        fontSize: normalizeHeight(55),
         color: Colors.white,
         marginLeft: 10
     },
     notifiedText: {
-        fontSize: normalizeHeight(50),
+        fontSize: normalizeHeight(55),
         color: Colors.white,
     },
     totalMinsText: {
-        fontSize: normalizeHeight(50),
+        fontSize: normalizeHeight(55),
         color: Colors.white,
     }
 })
