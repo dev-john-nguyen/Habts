@@ -106,7 +106,7 @@ export const signIn = (email: string, password: string) => async (dispatch: AppD
             return;
         }
 
-        const { createdAt, notificationToken, expiredAt } = userData.data() as { createdAt: Date, notificationToken: string, expiredAt: Date }
+        const { createdAt, notificationToken, expiredAt, subscription } = userData.data() as { createdAt: Date, notificationToken: string, expiredAt: Date, subscription: Text }
 
         //update login date
         const updatedAt = DateTime.utc()
@@ -117,7 +117,8 @@ export const signIn = (email: string, password: string) => async (dispatch: AppD
             notificationToken,
             loginAt: updatedAt.toJSDate(),
             expiredAt: expiredAt.toDate(),
-            updatedAt: updatedAt.toJSDate()
+            updatedAt: updatedAt.toJSDate(),
+            subscription
         }
 
         await firestoreDb.collection(Database.Users).doc(user.uid).set({

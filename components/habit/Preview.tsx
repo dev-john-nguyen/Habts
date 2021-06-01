@@ -118,7 +118,7 @@ const genStyles = (active: boolean) => StyleSheet.create({
     },
     contentHeader: {
         color: active ? Colors.white : Colors.mediumGrey,
-        fontSize: normalizeWidth(25),
+        fontSize: normalizeWidth(24),
         alignSelf: 'center',
         marginBottom: 5,
         width: '80%',

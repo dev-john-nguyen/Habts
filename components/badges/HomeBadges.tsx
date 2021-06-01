@@ -31,7 +31,7 @@ const HomeBadges = ({ habits, navigation }: Props) => {
         return count.length >= goal
     }).map((habit) => (
         <Pressable key={habit.docId} onPress={() => onNavigate(habit.docId)} style={styles.star}>
-            <HabitBadges consecutive={habit.consecutive} size={normalizeHeight(20)} name={habit.name} home={true} />
+            <HabitBadges consecutive={habit.consecutive} size={normalizeHeight(17)} name={habit.name} home={true} />
         </Pressable>
     ))
 
@@ -56,8 +56,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     star: {
-        alignItems: 'center',
-        width: normalizeHeight(17)
+        alignItems: 'center'
     },
     infoContainer: {
         flexDirection: 'row',

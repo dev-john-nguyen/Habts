@@ -165,6 +165,8 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased 
 
     const navToTerms = () => navigation.navigate('Terms');
 
+    const navToPrivacy = () => navigation.navigate('Privacy');
+
     const renderReviewTxt = () => {
         // const daysTilReview = getDateDiffInDays(calcMonthsInAdvance(DateTime.fromJSDate(user.createdAt), 1), DateTime.now());
         // const { days, text, months } = daysTilReview;
@@ -245,6 +247,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased 
             {expired && <Pay
                 subscriptionPurchased={subscriptionPurchased}
                 onDirectToTerms={navToTerms}
+                onDirectToPrivacy={navToPrivacy}
             />}
         </SafeAreaView>
     )

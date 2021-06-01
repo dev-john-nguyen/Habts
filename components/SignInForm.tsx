@@ -111,7 +111,7 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                 <AsapTextBold style={styles.header}>"We are what we repeatedly do"</AsapTextBold>
                 <View style={styles.infoContainer}>
                     <AsapTextBold style={styles.subHeader}>Free when you sign up!</AsapTextBold>
-                    <AsapText style={styles.subSubHeader}>Please consider subscribing after the first month to support my efforts ($1.99/month), but it's optional.</AsapText>
+                    <AsapText style={styles.subSubHeader}>The 1st month is free and then $1.99 / month to continue using our service. No payment information needed upon signing up.</AsapText>
                 </View>
                 <StyledTextInput
                     value={email}

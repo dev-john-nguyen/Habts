@@ -7,7 +7,7 @@ import Colors from '../../constants/Colors';
 import { AsapText, AsapTextBold } from '../../components/StyledText';
 import { UserActionsProps } from '../../services/user/types';
 
-export default ({ subscriptionPurchased, onDirectToTerms }: { subscriptionPurchased: UserActionsProps['subscriptionPurchased'], onDirectToTerms: () => void }) => {
+export default ({ subscriptionPurchased, onDirectToTerms, onDirectToPrivacy }: { subscriptionPurchased: UserActionsProps['subscriptionPurchased'], onDirectToTerms: () => void, onDirectToPrivacy: () => void }) => {
     const [loading, setLoading] = useState({
         com: true,
         month: false,
@@ -24,10 +24,10 @@ export default ({ subscriptionPurchased, onDirectToTerms }: { subscriptionPurcha
             .then(() => mount.current && setLoading({ ...loading, com: false }))
             .catch((err) => {
                 console.log(err)
-                if (mount.current) {
-                    setLoading({ ...loading, com: false });
-                    setError('Error occured while fetching products. Please try again.')
-                }
+                // if (mount.current) {
+                //     setLoading({ ...loading, com: false });
+                //     setError('Error occured while fetching products. Please try again.')
+                // }
             })
 
         return () => {
@@ -72,17 +72,17 @@ export default ({ subscriptionPurchased, onDirectToTerms }: { subscriptionPurcha
     return (
         <View style={styles.container}>
             <AsapTextBold style={styles.header}>Subscription Expired</AsapTextBold>
-            <AsapText style={styles.subHeader}>Please consider subscribing to support my efforts, but it's optional. Thanks 😁</AsapText>
-            <AsapText style={styles.info}>By continuing, you agree to our <AsapTextBold style={styles.info} onPress={onDirectToTerms}>Terms of Use.</AsapTextBold></AsapText>
+            <AsapText style={styles.subHeader}>To continue to use this app, please consider subscribing to support my efforts. Thanks 😁</AsapText>
+            <AsapText style={styles.info}>By continuing, you agree to our <AsapTextBold style={styles.info} onPress={onDirectToTerms}>Terms of Use</AsapTextBold> and <AsapTextBold style={styles.info} onPress={onDirectToPrivacy}>Privacy Policy.</AsapTextBold></AsapText>
             <AsapText style={styles.info}>If you are unable to access the app after purchase, please try to close and open the app again.</AsapText>
             <Pressable onPress={purchaseMonthly} style={styles.buttons}>
                 <AsapText style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : '$1.99 / Month'}</AsapText>
             </Pressable>
 
 
-            <Pressable onPress={continueForFree} style={styles.buttons}>
+            {/* <Pressable onPress={continueForFree} style={styles.buttons}>
                 <AsapText style={styles.buttonText}>{loading.free ? <ActivityIndicator size='small' color={Colors.white} /> : 'Continue for free'}</AsapText>
-            </Pressable>
+            </Pressable> */}
         </View>
     )
 }
