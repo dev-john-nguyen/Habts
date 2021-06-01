@@ -73,10 +73,10 @@ export default ({ subscriptionPurchased, onDirectToTerms }: { subscriptionPurcha
         <View style={styles.container}>
             <AsapTextBold style={styles.header}>Subscription Expired</AsapTextBold>
             <AsapText style={styles.subHeader}>Please consider subscribing to support my efforts, but it's optional. Thanks 😁</AsapText>
-            <AsapText style={styles.info}>By continuing, you agree to our <AsapTextBold style={styles.info} onPress={onDirectToTerms}>Terms of Use</AsapTextBold></AsapText>
+            <AsapText style={styles.info}>By continuing, you agree to our <AsapTextBold style={styles.info} onPress={onDirectToTerms}>Terms of Use.</AsapTextBold></AsapText>
             <AsapText style={styles.info}>If you are unable to access the app after purchase, please try to close and open the app again.</AsapText>
             <Pressable onPress={purchaseMonthly} style={styles.buttons}>
-                <AsapText style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : 'Monthly @ $1.99'}</AsapText>
+                <AsapText style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : '$1.99 / Month'}</AsapText>
             </Pressable>
 
 

@@ -41,9 +41,10 @@ const styles = StyleSheet.create({
         flex: 1,
         zIndex: 100,
         padding: 20,
+        maxHeight: normalizeHeight(2.5)
     },
     content: {
-        paddingBottom: 20
+        paddingBottom: 20,
     },
     text: {
         color: Colors.white,

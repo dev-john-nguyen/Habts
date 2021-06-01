@@ -161,12 +161,6 @@ export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: Ap
         }
     }
 
-    //check if cue updated
-    if (originalHabit.cue !== updatedHabit.cue || originalHabit.notificationOn !== updatedHabit.notificationOn) {
-        updateNotificationData = true;
-    }
-
-
     if (!notificationToken && updatedHabit.notificationOn) {
         notificationWarning = "Unable to turn on notification. Don't have access to notification credentials.";
         updatedHabit.notificationOn = false;

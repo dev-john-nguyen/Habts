@@ -248,6 +248,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                 disableScrollViewPanResponder={true}
                 contentContainerStyle={{ paddingBottom: 20 }}
                 scrollEnabled={scrollEnabled}
+                decelerationRate={0}
             >
                 <HabitHeader
                     habit={habit}

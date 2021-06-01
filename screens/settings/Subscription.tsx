@@ -16,7 +16,7 @@ const Subscription = ({ user }: { user: UserProps }) => {
     const subscriptionType = () => {
         switch (user.subscription) {
             case Database.monthlyPurchaseId:
-                return 'Monthly'
+                return '$1.99 / Month'
             case Database.oneMonthFreeTrail:
             default:
                 return '1 Month Free Trail'
@@ -32,12 +32,6 @@ const Subscription = ({ user }: { user: UserProps }) => {
                         <AsapText style={styles.headerText}>Subscription Type:</AsapText>
                         <AsapTextBold style={styles.text}>{subscriptionType()}</AsapTextBold>
                     </View>
-
-                    <View style={styles.section}>
-                        <AsapText style={styles.headerText}>Subscription Expiration Date (will update on renewal date):</AsapText>
-                        <AsapTextBold style={styles.text}>{expiredAt.toFormat('LLL dd yyyy')}</AsapTextBold>
-                    </View>
-
                     <View style={styles.section}>
                         <AsapText style={styles.headerText}>You can manage your subscription in your account settings on the App Store.</AsapText>
                     </View>

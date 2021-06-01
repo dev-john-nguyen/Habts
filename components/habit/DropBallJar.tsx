@@ -49,7 +49,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
     const jarBallsWidth = useRef(0);
     const jarBallsTransformY = useRef(new Animated.Value(0)).current;
     const quotes = useRef({ thumb: false, quote: 'One day at a time!' });
-    const mount = useRef(false);
+    const [mount, setMount] = useState(false);
 
     const panResponder = PanResponder.create({
         onStartShouldSetPanResponderCapture: () => enableTouchBall,
@@ -219,9 +219,9 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
     }, [resetBalls])
 
     useEffect(() => {
-        if (mount.current) {
+        let unmount = false;
+        if (mount) {
             //this already has the completed item in jar.
-            console.log('hiding')
             setShowBall(false);
             setInnerJarHeight(calcJarHeight);
 
@@ -229,6 +229,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
 
             const result = Math.ceil(completedHabits.length / 6);
             const habitsLen = completedHabits.length;
+
             if (habitsLen < 1) {
                 setInnerJarHeight(0);
                 return;
@@ -236,16 +237,17 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
             timer = habitsLen < 7 ? 2000 : habitsLen >= 60 ? 6000 : ((result * 700) + 2000);
 
             setTimeout(() => {
-                if (mount.current) {
+                if (!unmount) {
                     setInnerJarHeight(0);
                 }
             }, timer)
         } else {
-            mount.current = true
+            setMount(true)
         }
 
         return () => {
-            mount.current = false;
+            setMount(false)
+            unmount = true
         }
     }, [resetBalls])
 
