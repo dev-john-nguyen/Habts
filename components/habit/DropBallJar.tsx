@@ -234,11 +234,15 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                 setInnerJarHeight(0);
                 return;
             }
+
+            quotes.current.quote = 'Refilling Jar';
+
             timer = habitsLen < 7 ? 2000 : habitsLen >= 60 ? 6000 : ((result * 700) + 2000);
 
             setTimeout(() => {
                 if (!unmount) {
                     setInnerJarHeight(0);
+                    quotes.current.quote = 'Way to get back on track!';
                 }
             }, timer)
         } else {
@@ -304,7 +308,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                     </Animated.View>
                 }
                 <View style={styles.messageContainer}>
-                    <AsapText style={styles.message}>{!showBall ? 'Refilling Jar' : quotes.current.quote}</AsapText>
+                    <AsapText style={styles.message}>{quotes.current.quote}</AsapText>
                     {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeHeight(20)} color={Colors.white} />}
                 </View>
             </Animated.View>

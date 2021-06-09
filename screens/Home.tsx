@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, FlatList, AppState, AppStateStatus, Pressable } from 'react-native';
-import { AsapText, LatoText, AsapTextBold } from '../components/StyledText'
+import { AsapText, AsapTextBold } from '../components/StyledText'
 import Colors from '../constants/Colors';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import HabitPreview from '../components/habit/Preview';
@@ -16,7 +16,6 @@ import { DateTime } from 'luxon';
 import Calendar from '../components/Calendar';
 import * as Notifications from 'expo-notifications';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
-import Superman from '../assets/svgs/superman';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Pay from './settings/Pay';
 import HomeBadges from '../components/badges/HomeBadges';
@@ -38,8 +37,9 @@ interface HomeProps {
 const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased }: HomeProps) => {
     const appState = useRef(AppState.currentState);
     const [activeTime, setActiveTime] = useState(0);
-    const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([])
-    const [activeDate, setActiveDate] = useState<Date>(new Date())
+    const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([]);
+    const [activeDate, setActiveDate] = useState<Date>(new Date());
+    const [showCal, setShowCal] = useState(false);
     const listRef: any = useRef();
     const [expired, setExpired] = useState(false)
 
@@ -163,9 +163,16 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased 
 
     const navToHabitHistory = () => !expired && navigation.navigate('HabitHistory');
 
-    const navToTerms = () => navigation.navigate('Terms');
+    const onRefresh = () => {
+        setActiveDate(new Date())
+        setShowCal(false)
+    }
 
-    const navToPrivacy = () => navigation.navigate('Privacy');
+    const isTodaysDate = (): Boolean => {
+        const todaysDate = new Date();
+        return activeDate.getDate() === todaysDate.getDate() && activeDate.getMonth() === todaysDate.getMonth() && activeDate.getFullYear() === todaysDate.getFullYear()
+    }
+
 
     const renderReviewTxt = () => {
         // const daysTilReview = getDateDiffInDays(calcMonthsInAdvance(DateTime.fromJSDate(user.createdAt), 1), DateTime.now());
@@ -182,32 +189,34 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased 
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.superman}>
-                <Superman />
-            </View>
             <View style={styles.headerContainer}>
                 <View style={styles.headerLeftContainer}>
-                    <View style={styles.dayContainer}>
+                    {showCal ?
                         <Calendar
                             setActiveDate={setActiveDate}
                             activeDate={activeDate}
+                            setShowCal={setShowCal}
                         />
-                        {getDate(new Date()) !== getDate(activeDate) && <Entypo name="back-in-time" size={normalizeWidth(20)} color="white" style={styles.refreshTime} onPress={() => setActiveDate(new Date())} />}
-                    </View>
-                    <View>
-                        <AsapText style={styles.headerSubText}>{getDayName(activeDate)}</AsapText>
-                        <AsapText style={styles.headerSubText}>{getMonthShort(activeDate)} {activeDate.getFullYear()}</AsapText>
-                    </View>
+                        :
+                        <Pressable onPress={() => setShowCal(true)} style={styles.dateContainer}>
+                            <AsapText style={styles.dayText}>{activeDate.getDate()}</AsapText>
+                            <View>
+                                <AsapText style={styles.dateText}>{getDayName(activeDate)}</AsapText>
+                                <AsapText style={styles.dateText}>{getMonthShort(activeDate)} {activeDate.getFullYear()}</AsapText>
+                            </View>
+                            {!isTodaysDate() && <Entypo name="back-in-time" size={normalizeHeight(30)} color="white" style={styles.refreshTime} onPress={onRefresh} />}
+                        </Pressable>
+                    }
                 </View>
                 <View style={styles.headerRightContainer}>
                     <HomeBadges habits={[...habits, ...archivedHabits]} navigation={navigation} />
                 </View>
             </View>
             <View style={styles.notificationContainer}>
-                <View style={styles.notificationContent}>
+                <Pressable style={styles.notificationContent} onPress={navToReview}>
                     <FontAwesome name="file-text" size={normalizeWidth(20)} color={Colors.white} onPress={navToReview} />
-                    <LatoText style={styles.reviewText}>{renderReviewTxt()}</LatoText>
-                </View>
+                    <AsapText style={styles.reviewText}>Take some time today to reflect</AsapText>
+                </Pressable>
             </View>
             <View style={styles.listTitleContainer}>
                 <AsapTextBold style={styles.listTitleTimeText}>Time</AsapTextBold>
@@ -246,8 +255,6 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased 
             />
             {expired && <Pay
                 subscriptionPurchased={subscriptionPurchased}
-                onDirectToTerms={navToTerms}
-                onDirectToPrivacy={navToPrivacy}
             />}
         </SafeAreaView>
     )
@@ -269,8 +276,27 @@ const styles = StyleSheet.create({
         transform: [{ rotate: '-45deg' }],
         zIndex: 10
     },
-    dayContainer: {
-        marginRight: 5
+    dateContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: normalizeHeight(10),
+        width: normalizeWidth(2.5),
+    },
+    refreshTime: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
+        zIndex: 1000
+    },
+    dayText: {
+        fontSize: normalizeWidth(6.5),
+        color: Colors.white,
+        marginRight: 10
+    },
+    dateText: {
+        fontSize: normalizeWidth(20),
+        color: Colors.white
     },
     listTitleContainer: {
         width: '100%',
@@ -288,12 +314,6 @@ const styles = StyleSheet.create({
         color: Colors.white,
         textAlign: 'center',
         fontSize: normalizeWidth(25)
-    },
-    refreshTime: {
-        position: 'absolute',
-        top: 2,
-        right: 2,
-        zIndex: 10
     },
     empty: {
         alignSelf: 'stretch',
@@ -316,7 +336,7 @@ const styles = StyleSheet.create({
     headerLeftContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'flex-start'
+        justifyContent: 'flex-start',
     },
     headerRightContainer: {
         flex: 1,
@@ -327,10 +347,6 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: normalizeWidth(7),
         color: Colors.white,
-    },
-    headerSubText: {
-        fontSize: normalizeWidth(25),
-        color: Colors.white
     },
     notificationContainer: {
         marginBottom: normalizeHeight(50),

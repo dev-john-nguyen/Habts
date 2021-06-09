@@ -49,17 +49,17 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
 
     return (
         <View style={styles.container}>
-            <View style={styles.questionContainer}>
+            <View style={[styles.questionContainer, Colors.boxShadowLight]}>
                 <AsapText style={styles.questionText}>Out of 5, how do you feel about your habits since your last review?</AsapText>
                 <StarRating setStarRating={(number) => setItem({ ...item, rating: number })} starRating={item.rating} edit={edit} />
             </View>
 
-            <View style={styles.questionContainer}>
+            <View style={[styles.questionContainer, Colors.boxShadowLight]}>
                 <AsapText style={styles.questionText}>What Went Well?</AsapText>
                 {edit ? <StyledTextInput
                     value={item.good}
                     onChangeText={(text) => setItem({ ...item, good: text })}
-                    style={styles.answerInput}
+                    style={[styles.answerInput, Colors.boxShadowLight]}
                     placeholder="I'm on a 20 day meditation streak ..."
                     autoCorrect={true}
                     multiline={true}
@@ -73,12 +73,12 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                 }
             </View>
 
-            <View style={styles.questionContainer}>
+            <View style={[styles.questionContainer, Colors.boxShadowLight]}>
                 <AsapText style={styles.questionText}>What Didn't Go So Well?</AsapText>
                 {edit ? <StyledTextInput
                     value={item.bad}
                     onChangeText={(text) => setItem({ ...item, bad: text })}
-                    style={styles.answerInput}
+                    style={[styles.answerInput, Colors.boxShadowLight]}
                     placeholder="It's hard to maintain consistency in the gym ..."
                     autoCorrect={true}
                     multiline={true}
@@ -92,12 +92,12 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                 }
             </View>
 
-            <View style={styles.questionContainer}>
+            <View style={[styles.questionContainer, Colors.boxShadowLight]}>
                 <AsapText style={styles.questionText}>What Did I Learn?</AsapText>
                 {edit ? <StyledTextInput
                     value={item.learn}
                     onChangeText={(text) => setItem({ ...item, learn: text })}
-                    style={styles.answerInput}
+                    style={[styles.answerInput, Colors.boxShadowLight]}
                     placeholder='I learned how disciplined i am ...'
                     autoCorrect={true}
                     multiline={true}
@@ -123,10 +123,8 @@ const styles = StyleSheet.create({
         paddingBottom: 20,
     },
     textContainer: {
-        borderRadius: 10,
-        backgroundColor: Colors.veryLightGrey,
-        borderWidth: 1,
-        borderColor: Colors.primary,
+        borderRadius: 5,
+        backgroundColor: Colors.white,
         minHeight: 200
     },
     text: {
@@ -144,14 +142,12 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
     answerInput: {
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: Colors.primary,
+        borderRadius: 5,
         minHeight: 200,
         fontSize: normalizeHeight(60),
         padding: 10,
         paddingTop: 10,
         color: Colors.primary,
-        backgroundColor: Colors.veryLightGrey
+        backgroundColor: Colors.white
     }
 })

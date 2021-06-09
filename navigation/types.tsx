@@ -12,10 +12,8 @@ export type RootStackParamList = {
   ReviewHistory: undefined;
   HabitHistory: undefined;
   Account: undefined;
-  Privacy: undefined;
   Subscription: undefined;
   ContactUs: undefined;
-  Terms: undefined;
 };
 
 export type BottomTabParamList = {

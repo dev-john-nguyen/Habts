@@ -56,7 +56,7 @@ const Subscription = ({ user }: { user: UserProps }) => {
                         <AsapText style={styles.headerText}>Description:</AsapText>
                         <AsapTextBold style={styles.headerText}>{subscription.description}</AsapTextBold>
                         <AsapText style={styles.headerText}>Access:</AsapText>
-                        <AsapTextBold style={styles.headerText}>With this subscription, you have unlimited access to this service until your subscription expires.</AsapTextBold>
+                        <AsapTextBold style={styles.headerText}>With this subscription, you have ALL ACCESS to this app until your subscription expires.</AsapTextBold>
                     </View>
                 </View>
             </View>

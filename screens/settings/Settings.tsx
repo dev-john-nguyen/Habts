@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Pressable } from 'react-native';
+import { View, StyleSheet, Pressable, Linking } from 'react-native';
 import { AsapText } from '../../components/StyledText';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
@@ -9,8 +9,32 @@ import { normalizeHeight } from '../../utils/styles';
 
 type SettingsNavProps = StackNavigationProp<RootStackParamList, 'Settings'>;
 
+const privacyUrl = 'https://habt-b0f23.web.app/privacy';
+const termsUrl = 'https://habt-b0f23.web.app/terms';
+
 
 export default ({ navigation }: { navigation: SettingsNavProps }) => {
+
+    const openPrivacyUrl = async () => {
+        const supported = await Linking.canOpenURL(privacyUrl);
+
+        if (supported) {
+            await Linking.openURL(privacyUrl)
+        } else {
+            alert('Not able to open this url')
+        }
+    }
+
+    const openTermsUrl = async () => {
+        const supported = await Linking.canOpenURL(termsUrl);
+
+        if (supported) {
+            await Linking.openURL(termsUrl)
+        } else {
+            alert('Not able to open this url')
+        }
+    }
+
     return (
         <View style={styles.container}>
             <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('Account')}>
@@ -21,7 +45,7 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
                 <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
             </Pressable>
 
-            <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('Privacy')}>
+            <Pressable style={styles.itemContainer} onPress={openPrivacyUrl}>
                 <View style={styles.item}>
                     <Entypo name="lock" size={normalizeHeight(40)} color={Colors.white} />
                     <AsapText style={styles.itemText}>Privacy Policy</AsapText>
@@ -30,7 +54,7 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
             </Pressable>
 
 
-            <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('Terms')}>
+            <Pressable style={styles.itemContainer} onPress={openTermsUrl}>
                 <View style={styles.item}>
                     <FontAwesome name="file-text" size={normalizeHeight(40)} color={Colors.white} />
                     <AsapText style={styles.itemText}>Terms of Use</AsapText>

@@ -65,12 +65,12 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
             if (state.isConnected) {
                 await saveNotificationData(newHabit, uid, notificationToken)
             } else {
-                notificationWarning = "Unable to turn on notification. Looks like your offline.";
+                notificationWarning = "Failed to turn on notification. Looks like your offline.";
                 newHabit.notificationOn = false
             }
         } catch (err) {
             console.log(err)
-            notificationWarning = "Unable to turn on notification. Please check your mobile connection.";
+            notificationWarning = "Failed to turn on notification. Please check your mobile connection.";
             newHabit.notificationOn = false
         }
     }
@@ -162,7 +162,7 @@ export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: Ap
     }
 
     if (!notificationToken && updatedHabit.notificationOn) {
-        notificationWarning = "Unable to turn on notification. Don't have access to notification credentials.";
+        notificationWarning = "Failed to turn on notification. Don't have access to notification credentials.";
         updatedHabit.notificationOn = false;
     }
 
@@ -194,7 +194,7 @@ export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: Ap
     }
 
     const state = await NetInfo.fetch();
-    const warningMsg = "Unable to update notification data. Please check your mobile connection"
+    const warningMsg = "Failed to update notification data. Please check your mobile connection";
 
     if (originalHabit.notificationOn && !updatedHabit.notificationOn) {
         //notification was turned off, so remove notification
@@ -210,7 +210,7 @@ export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: Ap
             notificationWarning = warningMsg;
             habits[habitIndex].notificationOn = true;
         }
-    } else if (updateNotificationData && updatedHabit.notificationOn) {
+    } else if (updateNotificationData || updatedHabit.notificationOn) {
         try {
             if (state.isConnected) {
                 await saveNotificationData(habits[habitIndex], uid, notificationToken, originalHabit.notificationTime);

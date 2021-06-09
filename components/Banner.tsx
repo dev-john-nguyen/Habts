@@ -52,7 +52,7 @@ export default ({ removeBanner, banner }: Props) => {
             case 'error':
                 return Colors.red;
             default:
-                return Colors.tertiary;
+                return Colors.white;
         }
     }
 
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: normalizeHeight(10),
-        borderRadius: 20,
+        borderRadius: 10,
         zIndex: 100
     },
     messageContainer: {
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     },
     messageText: {
         fontSize: normalizeHeight(55),
-        color: Colors.white
+        color: Colors.black
     }
 })
 

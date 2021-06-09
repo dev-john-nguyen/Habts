@@ -146,7 +146,6 @@ export const signIn = (email: string, password: string) => async (dispatch: AppD
             notifyBatch[habitTimeRef] = {
                 updatedAt: updatedAt.toMillis(),
                 name: habit.name,
-                cue: habit.cue,
                 notificationTime: habit.notificationTime.date,
                 notificationTotalMins: habit.notificationTime.totalMins,
                 notificationToken,

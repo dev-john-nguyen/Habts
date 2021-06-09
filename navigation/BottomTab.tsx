@@ -5,7 +5,6 @@ import Colors from '../constants/Colors';
 import BottomSvg from '../assets/svgs/bottom';
 import { normalizeHeight } from '../utils/styles';
 import Layout from '../constants/Layout';
-import StarGazeMan from '../assets/svgs/stargazeman';
 
 interface BottomTabProps {
     navtoNew: () => void;
@@ -75,9 +74,6 @@ export default ({ navtoNew, navToReviewHistory, navToHabitHistory, navToSettings
 
     return (
         <View style={styles.container}>
-            <View style={styles.stargaze}>
-                <StarGazeMan />
-            </View>
             <View style={styles.bottomSvg}>
                 <BottomSvg />
             </View>

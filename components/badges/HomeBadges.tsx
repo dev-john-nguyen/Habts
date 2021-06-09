@@ -31,7 +31,7 @@ const HomeBadges = ({ habits, navigation }: Props) => {
         return count.length >= goal
     }).map((habit) => (
         <Pressable key={habit.docId} onPress={() => onNavigate(habit.docId)} style={styles.star}>
-            <HabitBadges consecutive={habit.consecutive} size={normalizeHeight(17)} name={habit.name} home={true} />
+            <HabitBadges consecutive={habit.consecutive} size={normalizeWidth(7)} name={habit.name} home={true} />
         </Pressable>
     ))
 

@@ -110,8 +110,8 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                 <Image source={require('../assets/logo.png')} style={styles.logo} />
                 <AsapTextBold style={styles.header}>"We are what we repeatedly do"</AsapTextBold>
                 <View style={styles.infoContainer}>
-                    <AsapTextBold style={styles.subHeader}>Free when you sign up!</AsapTextBold>
-                    <AsapText style={styles.subSubHeader}>The 1st month is free and then $1.99 / month to continue using our service. No payment information needed upon signing up.</AsapText>
+                    <AsapTextBold style={styles.subHeader}>One month free trail</AsapTextBold>
+                    <AsapText style={styles.subSubHeader}>and then $1.99 / month to continue using our service.</AsapText>
                 </View>
                 <StyledTextInput
                     value={email}
@@ -147,7 +147,7 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                     />
                 }
                 <StyledPrimaryButton
-                    text={loading ? <ActivityIndicator size='small' color={Colors.white} /> : 'Submit'}
+                    text={loading ? <ActivityIndicator size='small' color={Colors.white} /> : showSignUp ? 'Start Free Trail' : 'Login'}
                     style={styles.buttons}
                     onPress={handleOnSubmit}
                 />
@@ -180,14 +180,15 @@ const styles = StyleSheet.create({
         marginBottom: normalizeHeight(30),
     },
     header: {
-        fontSize: normalizeHeight(19),
+        fontSize: normalizeHeight(20),
         marginTop: normalizeHeight(30),
         color: `rgba(${Colors.whiteRgb}, .8)`
     },
     subHeader: {
         fontSize: normalizeHeight(50),
         marginBottom: 5,
-        color: `rgba(${Colors.whiteRgb}, .8)`
+        color: `rgba(${Colors.whiteRgb}, .8)`,
+        textAlign: 'center'
     },
     subSubHeader: {
         fontSize: normalizeHeight(60),

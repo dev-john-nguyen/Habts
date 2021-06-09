@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { View, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, Pressable, ActivityIndicator, Linking } from 'react-native';
 import * as InAppPurchases from 'expo-in-app-purchases';
 import Database from '../../constants/Database';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
@@ -7,7 +7,10 @@ import Colors from '../../constants/Colors';
 import { AsapText, AsapTextBold } from '../../components/StyledText';
 import { UserActionsProps } from '../../services/user/types';
 
-export default ({ subscriptionPurchased, onDirectToTerms, onDirectToPrivacy }: { subscriptionPurchased: UserActionsProps['subscriptionPurchased'], onDirectToTerms: () => void, onDirectToPrivacy: () => void }) => {
+const privacyUrl = 'https://habt-b0f23.web.app/privacy';
+const termsUrl = 'https://habt-b0f23.web.app/terms';
+
+export default ({ subscriptionPurchased }: { subscriptionPurchased: UserActionsProps['subscriptionPurchased'] }) => {
     const [loading, setLoading] = useState({
         com: true,
         month: false,
@@ -23,7 +26,7 @@ export default ({ subscriptionPurchased, onDirectToTerms, onDirectToPrivacy }: {
         InAppPurchases.getProductsAsync([Database.monthlyPurchaseId])
             .then(() => mount.current && setLoading({ ...loading, com: false }))
             .catch((err) => {
-                console.log(err)
+                // console.log(err)
                 // if (mount.current) {
                 //     setLoading({ ...loading, com: false });
                 //     setError('Error occured while fetching products. Please try again.')
@@ -58,6 +61,26 @@ export default ({ subscriptionPurchased, onDirectToTerms, onDirectToPrivacy }: {
             })
     }
 
+    const openPrivacyUrl = async () => {
+        const supported = await Linking.canOpenURL(privacyUrl);
+
+        if (supported) {
+            await Linking.openURL(privacyUrl)
+        } else {
+            alert('Not able to open this url')
+        }
+    }
+
+    const openTermsUrl = async () => {
+        const supported = await Linking.canOpenURL(termsUrl);
+
+        if (supported) {
+            await Linking.openURL(termsUrl)
+        } else {
+            alert('Not able to open this url')
+        }
+    }
+
     if (error) {
         return (
             <View style={styles.container}>
@@ -71,19 +94,20 @@ export default ({ subscriptionPurchased, onDirectToTerms, onDirectToPrivacy }: {
 
     return (
         <View style={styles.container}>
-            <AsapTextBold style={styles.header}>Subscription Expired</AsapTextBold>
-            <AsapText style={styles.subHeader}>To continue to use this app, please consider subscribing to support my efforts. Thanks 😁</AsapText>
-            <AsapText style={styles.info}>By continuing, you agree to our <AsapTextBold style={styles.info} onPress={onDirectToTerms}>Terms of Use</AsapTextBold> and <AsapTextBold style={styles.info} onPress={onDirectToPrivacy}>Privacy Policy.</AsapTextBold></AsapText>
-            <AsapText style={styles.info}>If you are unable to access the app after purchase, please try to close and open the app again.</AsapText>
+            <AsapText style={styles.smallText}>Your subscription has expired.</AsapText>
+            <AsapTextBold style={styles.largeText}>Subscribe for unlimited access.</AsapTextBold>
+            <AsapText style={styles.mediumText}>Unlock access to our habit tracker, reminders, notes, scheduling, and reflection tools.</AsapText>
             <Pressable onPress={purchaseMonthly} style={styles.buttons}>
-                <AsapText style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : '$1.99 / Month'}</AsapText>
+                <AsapText style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : 'Subscribe for $1.99 / Month'}</AsapText>
             </Pressable>
-
+            <AsapText style={styles.smallText}>Become the best version of yourself.</AsapText>
+            <AsapText style={styles.info}><AsapTextBold style={styles.docs} onPress={openTermsUrl}>Terms of Use</AsapTextBold> and <AsapTextBold style={styles.docs} onPress={openPrivacyUrl}>Privacy Policy.</AsapTextBold></AsapText>
+            <AsapText style={styles.info}>If you are unable to access the app after purchase, please try to close and open the app again.</AsapText>
 
             {/* <Pressable onPress={continueForFree} style={styles.buttons}>
                 <AsapText style={styles.buttonText}>{loading.free ? <ActivityIndicator size='small' color={Colors.white} /> : 'Continue for free'}</AsapText>
             </Pressable> */}
-        </View>
+        </View >
     )
 }
 
@@ -91,33 +115,55 @@ const styles = StyleSheet.create({
     container: {
         position: 'absolute',
         top: 0,
-        height: normalizeHeight(2),
         width: normalizeWidth(1),
         backgroundColor: Colors.primary,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 5,
-        paddingTop: 50
+        paddingTop: normalizeHeight(15),
+        paddingBottom: normalizeHeight(25)
+    },
+    docs: {
+        fontSize: normalizeWidth(30),
+        color: Colors.white,
+        textDecorationLine: 'underline'
     },
     error: {
         fontSize: normalizeWidth(20),
         color: Colors.red,
         marginBottom: 10
     },
-    header: {
-        fontSize: normalizeWidth(15),
-        color: Colors.white,
-        marginBottom: 10,
+    headerContainer: {
+        width: '100%',
+        borderBottomColor: Colors.tertiary,
+        borderBottomWidth: 1,
+        alignItems: 'center',
+        marginBottom: 10
     },
-    subHeader: {
-        fontSize: normalizeWidth(25),
+    smallText: {
+        fontSize: normalizeWidth(30),
         width: '80%',
+        textAlign: 'center',
+        color: Colors.white,
+        marginBottom: 10
+    },
+    mediumText: {
+        fontSize: normalizeWidth(27),
+        width: '80%',
+        textAlign: 'center',
+        color: Colors.white,
+        marginBottom: 10
+    },
+    largeText: {
+        fontSize: normalizeWidth(15),
+        width: '100%',
         textAlign: 'center',
         color: Colors.white,
         marginBottom: 10
     },
     info: {
         fontSize: normalizeWidth(35),
+        textAlign: 'center',
         color: Colors.white,
         width: '80%',
         marginBottom: 10
