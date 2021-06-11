@@ -176,20 +176,20 @@ export function genCalendarVals() {
 
     let dates = [];
 
-    //30 days before
-    for (let i = 30; i > 0; i--) {
-        let date = new Date(d.getFullYear(), d.getMonth(), d.getDate() - i);
-        dates.push({
-            day: date.getDate(),
-            dayName: getDayName(date),
-            month: date.getMonth(),
-            monthShort: getMonthShort(date),
-            year: date.getFullYear()
-        })
-    }
+    // //30 days before
+    // for (let i = 30; i > 0; i--) {
+    //     let date = new Date(d.getFullYear(), d.getMonth(), d.getDate() - i);
+    //     dates.push({
+    //         day: date.getDate(),
+    //         dayName: getDayName(date),
+    //         month: date.getMonth(),
+    //         monthShort: getMonthShort(date),
+    //         year: date.getFullYear()
+    //     })
+    // }
 
     //30 days after
-    for (let i = 0; i < 30; i++) {
+    for (let i = 0; i <= 30; i++) {
         let date = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);
         dates.push({
             day: date.getDate(),
@@ -201,28 +201,6 @@ export function genCalendarVals() {
     }
 
     return dates
-
-
-    // const thisMonthDays = daysInMonth(d.getMonth(), d.getFullYear())
-    // const firstDayWeekDay = new Date(d.getFullYear(), d.getMonth(), 2).getDay() - 1;
-    // const daysInCurrentMonth: any[] = [];
-    // let day = firstDayWeekDay;
-
-    // for (let i = 0; i < thisMonthDays; i++) {
-    //     // daysInCurrentMonth[i] = {
-    //     //     day: i + 1,
-    //     //     dayName: daysShort[day]
-    //     // }
-    //     daysInCurrentMonth[i] = i + 1
-
-    //     if (day > 5) {
-    //         day = 0
-    //     } else {
-    //         day++
-    //     }
-    // }
-
-    // return daysInCurrentMonth
 }
 
 export function renderSequenceValue(habit: HabitProps) {

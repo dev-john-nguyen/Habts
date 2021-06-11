@@ -198,7 +198,9 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased 
                             setShowCal={setShowCal}
                         />
                         :
-                        <Pressable onPress={() => setShowCal(true)} style={styles.dateContainer}>
+                        <Pressable
+                            onLongPress={() => setShowCal(true)}
+                            style={({ pressed }) => pressed ? [styles.dateContainer, { backgroundColor: Colors.secondary, borderRadius: 10 }] : styles.dateContainer}>
                             <AsapText style={styles.dayText}>{activeDate.getDate()}</AsapText>
                             <View>
                                 <AsapText style={styles.dateText}>{getDayName(activeDate)}</AsapText>

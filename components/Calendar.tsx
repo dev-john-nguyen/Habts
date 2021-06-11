@@ -23,7 +23,7 @@ interface DateProps {
 
 export default ({ setActiveDate, activeDate, setShowCal }: props) => {
     const dates: DateProps[] = genCalendarVals()
-    const listRef: any = useRef();
+    // const listRef: any = useRef();
 
     // useEffect(() => {
     //     handleScroll()
@@ -36,41 +36,35 @@ export default ({ setActiveDate, activeDate, setShowCal }: props) => {
         setShowCal(false)
     }
 
-    const handleScroll = () => {
-        const index = dates.findIndex(d => isActiveDate(d));
+    // const handleScroll = () => {
+    //     const index = dates.findIndex(d => isActiveDate(d));
 
-        if (index < 0) {
-            return;
-        }
+    //     if (index < 0) {
+    //         return;
+    //     }
 
-        new Promise(resolve => setTimeout(resolve, 500))
-            .then(() => {
-                listRef && listRef.current && listRef.current.scrollToIndex({
-                    index: index,
-                    animated: true
-                })
-            })
+    //     new Promise(resolve => setTimeout(resolve, 500))
+    //         .then(() => {
+    //             listRef && listRef.current && listRef.current.scrollToIndex({
+    //                 index: index,
+    //                 animated: true
+    //             })
+    //         })
 
-        //find the index of current date
-    }
+    //     //find the index of current date
+    // }
 
     const isActiveDate = (d: DateProps): Boolean => {
         return d.day === activeDate.getDate() && d.month === activeDate.getMonth() && d.year === activeDate.getFullYear()
     }
 
-    const index = dates.findIndex(d => isActiveDate(d));
+    // const index = dates.findIndex(d => isActiveDate(d));
 
     return (
         <>
             <FlatList
                 style={styles.container}
-                ref={(ref) => { listRef.current = ref }}
-                getItemLayout={(data, index) => (
-                    { length: normalizeHeight(12.5), offset: normalizeHeight(12.5) * index, index }
-                )}
                 data={dates}
-                initialScrollIndex={index}
-                onScrollToIndexFailed={handleScroll}
                 renderItem={({ item, index }) => (
                     <Pressable
                         key={index}
@@ -92,6 +86,7 @@ export default ({ setActiveDate, activeDate, setShowCal }: props) => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 0,
         height: normalizeHeight(10),
         width: normalizeWidth(2.5),
         padding: 2,
