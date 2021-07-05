@@ -3,7 +3,7 @@ import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { Lato_400Regular, Lato_400Regular_Italic } from '@expo-google-fonts/lato';
-import { Asap_400Regular, Asap_700Bold } from '@expo-google-fonts/asap';
+import { Asap_400Regular, Asap_700Bold, Asap_500Medium } from '@expo-google-fonts/asap';
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -21,7 +21,8 @@ export default function useCachedResources() {
           Lato_400Regular,
           Asap_400Regular,
           Lato_400Regular_Italic,
-          Asap_700Bold
+          Asap_700Bold,
+          Asap_500Medium
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

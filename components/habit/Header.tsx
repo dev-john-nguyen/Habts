@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native'
-import { AsapText, LatoText } from '../StyledText';
+import { AsapText, AsapTextBold, AsapTextMedium } from '../StyledText';
 import Colors from '../../constants/Colors';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { HabitProps, HabitEditProps } from '../../services/habits/types';
+import { HabitProps, HabitEditProps, CompletedHabitsProps } from '../../services/habits/types';
 import { StyledTextInput } from '../StyledTextInput';
 import { formatTime, renderSequenceValue } from '../../utils/tools';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -31,7 +31,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
     const [showNotes, setShowNotes] = useState(false);
 
 
-    const luxNow = DateTime.now()
+    const luxNow = DateTime.now();
 
     const renderNotificationEdit = () => {
         if (edit) {
@@ -49,16 +49,29 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
         }
     }
 
+    const calcConsecutiveTotal = () => {
+        let consecutiveTotal: CompletedHabitsProps[] = [];
+
+        Object.keys(habit.consecutive).forEach((goalKey, i) => {
+            const { count } = habit.consecutive[goalKey];
+            if (count.length > 0) {
+                consecutiveTotal = consecutiveTotal.concat(count)
+            }
+        })
+
+        return consecutiveTotal.length
+    }
+
     const onShowNotes = () => setShowNotes && setShowNotes(showNotes ? false : true);
 
     const onUpdateNotes = (text: string) => habitEdit && setHabitEdit({ ...habitEdit, notes: text });
 
     return (
-        <View style={[styles.container, Colors.boxShadow, { borderRadius: newCom ? 20 : undefined }]}>
+        <View style={styles.container}>
             <View style={styles.header}>
                 <View>
-                    <LatoText style={styles.headerSubText}>{habit.remove}</LatoText>
-                    <AsapText style={styles.headerText}>{habit.name}</AsapText>
+                    <AsapText style={styles.headerSubText}>{habit.remove}</AsapText>
+                    <AsapTextBold style={styles.headerText}>{habit.name}</AsapTextBold>
                 </View>
             </View>
             {showNotes ?
@@ -70,114 +83,108 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                     updateNotes={onUpdateNotes}
                 />
                 :
-                <View style={styles.data}>
-                    <View style={styles.dataItem}>
-                        <Entypo name="calendar" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
-                        <LatoText style={styles.dataText}>{habit.sequence.type} {renderSequenceValue(habit)}</LatoText>
-                    </View>
-                    <View style={styles.dataItem}>
-                        <Entypo name="clock" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
-                        {edit ?
-                            <View style={styles.timeContainer}>
-                                <View style={styles.time}>
-                                    <AsapText style={styles.timeText}>Start Time: </AsapText>
-                                    <DateTimePicker
-                                        value={habitEdit.startTime.date}
-                                        minuteInterval={5}
-                                        mode='time'
-                                        is24Hour={true}
-                                        display="default"
-                                        onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, startTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes(), zoneName: luxNow.zoneName } })}
-                                        style={styles.datePicker}
-                                    />
+                <View>
+                    <View>
+                        <View style={styles.dataItem}>
+                            {edit ?
+                                <View style={styles.timeContainer}>
+                                    <View style={styles.time}>
+                                        <AsapTextMedium style={styles.timeText}>Start Time: </AsapTextMedium>
+                                        <DateTimePicker
+                                            value={habitEdit.startTime.date}
+                                            minuteInterval={5}
+                                            mode='time'
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, startTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes(), zoneName: luxNow.zoneName } })}
+                                            style={styles.datePicker}
+                                        />
+                                    </View>
+                                    <View style={styles.time}>
+                                        <AsapTextMedium style={styles.timeText}>End Time: </AsapTextMedium>
+                                        <DateTimePicker
+                                            value={habitEdit.endTime.date}
+                                            minuteInterval={5}
+                                            mode='time'
+                                            is24Hour={true}
+                                            display="default"
+                                            onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, endTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes(), zoneName: luxNow.zoneName } })}
+                                            style={styles.datePicker}
+                                            children
+                                        />
+                                    </View>
                                 </View>
-                                <View style={styles.time}>
-                                    <AsapText style={styles.timeText}>End Time: </AsapText>
-                                    <DateTimePicker
-                                        value={habitEdit.endTime.date}
-                                        minuteInterval={5}
-                                        mode='time'
-                                        is24Hour={true}
-                                        display="default"
-                                        onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, endTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes(), zoneName: luxNow.zoneName } })}
-                                        style={styles.datePicker}
-                                        children
-                                    />
-                                </View>
-                            </View>
-                            : <LatoText style={styles.dataText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)}</LatoText>
-                        }
-                    </View>
-
-                    <View style={styles.dataItem}>
-                        {
-                            edit ?
-                                habitEdit.notificationOn
-                                    ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.veryLightGrey} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
-                                    : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.veryLightGrey} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
-                                : habit.notificationOn ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.veryLightGrey} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
-                                    : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.veryLightGrey} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
-                        }
-                        <View style={{ alignItems: 'center', flexDirection: 'row' }}>
-                            <LatoText style={styles.dataText}>Notify </LatoText>
-                            {renderNotificationEdit()}
-                            <LatoText style={styles.notifiedText}> mins before.</LatoText>
+                                : <>
+                                    <AsapTextMedium style={styles.dataText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)} ({habit.sequence.type}{renderSequenceValue(habit)}) </AsapTextMedium>
+                                    {
+                                        edit ?
+                                            habitEdit.notificationOn
+                                                ? <Entypo name="bell" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
+                                                : <Entypo name="sound-mute" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
+                                            : habit.notificationOn ? <Entypo name="bell" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
+                                                : <Entypo name="sound-mute" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
+                                    }
+                                </>
+                            }
                         </View>
+
+                        <View style={styles.dataItem}>
+                            {
+                                edit ?
+                                    <StyledTextInput
+                                        style={styles.textInput}
+                                        value={habitEdit.locationDes}
+                                        onChangeText={(text) => setHabitEdit({ ...habitEdit, locationDes: text })}
+                                        autoCorrect={true}
+                                        multiline={true}
+                                        maxLength={Inputs.habitLocationMaxChar}
+                                    />
+                                    : <AsapTextMedium style={styles.dataText}>{habit.locationDes}</AsapTextMedium>
+                            }
+                        </View>
+
+                        <View style={styles.dataItem}>
+                            {
+                                edit ?
+                                    <StyledTextInput
+                                        style={styles.textInput}
+                                        value={habitEdit.cue}
+                                        onChangeText={(text) => setHabitEdit({ ...habitEdit, cue: text })}
+                                        autoCorrect={true}
+                                        multiline={true}
+                                        maxLength={Inputs.habitCueMaxChar}
+                                    />
+                                    : <AsapTextMedium style={styles.dataText}>{habit.cue}</AsapTextMedium>
+                            }
+                        </View>
+
                     </View>
 
-                    <View style={styles.dataItem}>
-                        <MaterialCommunityIcons name="sigma" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
-                        <LatoText style={styles.dataText}>{habit.completedHabits.length}</LatoText>
-                    </View>
 
-                    <View style={styles.dataItem}>
-                        <Entypo name="link" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
-                        {
-                            edit ?
-                                <StyledTextInput
-                                    style={styles.textInput}
-                                    value={habitEdit.cue}
-                                    onChangeText={(text) => setHabitEdit({ ...habitEdit, cue: text })}
-                                    autoCorrect={true}
-                                    multiline={true}
-                                    maxLength={Inputs.habitCueMaxChar}
-                                />
-                                : <LatoText style={styles.dataText}>{habit.cue}</LatoText>
-                        }
-                    </View>
+                    <View style={{ marginTop: 10 }}>
 
-                    <View style={styles.dataItem}>
-                        <Entypo name="location-pin" size={normalizeHeight(40)} color={Colors.veryLightGrey} />
-                        {
-                            edit ?
-                                <StyledTextInput
-                                    style={styles.textInput}
-                                    value={habitEdit.locationDes}
-                                    onChangeText={(text) => setHabitEdit({ ...habitEdit, locationDes: text })}
-                                    autoCorrect={true}
-                                    multiline={true}
-                                    maxLength={Inputs.habitLocationMaxChar}
-                                />
-                                : <LatoText style={styles.dataText}>{habit.locationDes}</LatoText>
-                        }
-                    </View>
+                        <View style={styles.dataItem}>
+                            <Entypo name="bar-graph" size={normalizeHeight(40)} color={Colors.secondary} style={{ marginRight: 2 }} />
+                            <AsapTextMedium style={styles.dataText}>{calcConsecutiveTotal()} day(s) in a row</AsapTextMedium>
+                        </View>
 
-                    <View style={styles.dataItem}>
-                        <Entypo name="text-document" size={normalizeHeight(40)} color={Colors.veryLightGrey} onPress={onShowNotes} />
-                        {
-                            edit ?
-                                <StyledTextInput
-                                    style={styles.textInput}
-                                    value={habitEdit.notes}
-                                    onChangeText={(text) => setHabitEdit({ ...habitEdit, notes: text })}
-                                    autoCorrect={true}
-                                    multiline={true}
-                                    maxLength={Inputs.habitNotesMaxChar}
-                                />
-                                : <ScrollView style={{ maxHeight: normalizeHeight(20) }}>
-                                    <LatoText style={styles.dataText}>{habit.notes}</LatoText>
-                                </ScrollView>
-                        }
+                        <View style={styles.dataItem}>
+                            <Entypo name="text-document" size={normalizeHeight(35)} color={Colors.secondary} onPress={onShowNotes} style={{ marginRight: 2 }} />
+                            {
+                                edit ?
+                                    <StyledTextInput
+                                        style={styles.textInput}
+                                        value={habitEdit.notes}
+                                        onChangeText={(text) => setHabitEdit({ ...habitEdit, notes: text })}
+                                        autoCorrect={true}
+                                        multiline={true}
+                                        maxLength={Inputs.habitNotesMaxChar}
+                                    />
+                                    : <ScrollView style={{ maxHeight: normalizeHeight(20) }}>
+                                        <AsapText style={styles.dataText}>{habit.notes}</AsapText>
+                                    </ScrollView>
+                            }
+                        </View>
                     </View>
                 </View>
             }
@@ -189,29 +196,19 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
 
 const styles = StyleSheet.create({
     container: {
-        paddingLeft: 20,
-        paddingRight: 20,
-        paddingTop: normalizeHeight(14),
-        minHeight: normalizeHeight(2),
-        backgroundColor: Colors.primary,
-        borderBottomEndRadius: 20,
-        borderBottomLeftRadius: 20,
     },
     header: {
-        alignItems: 'center',
-        borderBottomColor: Colors.secondary,
-        borderBottomWidth: 1
     },
     pickerItemStyle: {
         fontSize: normalizeHeight(60),
-        color: Colors.white,
+        color: Colors.primary,
         padding: normalizeWidth(10),
         height: normalizeHeight(30),
         borderRadius: 10
     },
     timeText: {
         fontSize: normalizeHeight(60),
-        color: Colors.white
+        color: Colors.primary
     },
     timeContainer: {
         flex: 1,
@@ -234,25 +231,24 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         borderRadius: 10,
         borderWidth: 1,
-        borderColor: Colors.white,
+        borderColor: Colors.primary,
         padding: 10,
         paddingTop: 10,
         flex: 1,
         maxHeight: 100,
-        backgroundColor: Colors.veryLightGrey
+        backgroundColor: Colors.secondary
     },
     bell: {
 
     },
     headerText: {
-        fontSize: normalizeHeight(25),
-        color: Colors.white,
-        alignSelf: 'center',
+        fontSize: normalizeHeight(20),
+        color: Colors.primary,
         textTransform: 'capitalize'
     },
     headerSubText: {
         fontSize: normalizeHeight(70),
-        color: Colors.white,
+        color: Colors.primary,
         textDecorationLine: 'line-through',
         alignSelf: 'flex-end'
     },
@@ -263,21 +259,19 @@ const styles = StyleSheet.create({
     dataItem: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 10,
-        paddingLeft: 10,
-        paddingRight: 10
+        marginTop: 5,
+        flexWrap: 'wrap'
     },
     dataText: {
-        fontSize: normalizeHeight(55),
-        color: Colors.white,
-        marginLeft: 10
+        fontSize: normalizeHeight(60),
+        color: Colors.primary,
     },
     notifiedText: {
         fontSize: normalizeHeight(55),
-        color: Colors.white,
+        color: Colors.primary,
     },
     totalMinsText: {
         fontSize: normalizeHeight(55),
-        color: Colors.white,
+        color: Colors.primary,
     }
 })

@@ -15,13 +15,14 @@ import { setBanner } from '../services/banner/actions';
 import { BannerActionsProps } from '../services/banner/types';
 import { addCompletedHabit, updateHabit, archiveHabit } from '../services/habits/actions';
 import Modal from '../components/habit/ArchiveModal';
-import { normalizeHeight } from '../utils/styles';
-import { LinearGradient } from 'expo-linear-gradient';
+import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import DropBallJar from '../components/habit/DropBallJar';
 import ShootingStars from '../components/shootingstars';
 import CongratsStar from '../components/congrats/Star';
 import { cloneDeep, isEqual } from 'lodash';
 import { AsapText } from '../components/StyledText';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Tracker from '../components/habit/tracker';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
 type HabitComRouteProps = RouteProp<RootStackParamList, 'Habit'>
@@ -235,42 +236,27 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
     }
 
     return (
-        <LinearGradient
-            style={{ flex: 1 }}
-            colors={[Colors.primary, 'rgba(17, 81, 115, 0.5)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-        >
-            <ShootingStars count={consecCompletedHabits.length} />
-            {congratsIndex != undefined && <CongratsStar goalIndex={congratsIndex} />}
-            <ScrollView
-                style={styles.container}
-                disableScrollViewPanResponder={true}
-                contentContainerStyle={{ paddingBottom: 20 }}
-                scrollEnabled={scrollEnabled}
-                decelerationRate={0}
-            >
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={{
+                flex: 1,
+                padding: normalizeWidth(15)
+            }}>
+                {congratsIndex != undefined && <CongratsStar goalIndex={congratsIndex} />}
                 <HabitHeader
                     habit={habit}
                     edit={edit}
                     setHabitEdit={setHabitEdit}
                     habitEdit={habitEdit}
                 />
-                <Pressable style={styles.infoContainer} onPress={() => setShowInfo(showInfo ? false : true)} hitSlop={2}>
-                    <Entypo name="info-with-circle" size={normalizeHeight(60)} color={Colors.white} onPress={() => setShowInfo(showInfo ? false : true)} />
-                    {showInfo && <AsapText style={styles.text}>If miss more than one day, the jar will reset to previous goal met.</AsapText>}
-                </Pressable>
-                <View style={styles.habit}>
-                    <DropBallJar
-                        setScrollEnabled={setScrollEnabled}
-                        completedHabits={consecCompletedHabits}
-                        handleAddCompletedHabit={handleAddCompletedHabit}
-                        activeDay={route.params.activeDay}
-                        resetBalls={resetBalls}
-                    />
-                </View>
-            </ScrollView>
-        </LinearGradient>
+                <Tracker
+                    completedHabits={habit.completedHabits}
+                    startDate={habit.createdAt}
+                    endDate={habit.archivedAt}
+                    activeDay={route.params.activeDay}
+                    handleAddCompletedHabit={handleAddCompletedHabit}
+                />
+            </View>
+        </SafeAreaView>
     )
 }
 

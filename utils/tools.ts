@@ -29,7 +29,7 @@ export function formatTime(time: Time) {
         amPm = time.hour > 12 ? 'pm' : 'am';
     }
 
-    return hourStr + ':' + timeStr + amPm
+    return hourStr + ':' + timeStr
 }
 
 export function convertTimeToInt(time: Time) {

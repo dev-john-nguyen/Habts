@@ -155,11 +155,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased 
 
     const navToHabit = (item: HabitProps) => !expired && navigation.navigate('Habit', { habitDocId: item.docId, activeDay: activeDate.getDate() });
 
-    const navToReview = () => !expired && navigation.navigate('Review');
-
     const navToNew = () => !expired && navigation.navigate('New');
-
-    const navToReviewHistory = () => !expired && navigation.navigate('ReviewHistory');
 
     const navToHabitHistory = () => !expired && navigation.navigate('HabitHistory');
 
@@ -173,86 +169,70 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased 
         return activeDate.getDate() === todaysDate.getDate() && activeDate.getMonth() === todaysDate.getMonth() && activeDate.getFullYear() === todaysDate.getFullYear()
     }
 
-
-    const renderReviewTxt = () => {
-        // const daysTilReview = getDateDiffInDays(calcMonthsInAdvance(DateTime.fromJSDate(user.createdAt), 1), DateTime.now());
-        // const { days, text, months } = daysTilReview;
-
-        // if ((!days || days < 1) && (months)) {
-        //     return "Take some time today to reflect.";
-        // }
-
-        // return text + ' until next review.';
-
-        return "Take some time today to reflect.";
-    }
-
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
                 <View style={styles.headerLeftContainer}>
-                    {showCal ?
-                        <Calendar
-                            setActiveDate={setActiveDate}
-                            activeDate={activeDate}
-                            setShowCal={setShowCal}
-                        />
-                        :
-                        <Pressable
-                            onLongPress={() => setShowCal(true)}
-                            style={({ pressed }) => pressed ? [styles.dateContainer, { backgroundColor: Colors.secondary, borderRadius: 10 }] : styles.dateContainer}>
-                            <AsapText style={styles.dayText}>{activeDate.getDate()}</AsapText>
-                            <View>
-                                <AsapText style={styles.dateText}>{getDayName(activeDate)}</AsapText>
-                                <AsapText style={styles.dateText}>{getMonthShort(activeDate)} {activeDate.getFullYear()}</AsapText>
-                            </View>
-                            {!isTodaysDate() && <Entypo name="back-in-time" size={normalizeHeight(30)} color="white" style={styles.refreshTime} onPress={onRefresh} />}
-                        </Pressable>
-                    }
+                    <View style={styles.dateContainer}>
+                        <AsapTextBold style={styles.dayText}>{activeDate.getDate()}</AsapTextBold>
+                        <View>
+                            <AsapText style={styles.dateText}>{getDayName(activeDate)}</AsapText>
+                            <AsapText style={[styles.dateText, { marginTop: 5 }]}>{getMonthShort(activeDate)} {activeDate.getFullYear()}</AsapText>
+                        </View>
+                        {!isTodaysDate() && <Entypo name="back-in-time" size={normalizeHeight(30)} color="white" style={styles.refreshTime} onPress={onRefresh} />}
+                    </View>
                 </View>
                 <View style={styles.headerRightContainer}>
                     <HomeBadges habits={[...habits, ...archivedHabits]} navigation={navigation} />
                 </View>
             </View>
-            <View style={styles.notificationContainer}>
-                <Pressable style={styles.notificationContent} onPress={navToReview}>
-                    <FontAwesome name="file-text" size={normalizeWidth(20)} color={Colors.white} onPress={navToReview} />
-                    <AsapText style={styles.reviewText}>Take some time today to reflect</AsapText>
-                </Pressable>
-            </View>
-            <View style={styles.listTitleContainer}>
-                <AsapTextBold style={styles.listTitleTimeText}>Time</AsapTextBold>
-                <AsapTextBold style={styles.listTitleHabitText}>Habit</AsapTextBold>
-            </View>
-            <FlatList
-                data={todayHabits}
-                extraData={activeDate}
-                ref={ref => listRef.current = ref}
-                ListHeaderComponentStyle={styles.listHeader}
-                ListEmptyComponent={() => (
-                    <Pressable style={styles.empty} onPress={navToNew}>
-                        <Entypo
-                            name="add-to-list"
-                            size={normalizeHeight(25)}
-                            color={Colors.white}
-                            onPress={navToNew}
+
+
+            <View style={styles.content}>
+
+                <View style={styles.contentBg} />
+
+                <Calendar setActiveDate={setActiveDate} activeDate={activeDate} />
+
+                <View style={styles.borderLineBottom} />
+
+                <FlatList
+                    data={todayHabits}
+                    extraData={activeDate}
+                    contentContainerStyle={styles.contentContainerStyle}
+                    ref={ref => listRef.current = ref}
+                    ListHeaderComponent={() => (
+                        <View style={styles.listTitleContainer}>
+                            <AsapText style={styles.listHeaderText}>Time</AsapText>
+                            <View style={{ flex: .1 }} />
+                            <AsapText style={styles.listHeaderText}>Habit</AsapText>
+                        </View>
+                    )}
+                    ListHeaderComponentStyle={styles.listHeader}
+                    ListEmptyComponent={() => (
+                        <Pressable style={styles.empty} onPress={navToNew}>
+                            <Entypo
+                                name="add-to-list"
+                                size={normalizeHeight(25)}
+                                color={Colors.white}
+                                onPress={navToNew}
+                            />
+                        </Pressable>
+                    )}
+                    renderItem={({ item, index }) => (
+                        <HabitPreview
+                            onPress={() => navToHabit(item)}
+                            habit={item}
+                            active={index === activeTime}
                         />
-                    </Pressable>
-                )}
-                renderItem={({ item, index }) => (
-                    <HabitPreview
-                        onPress={() => navToHabit(item)}
-                        habit={item}
-                        active={index === activeTime}
-                    />
-                )}
-                keyExtractor={(item, index) => item.docId ? item.docId + index.toString() : index.toString()}
-            />
+                    )}
+                    keyExtractor={(item, index) => item.docId ? item.docId + index.toString() : index.toString()}
+                />
+            </View>
 
             <BottomTab
                 navtoNew={navToNew}
                 navToHabitHistory={navToHabitHistory}
-                navToReviewHistory={navToReviewHistory}
                 navToSettings={navToSettings}
             />
             {expired && <Pay
@@ -269,6 +249,30 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingBottom: 50,
     },
+    contentContainerStyle: {
+        paddingBottom: normalizeHeight(5)
+    },
+    borderLineBottom: {
+        width: '100%',
+        height: 1,
+        backgroundColor: Colors.mediumGrey,
+        marginTop: 5
+    },
+    content: {
+        backgroundColor: Colors.contentBg,
+        marginTop: normalizeHeight(20),
+        paddingTop: normalizeHeight(50),
+        borderTopRightRadius: 60,
+        borderTopLeftRadius: 60,
+    },
+    contentBg: {
+        backgroundColor: Colors.contentBg, width: normalizeWidth(.9), alignSelf: 'center',
+        height: '100%',
+        borderTopRightRadius: 100,
+        borderTopLeftRadius: 100,
+        zIndex: -100,
+        position: 'absolute'
+    },
     superman: {
         position: 'absolute',
         top: normalizeHeight(2),
@@ -281,8 +285,6 @@ const styles = StyleSheet.create({
     dateContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        height: normalizeHeight(10),
         width: normalizeWidth(2.5),
     },
     refreshTime: {
@@ -293,29 +295,24 @@ const styles = StyleSheet.create({
     },
     dayText: {
         fontSize: normalizeWidth(6.5),
-        color: Colors.white,
+        color: Colors.primary,
         marginRight: 10
     },
     dateText: {
-        fontSize: normalizeWidth(20),
-        color: Colors.white
+        fontSize: normalizeWidth(25),
+        color: Colors.grey
     },
     listTitleContainer: {
         width: '100%',
-        marginBottom: 10,
+        marginTop: 20,
+        marginBottom: 20,
         flexDirection: 'row',
         zIndex: -1
     },
-    listTitleTimeText: {
+    listHeaderText: {
         flex: .2,
-        color: Colors.white,
-        fontSize: normalizeWidth(25)
-    },
-    listTitleHabitText: {
-        flex: 1,
-        color: Colors.white,
-        textAlign: 'center',
-        fontSize: normalizeWidth(25)
+        color: Colors.grey,
+        fontSize: normalizeWidth(30)
     },
     empty: {
         alignSelf: 'stretch',
@@ -326,19 +323,15 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     listHeader: {
-        position: 'absolute',
-        top: -200,
-        width: '100%',
-        height: 150
     },
     headerContainer: {
         display: 'flex',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     headerLeftContainer: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
+        flex: .7
     },
     headerRightContainer: {
         flex: 1,
@@ -349,13 +342,6 @@ const styles = StyleSheet.create({
     headerText: {
         fontSize: normalizeWidth(7),
         color: Colors.white,
-    },
-    notificationContainer: {
-        marginBottom: normalizeHeight(50),
-        padding: 10,
-        marginLeft: 20,
-        justifyContent: 'flex-start',
-        zIndex: -1
     },
     notificationContent: {
         flexDirection: 'row',

@@ -8,12 +8,11 @@ import Layout from '../constants/Layout';
 
 interface BottomTabProps {
     navtoNew: () => void;
-    navToReviewHistory: () => void;
     navToHabitHistory: () => void;
     navToSettings: () => void;
 }
 
-export default ({ navtoNew, navToReviewHistory, navToHabitHistory, navToSettings }: BottomTabProps) => {
+export default ({ navtoNew, navToHabitHistory, navToSettings }: BottomTabProps) => {
     const menuWidth: any = useRef(new Animated.Value(0)).current;
     const menuHeight: any = useRef(new Animated.Value(0)).current;
 
@@ -59,9 +58,6 @@ export default ({ navtoNew, navToReviewHistory, navToHabitHistory, navToSettings
             case 'HabitHistory':
                 navToHabitHistory()
                 break;
-            case 'ReviewHistory':
-                navToReviewHistory()
-                break;
             case 'New':
                 navtoNew()
                 break;
@@ -106,15 +102,6 @@ export default ({ navtoNew, navToReviewHistory, navToHabitHistory, navToSettings
                                         onPress={() => handleOnPress('Settings')}
                                     />
                                 </Pressable>
-                                <Pressable onPress={() => handleOnPress('ReviewHistory')} hitSlop={5}>
-                                    <FontAwesome
-                                        name="file-text"
-                                        size={normalizeHeight(30)}
-                                        color={Colors.white}
-                                        onPress={() => handleOnPress('ReviewHistory')}
-                                    />
-                                </Pressable>
-
                                 <Pressable
                                     onPress={() => handleOnPress('HabitHistory')}
                                     hitSlop={5}

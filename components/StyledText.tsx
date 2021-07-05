@@ -10,6 +10,10 @@ export function AsapTextBold(props: TextProps) {
   return <Text {...props} style={[props.style, { fontFamily: 'Asap_700Bold' }]} />;
 }
 
+export function AsapTextMedium(props: TextProps) {
+  return <Text {...props} style={[props.style, { fontFamily: 'Asap_500Medium' }]} />;
+}
+
 function checkItalic(style: any) {
   if (style && style.fontStyle && style.fontStyle == 'italic') {
     return 'Lato_400Regular_Italic'

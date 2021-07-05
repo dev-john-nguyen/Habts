@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { normalizeWidth, normalizeHeight } from '../../utils/styles';
 import { AsapText, AsapTextBold } from '../StyledText';
 import { HabitProps } from '../../services/habits/types';
+import Badge from "../../assets/svgs/badge";
 
 interface Props {
     consecutive: HabitProps['consecutive'];
@@ -25,12 +26,12 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
     for (let i = 0; i < goalKeys.length - 1; i++) {
         const { count, goal, total } = consecutive[goalKeys[i]];
         if (count.length >= goal) {
-            const star = (i % 2) < 1 ? 'star-o' : 'star';
-            const color = i < 2 ? Colors.white : Colors.yellow
+            const outlineBadge = (i % 2) < 1 ? true : false;
+            const color = i < 2 ? Colors.primary : Colors.yellow
             mappedBadges.push(
                 <View style={styles.star} key={i}>
-                    <FontAwesome name={star} size={size} color={color} />
                     {!name && <AsapText style={[styles.text, { color: color }]} numberOfLines={1}>{total}</AsapText>}
+                    <Badge fill={color} style={styles.badge} outlineBadge={outlineBadge} />
                 </View>
             )
         } else {
@@ -55,7 +56,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
     }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, Colors.boxShadowLight]}>
             <View style={styles.content}>
                 {mappedBadges}
             </View>
@@ -66,14 +67,14 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
 const styles = StyleSheet.create({
     container: {
         alignSelf: 'center',
-        backgroundColor: Colors.tertiary,
+        backgroundColor: Colors.white,
         borderRadius: 10,
         width: '60%',
-        top: 20
+        margin: 20
     },
     content: {
         flexDirection: 'row',
-        margin: 5,
+        margin: 1,
         justifyContent: 'space-evenly',
         alignItems: 'center'
     },
@@ -83,7 +84,10 @@ const styles = StyleSheet.create({
         marginLeft: 2
     },
     star: {
-        alignItems: 'center'
+        position: 'relative',
+        alignItems: 'center',
+        height: 50,
+        width: 50
     },
     nextGoalContainer: {
         flexDirection: 'row',
@@ -101,6 +105,9 @@ const styles = StyleSheet.create({
     info: {
         flexDirection: 'row',
         alignSelf: 'center'
+    },
+    badge: {
+        zIndex: 1000
     }
 })
 

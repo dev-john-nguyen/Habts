@@ -158,23 +158,18 @@ const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationT
     }
 
     return (
-        <LinearGradient
-            style={styles.container}
-            colors={[Colors.primary, 'rgba(17, 81, 115, 0.5)']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
-        >
-            <Stars quantity={30} rightMax={Layout.window.width} topMax={Layout.window.height} />
+        <View style={styles.container}>
             {renderContent()}
             <Banner removeBanner={removeBanner} banner={banner} />
-        </LinearGradient>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: Colors.bgColor
     }
 })
 
