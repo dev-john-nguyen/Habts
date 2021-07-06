@@ -2,9 +2,7 @@ import { HabitProps, HabitEditProps, Time, SequenceType } from "../types";
 import { convertTimeToInt, isValidTime, formatTimeForNotification } from "../../../utils/tools";
 import { realtimeDb } from "../../../firebase"; import Database from "../../../constants/Database";
 import { DateTime } from "luxon";
-import { ConsecutiveTools } from "./consecutive";
-
-const consecutiveTools = new ConsecutiveTools();
+import { consecutiveTools } from "./consecutive";
 
 export function processArchiveHabit(habits: HabitProps[], archivedHabits: HabitProps[], archivedData: { docId: string, archivedAt: Date }) {
     const foundHabit = habits.findIndex((habit) => habit.docId === archivedData.docId);
@@ -39,6 +37,11 @@ export function handleCompletedHabit(habits: HabitProps[], payload: { habitDocId
     const foundHabit = habits.findIndex((habit) => habit.docId === payload.habitDocId);
 
     if (foundHabit >= 0) {
+
+        //check duplicate date
+        const isDuplicate = habits[foundHabit].completedHabits.find(({ dateCompleted }) => consecutiveTools.datesAreOnSameDay(dateCompleted, payload.newDate));
+        if (isDuplicate) return habits;
+
         habits[foundHabit].completedHabits = [...habits[foundHabit].completedHabits, { dateCompleted: payload.newDate }]
         //update total and consecutive days
         habits[foundHabit].totalCount = habits[foundHabit].completedHabits.length;

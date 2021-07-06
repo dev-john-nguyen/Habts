@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, Pressable, StyleProp } from 'react-native';
-import { AsapText, LatoText } from '../../components/StyledText';
+import { AsapText, LatoText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
 import { SequenceType, SequenceProps, WeekDay } from '../../services/habits/types';
 import { StyledSecondaryButton, StyledPrimaryButton } from '../../components/StyledButton';
 import { BannerActionsProps } from '../../services/banner/types';
 import Colors from '../../constants/Colors';
 import { FlatList } from 'react-native-gesture-handler';
+import { normalizeWidth, normalizeHeight } from '../../utils/styles';
 
 interface Props {
     sequence: SequenceProps;
@@ -55,54 +56,65 @@ export default ({ sequence, setSequence, handleNextStep, handlePreviousStep, set
         }
     }
 
+    const isSelectedDay = (dayOfWeek: number): StyleProp<any> => {
+        const foundValue = sequence.value.findIndex(val => val === dayOfWeek)
+        if (foundValue >= 0) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     const renderWeekly = () => (
         <View style={styles.weekContainer}>
             <Pressable onPress={() => handleValueChange(0)} style={() => renderDayStyles(0)}>
-                <AsapText style={styles.weekDayText}>Sunday</AsapText>
+                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(0) ? Colors.white : Colors.primary }]}>Sunday</AsapTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(1)} style={() => renderDayStyles(1)}>
-                <AsapText style={styles.weekDayText}>Monday</AsapText>
+                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(1) ? Colors.white : Colors.primary }]}>Monday</AsapTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(2)} style={() => renderDayStyles(2)}>
-                <AsapText style={styles.weekDayText}>Tuesday</AsapText>
+                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(2) ? Colors.white : Colors.primary }]}>Tuesday</AsapTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(3)} style={() => renderDayStyles(3)}>
-                <AsapText style={styles.weekDayText}>Wednesday</AsapText>
+                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(3) ? Colors.white : Colors.primary }]}>Wednesday</AsapTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(4)} style={() => renderDayStyles(4)}>
-                <AsapText style={styles.weekDayText}>Thursday</AsapText>
+                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(4) ? Colors.white : Colors.primary }]}>Thursday</AsapTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(5)} style={() => renderDayStyles(5)}>
-                <AsapText style={styles.weekDayText}>Friday</AsapText>
+                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(5) ? Colors.white : Colors.primary }]}>Friday</AsapTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(6)} style={() => renderDayStyles(6)}>
-                <AsapText style={styles.weekDayText}>Saturday</AsapText>
+                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(6) ? Colors.white : Colors.primary }]}>Saturday</AsapTextMedium>
             </Pressable>
         </View>
     )
 
     const renderMonthly = () => (
-        <View>
-            <FlatList
-                data={numberArray}
-                style={styles.monthlyContainer}
-                renderItem={({ item }) => (
+        <FlatList
+            data={numberArray}
+            style={styles.monthlyContainer}
+            renderItem={({ item }) => {
+                let isSelected = sequence.value.find(day => day == item);
+                return (
                     <Pressable
                         onPress={() => handleValueChange(item)}
-                        style={[styles.monthly, sequence.value.find(day => day == item) ? styles.monthlyActive : undefined]}
+                        style={[styles.monthly, isSelected ? styles.monthlyActive : undefined]}
                     >
-                        <AsapText style={styles.monthlyText}>{item}</AsapText>
+                        <AsapTextMedium style={[styles.monthlyText, { color: isSelected ? Colors.white : Colors.primary }]}>{item}</AsapTextMedium>
                     </Pressable>
-                )}
-                keyExtractor={(item) => item.toString()}
-            />
-        </View>
+                )
+            }
+            }
+            keyExtractor={(item) => item.toString()}
+        />
     )
 
     const renderOptionStyle = (value: SequenceType): StyleProp<any> => {
         switch (value) {
             case SequenceType.daily:
-                return [styles.option, sequence.type === SequenceType.daily && styles.optionActive]
+                return [styles.option, sequence.type === SequenceType.daily && styles.optionActive,]
             case SequenceType.weekly:
                 return [styles.option, sequence.type === SequenceType.weekly && styles.optionActive]
             case SequenceType.monthly:
@@ -113,26 +125,29 @@ export default ({ sequence, setSequence, handleNextStep, handlePreviousStep, set
     }
 
     return (
-        <View style={styles.step}>
-            <AsapText style={styles.questionText}>How Frequent Do You Want To Do This Habit?</AsapText>
-            <LatoText style={styles.infoText}>Daily, Weekly, or Monthly?</LatoText>
+        <View style={styles.container}>
+            <View>
+                <AsapTextBold style={styles.questionText}>How Frequent Do You Want To Do This Habit?</AsapTextBold>
+            </View>
             <View style={styles.optionsContainer}>
                 <Pressable style={() => renderOptionStyle(SequenceType.daily)} onPress={() => setSequence({ type: SequenceType.daily, value: [] })}>
-                    <AsapText style={styles.optionText}>Daily</AsapText>
+                    <AsapTextBold style={[styles.optionText, { color: sequence.type === SequenceType.daily ? Colors.white : Colors.primary }]}>Daily</AsapTextBold>
                 </Pressable>
                 <Pressable style={() => renderOptionStyle(SequenceType.weekly)} onPress={() => setSequence({ type: SequenceType.weekly, value: [] })}>
-                    <AsapText style={styles.optionText}>Weekly</AsapText>
+                    <AsapTextBold style={[styles.optionText, { color: sequence.type === SequenceType.weekly ? Colors.white : Colors.primary }]}>Weekly</AsapTextBold>
                 </Pressable>
                 <Pressable style={() => renderOptionStyle(SequenceType.monthly)} onPress={() => setSequence({ type: SequenceType.monthly, value: [] })}>
-                    <AsapText style={styles.optionText}>Monthly</AsapText>
+                    <AsapTextBold style={[styles.optionText, { color: sequence.type === SequenceType.monthly ? Colors.white : Colors.primary }]}>Monthly</AsapTextBold>
                 </Pressable>
             </View>
-            {
-                sequence.type === SequenceType.weekly && renderWeekly()
-            }
-            {
-                sequence.type === SequenceType.monthly && renderMonthly()
-            }
+            <View style={styles.optionValuesContainer}>
+                {
+                    sequence.type === SequenceType.weekly && renderWeekly()
+                }
+                {
+                    sequence.type === SequenceType.monthly && renderMonthly()
+                }
+            </View>
             <View style={styles.buttonContainer}>
                 <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
                 <StyledPrimaryButton text='Next' style={{ flex: .4 }} onPress={onNextPress} />
@@ -142,18 +157,25 @@ export default ({ sequence, setSequence, handleNextStep, handlePreviousStep, set
 }
 
 const styles = StyleSheet.create({
-    step: {
-        marginTop: 10,
-        width: '100%'
+    container: {
+        backgroundColor: Colors.contentBg,
+        padding: normalizeWidth(15),
+        borderRadius: 20,
+        height: normalizeHeight(2),
+        justifyContent: 'space-between'
     },
     weekContainer: {
         flexDirection: 'row',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        flex: 1
     },
     monthlyContainer: {
-        height: 100,
-        width: 200,
-        alignSelf: 'center'
+        flex: 1,
+        width: '60%'
+    },
+    optionValuesContainer: {
+        flex: 1,
+        alignItems: 'center'
     },
     monthly: {
         padding: 10,
@@ -165,13 +187,11 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.secondary
     },
     monthlyText: {
-        fontSize: 16,
+        fontSize: normalizeWidth(30),
         alignSelf: 'center',
-        color: Colors.white
     },
     weekDayText: {
-        fontSize: 14,
-        color: Colors.white
+        fontSize: normalizeWidth(30)
     },
     weekDay: {
         padding: 10,
@@ -188,11 +208,11 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         margin: 20,
-        marginTop: 30
+        marginTop: 10
     },
     optionText: {
         fontSize: 16,
-        color: Colors.white
+        color: Colors.primary
     },
     option: {
         padding: 10,
@@ -201,24 +221,16 @@ const styles = StyleSheet.create({
         borderRadius: 20,
     },
     optionActive: {
-        backgroundColor: Colors.primary
+        backgroundColor: Colors.primary,
     },
     questionText: {
         textTransform: 'capitalize',
-        fontSize: 30,
-        color: Colors.white
-    },
-    infoText: {
-        margin: 5,
-        marginLeft: 10,
-        fontSize: 12,
-        color: Colors.white,
-        fontStyle: 'italic'
+        fontSize: normalizeWidth(15),
+        color: Colors.primary
     },
     buttonContainer: {
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginTop: 50
     }
 })

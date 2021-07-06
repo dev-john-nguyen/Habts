@@ -43,7 +43,7 @@ const Track = ({ type, date, badge, missCountRows }: Props) => {
             borderColor = Colors.red;
             break;
         case 'warning':
-            icon = <AlertCircle color={Colors.orange} />
+            icon = <AlertCircle fillColor={Colors.white} strokeColor={Colors.orange} />
             borderColor = Colors.orange;
             break;
         case 'badge':
@@ -102,7 +102,9 @@ const styles = StyleSheet.create({
         height: normalizeWidth(8)
     },
     badge: {
-        height: normalizeWidth(10), width: normalizeWidth(10)
+        height: normalizeWidth(10),
+        width: normalizeWidth(10),
+        top: 6
     },
     iconContainer: {
         flex: .9,

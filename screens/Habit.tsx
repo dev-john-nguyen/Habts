@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
-import { View, StyleSheet, ActivityIndicator, Pressable } from 'react-native'
+import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import Colors from '../constants/Colors';
 import { Entypo } from '@expo/vector-icons';
-import { ScrollView } from 'react-native-gesture-handler';
 import Layout from '../constants/Layout';
 import { BottomTabParamList, RootStackParamList } from '../navigation/types';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -16,13 +15,11 @@ import { BannerActionsProps } from '../services/banner/types';
 import { addCompletedHabit, updateHabit, archiveHabit } from '../services/habits/actions';
 import Modal from '../components/habit/ArchiveModal';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
-import DropBallJar from '../components/habit/DropBallJar';
-import ShootingStars from '../components/shootingstars';
 import CongratsStar from '../components/congrats/Star';
 import { cloneDeep, isEqual } from 'lodash';
-import { AsapText } from '../components/StyledText';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Tracker from '../components/habit/tracker';
+import { AsapTextBold, AsapText } from '../components/StyledText';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
 type HabitComRouteProps = RouteProp<RootStackParamList, 'Habit'>
@@ -237,10 +234,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
-            <View style={{
-                flex: 1,
-                padding: normalizeWidth(15)
-            }}>
+            <View style={styles.container}>
                 {congratsIndex != undefined && <CongratsStar goalIndex={congratsIndex} />}
                 <HabitHeader
                     habit={habit}
@@ -254,7 +248,12 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                     endDate={habit.archivedAt}
                     activeDay={route.params.activeDay}
                     handleAddCompletedHabit={handleAddCompletedHabit}
+                    consecutive={habit.consecutive}
                 />
+                <View style={styles.totalContainer}>
+                    <AsapText>Total: </AsapText>
+                    <AsapTextBold>{habit.completedHabits.length}</AsapTextBold>
+                </View>
             </View>
         </SafeAreaView>
     )
@@ -268,68 +267,12 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        padding: normalizeWidth(15)
     },
-    bell: {
-        position: 'absolute',
-        top: '10%',
-        right: -30,
-        zIndex: 10
-    },
-    menu: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        padding: 20,
-        backgroundColor: Colors.secondary,
-        borderTopLeftRadius: 20,
-        borderBottomLeftRadius: 20,
-    },
-    content: {
-        height: (Layout.window.height / 3),
-        paddingLeft: 20,
-        paddingRight: 20,
-    },
-    header: {
-        flex: .5,
-        alignItems: 'center'
-    },
-    headerText: {
-        fontSize: 50,
-        color: Colors.primary,
-        alignSelf: 'center'
-    },
-    headerSubText: {
-        fontSize: 12,
-        color: Colors.grey,
-        textDecorationLine: 'line-through',
-        alignSelf: 'flex-end'
-    },
-    data: {
-        flex: 1,
-        justifyContent: 'space-evenly'
-    },
-    dataItem: {
+    totalContainer: {
         flexDirection: 'row',
-        alignItems: 'center'
-    },
-    infoContainer: {
-        width: '20%',
-        flexDirection: 'row',
-        marginLeft: 10,
-        top: normalizeHeight(9),
-        zIndex: 100
-    },
-    text: {
-        fontSize: normalizeHeight(60),
-        color: Colors.veryLightGrey,
-        marginLeft: 20,
-        position: 'absolute',
-        width: '100%'
-    },
-    habit: {
-        flex: 1
+        marginTop: 5
     }
-
 })
 
 const mapStateToProps = (state: ReducerStateProps) => ({

@@ -1,6 +1,6 @@
 import { HabitProps, SequenceProps } from "../types";
 
-export class ConsecutiveTools {
+class ConsecutiveTools {
 
     getNextDays(d: Date, days: number) {
         return new Date(d.getFullYear(), d.getMonth(), d.getDate() + days);
@@ -280,3 +280,5 @@ export class ConsecutiveTools {
     }
 
 }
+
+export const consecutiveTools = new ConsecutiveTools();

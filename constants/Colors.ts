@@ -31,6 +31,7 @@ export default {
   mediumGrey: '#EEEEEE',
   red: '#DC3333',
   orange: '#FF8D06',
+  orangeRgb: '255, 141, 6',
   yellow: '#ffd700',
   green: '#28DF99',
   veryLightGrey: '#e0e0e0',

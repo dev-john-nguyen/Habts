@@ -1,22 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { AsapText, LatoText, AsapTextBold } from '../StyledText';
-import { HabitProps, CompletedHabitsProps } from '../../services/habits/types';
-import { DateTime } from 'luxon';
+import { HabitProps, CompletedHabitsProps, HabitsActionsProps } from '../../services/habits/types';
+import { DateTime, Interval } from 'luxon';
 import { formatTime } from '../../utils/tools';
 import { normalizeWidth } from '../../utils/styles';
 import CircleChecked from '../../assets/svgs/CircleCheck';
 import CircleSquare from '../../assets/svgs/CircleSquare';
+import { consecutiveTools } from '../../services/habits/utils/consecutive';
+import AlertCircle from '../../assets/svgs/AlertCircle';
 
 interface HabitPreviewProps {
     onPress: () => void;
     habit: HabitProps;
     active: boolean;
+    addCompletedHabit: HabitsActionsProps['addCompletedHabit'];
+    activeDate: Date;
 }
 
-export default ({ onPress, habit, active }: HabitPreviewProps) => {
+export default ({ onPress, habit, active, addCompletedHabit, activeDate }: HabitPreviewProps) => {
+    const [loading, setLoading] = useState(false);
+    // const [pressed, setPressed] = useState(false);
+    // const [pressedColor, setPressedColor] = useState(Colors.orange)
     const styles = genStyles(active);
     const iconColor = active ? Colors.white : Colors.grey;
 
@@ -28,6 +35,88 @@ export default ({ onPress, habit, active }: HabitPreviewProps) => {
             consecutiveTotal = consecutiveTotal.concat(count)
         }
     })
+
+
+    // useEffect(() => {
+    //     let interval: any;
+    //     if (pressed) {
+    //         let opacity = 1;
+    //         let count = 0;
+    //         interval = setInterval(async () => {
+    //             setPressedColor(`rgba(${Colors.orangeRgb}, ${opacity})`);
+    //             opacity = opacity - .05;
+    //             if (count > 10) {
+    //                 clearInterval(interval);
+    //                 // await handleCompletePress();
+    //                 setPressedColor(Colors.orange)
+    //             } else {
+    //                 count++
+    //             }
+    //         }, 100)
+    //     } else {
+    //         clearInterval(interval)
+    //         setPressedColor(Colors.orange)
+    //     }
+
+    //     return () => {
+    //         clearInterval(interval)
+    //     }
+    // }, [pressed])
+
+    const handleCompletePress = async () => {
+        if (loading) return;
+
+        setLoading(true);
+
+        await addCompletedHabit(habit.docId)
+
+        setLoading(false)
+    }
+
+
+    const renderActionIcons = () => {
+        let todayDate = new Date();
+
+        if (!consecutiveTools.datesAreOnSameDay(todayDate, activeDate)) {
+            return (
+                <View style={styles.circleInfo}>
+                    <CircleSquare squareColor={Colors.mediumGrey} circleColor={Colors.grey} />
+                </View>
+            )
+        }
+
+        let foundCompleted = habit.completedHabits.find(({ dateCompleted }) => {
+            if (consecutiveTools.datesAreOnSameDay(dateCompleted, todayDate)) return true
+        })
+
+        if (foundCompleted) {
+            return (
+                <View style={styles.circleInfo}>
+                    <CircleChecked color={Colors.green} />
+                </View>
+            )
+        } else {
+            let prevDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() - 1);
+
+            let foundPrevDay = habit.completedHabits.find(({ dateCompleted }) => {
+                if (consecutiveTools.datesAreOnSameDay(dateCompleted, prevDate)) return true
+            });
+
+            if (foundPrevDay) {
+                return (
+                    <Pressable style={styles.circleInfo} onLongPress={handleCompletePress}>
+                        {({ pressed }) => <AlertCircle fillColor={pressed ? `rgba(${Colors.orangeRgb}, .5)` : Colors.orange} strokeColor={Colors.white} />}
+                    </Pressable>
+                )
+            }
+
+            return (
+                <Pressable style={styles.circleInfo} onLongPress={handleCompletePress}>
+                    {({ pressed }) => <CircleSquare squareColor={Colors.white} circleColor={pressed ? `rgba(${Colors.primaryRgb}, .5)` : Colors.primary} />}
+                </Pressable>
+            )
+        }
+    }
 
     return (
         <Pressable style={styles.container} onPress={onPress}
@@ -41,9 +130,7 @@ export default ({ onPress, habit, active }: HabitPreviewProps) => {
             </View>
             <View style={styles.contentContainer}>
 
-                <Pressable style={styles.circleInfo}>
-                    {active ? <CircleChecked color={Colors.green} /> : <CircleSquare squareColor={Colors.white} circleColor={Colors.primary} />}
-                </Pressable>
+                {renderActionIcons()}
 
                 <View style={styles.notification}>
                     {

@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     content: {
-        borderRadius: 1,
+        borderRadius: 1000,
         borderWidth: 1.5,
         height: '90%',
         width: '90%',

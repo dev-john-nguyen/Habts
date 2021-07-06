@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, ActivityIndicator, Pressable, Keyboard, Animated, SafeAreaView } from 'react-native';
-import { AsapText, LatoText } from '../components/StyledText';
+import { AsapText, AsapTextBold } from '../components/StyledText';
 import Colors from '../constants/Colors';
 import { StyledPrimaryButton, StyledSecondaryButton, StyledDisabledButton } from '../components/StyledButton';
 import { StyledTextInput } from '../components/StyledTextInput';
@@ -177,8 +177,8 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
         switch (step) {
             case 0:
                 return (
-                    <View style={styles.step}>
-                        <AsapText style={styles.questionText}>Removing An Old Habit?</AsapText>
+                    <View style={[styles.content, { height: normalizeHeight(5) }]}>
+                        <AsapTextBold style={styles.questionText}>Removing An Old Habit?</AsapTextBold>
                         <View style={styles.buttonContainer}>
                             <StyledPrimaryButton text='Yes' style={{ flex: .4 }} onPress={() => handleRemoveOldHabit(true)} />
                             <StyledSecondaryButton text='No' style={{ flex: .4 }} onPress={() => handleRemoveOldHabit(false)} />
@@ -187,9 +187,8 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             case 1:
                 return (
-                    <Pressable style={styles.step} onPress={Keyboard.dismiss}>
-                        <LatoText style={styles.infoText}>in a few words or less.</LatoText>
-                        <AsapText style={styles.questionText}>What Habit Do You Want To Remove From Your Life?</AsapText>
+                    <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
+                        <AsapTextBold style={styles.questionText}>What Habit Do You Want To Remove From Your Life?</AsapTextBold>
                         <StyledTextInput
                             value={remove}
                             style={styles.responseInput}
@@ -211,8 +210,8 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             case 2:
                 return (
-                    <View style={styles.step}>
-                        <AsapText style={styles.questionText}>We Recommend Replacing The Old Habit With A New One.</AsapText>
+                    <View style={[styles.content, { height: normalizeHeight(4) }]}>
+                        <AsapTextBold style={styles.questionText}>We Recommend Replacing The Old Habit With A New One.</AsapTextBold>
                         <View style={styles.buttonContainer}>
                             <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
                             <StyledPrimaryButton text='Next' style={{ flex: .4 }} onPress={handleNextStep} />
@@ -221,13 +220,13 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             case 3:
                 return (
-                    <Pressable style={styles.step} onPress={Keyboard.dismiss}>
-                        <LatoText style={styles.infoText}>in a few words or less.</LatoText>
-                        <AsapText style={styles.questionText}>What Habit Do You Want To Implement Into Your Life?</AsapText>
+                    <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
+                        <AsapTextBold style={styles.questionText}>What Habit Do You Want To Implement Into Your Life?</AsapTextBold>
                         <StyledTextInput
                             value={name}
                             style={styles.responseInput}
                             placeholder="Meditation"
+                            placeholderTextColor={Colors.grey}
                             autoCorrect={true}
                             multiline={false}
                             maxLength={Inputs.habitNameMaxChar}
@@ -264,13 +263,18 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 />
             case 6:
                 return (
-                    <Pressable style={styles.step} onPress={Keyboard.dismiss}>
-                        <LatoText style={styles.infoText}>In a few words or less.</LatoText>
-                        <AsapText style={styles.questionText}>Where Will You Be?</AsapText>
+                    <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
+                        <View>
+                            <AsapTextBold style={styles.questionText}>Location of which the habit will be performed</AsapTextBold>
+                            <AsapText style={styles.infoText}>Ex. Home - Living Room</AsapText>
+
+                        </View>
+
                         <StyledTextInput
                             value={locationDes}
                             style={styles.responseInput}
                             placeholder="Home - Living Room"
+                            placeholderTextColor={Colors.grey}
                             autoCorrect={true}
                             multiline={true}
                             maxLength={Inputs.habitLocationMaxChar}
@@ -289,13 +293,17 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             case 7:
                 return (
-                    <Pressable style={styles.step} onPress={Keyboard.dismiss}>
-                        <AsapText style={styles.questionText}>What Cue Do You Want To Trigger The Habit?</AsapText>
-                        <LatoText style={styles.infoText}>Something that you will do before you start the habit. Example, “I will meditate after I drink my morning coffee.” The habit is meditating and the cue is drinking the morning coffee.</LatoText>
+                    <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
+                        <View>
+                            <AsapTextBold style={styles.questionText}>What Cue Do You Want To Trigger The Habit?</AsapTextBold>
+                            <AsapText style={styles.infoText}>Ex. “I will meditate after I drink my morning coffee.”</AsapText>
+                        </View>
+
                         <StyledTextInput
                             value={cue}
                             style={styles.responseInput}
                             placeholder="I will meditate after I drink my morning coffee"
+                            placeholderTextColor={Colors.grey}
                             blurOnSubmit={true}
                             autoCorrect={true}
                             multiline={true}
@@ -324,13 +332,18 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 />
             case 9:
                 return (
-                    <Pressable style={styles.step} onPress={Keyboard.dismiss}>
-                        <AsapText style={styles.questionText}>Any Personal Notes You Want To Add?</AsapText>
-                        <LatoText style={styles.infoText}>Maybe include the reason WHY you want to implement this habit into your life.</LatoText>
+                    <Pressable style={[styles.content, { height: normalizeHeight(2.5) }]} onPress={Keyboard.dismiss}>
+
+                        <View>
+                            <AsapTextBold style={styles.questionText}>Any Personal Notes You Want To Add?</AsapTextBold>
+                            <AsapText style={styles.infoText}>Maybe include the reason WHY you want to implement this habit into your life.</AsapText>
+                        </View>
+
                         <StyledTextInput
                             value={notes}
-                            style={[styles.responseInput, { height: normalizeHeight(4) }]}
+                            style={[styles.responseInput, { flex: .8 }]}
                             placeholder="I want to decrease my stress and anxiety, and at the same time increase my self-awareness."
+                            placeholderTextColor={Colors.grey}
                             autoCorrect={true}
                             multiline={true}
                             maxLength={Inputs.habitNotesMaxChar}
@@ -344,7 +357,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             default:
                 return (
-                    <View style={styles.step}>
+                    <View style={styles.finalPreview}>
                         <View style={styles.overviewContainer}>
                             <HabitHeader
                                 newCom={true}
@@ -379,7 +392,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                         </View>
                         <View style={styles.overviewBtns}>
                             <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
-                            <StyledPrimaryButton text={loading ? <ActivityIndicator color={Colors.white} /> : 'Save'} style={{ flex: .4, zIndex: 100 }} onPress={handleSave} />
+                            <StyledPrimaryButton text={loading ? <ActivityIndicator color={Colors.primary} /> : 'Save'} style={{ flex: .4, zIndex: 100 }} onPress={handleSave} />
                         </View>
                     </View>
                 )
@@ -387,28 +400,31 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
     }
 
     return (
-        <>
-            <SafeAreaView style={{ flex: 1 }}>
-                <View style={styles.container}>
-                    {renderStep()}
-                    <Animated.View style={{ height: keyboardRef }} />
-                </View>
-            </SafeAreaView>
+        <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.container}>
+                {renderStep()}
+                <Animated.View style={{ height: keyboardRef }} />
+            </View>
             <View style={styles.bottomSvg}>
                 <BottomSvg />
             </View>
-            <ProgressAvatar step={step} />
-        </>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingLeft: 40,
-        paddingRight: 40,
+        padding: normalizeWidth(15),
         alignItems: 'center',
-        justifyContent: 'center',
+        marginTop: normalizeHeight(10)
+    },
+    finalPreview: {},
+    content: {
+        backgroundColor: Colors.contentBg,
+        padding: normalizeWidth(15),
+        borderRadius: 20,
+        justifyContent: 'space-between'
     },
     bottomSvg: {
         position: 'absolute',
@@ -416,39 +432,27 @@ const styles = StyleSheet.create({
         height: normalizeHeight(19),
         bottom: 0
     },
-    step: {
-        flex: 1,
-        marginTop: 10,
-        justifyContent: 'center',
-    },
     questionText: {
         textTransform: 'capitalize',
-        fontSize: normalizeWidth(12),
-        color: Colors.white
+        fontSize: normalizeWidth(15),
+        color: Colors.primary,
     },
     infoText: {
-        margin: 5,
-        marginLeft: 10,
-        fontSize: normalizeWidth(25),
-        color: Colors.white,
-        fontStyle: 'italic'
+        fontSize: normalizeWidth(30),
+        color: Colors.primary,
     },
     responseInput: {
-        borderRadius: 20,
-        borderWidth: 1,
-        borderColor: Colors.primary,
+        borderRadius: 10,
         fontSize: normalizeWidth(25),
         padding: 10,
         paddingTop: 10,
         color: Colors.primary,
-        backgroundColor: Colors.veryLightGrey,
-        marginTop: 50
+        backgroundColor: Colors.white
     },
     buttonContainer: {
         width: '100%',
         flexDirection: 'row',
         justifyContent: 'space-around',
-        marginTop: 50
     },
     overviewBtns: {
         flexDirection: 'row',

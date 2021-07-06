@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
 import { StyledPrimaryButton, StyledDisabledButton, StyledSecondaryButton } from '../../components/StyledButton';
-import { LatoText, AsapText } from '../../components/StyledText';
+import { AsapText, AsapTextBold } from '../../components/StyledText';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import { Entypo } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
@@ -20,17 +20,10 @@ interface Props {
 export default ({ notificationNum, notificationOn, setNotificationOn, setNotificationNum, handlePreviousStep, handleNextStep }: Props) => {
 
     return (
-        <View style={styles.step}>
-            <LatoText style={styles.infoText}>Up to an hour before,</LatoText>
-            <AsapText style={styles.questionText}>At What Time Do You Want To Be Notified?</AsapText>
-            <View style={styles.container}>
-
-                {
-                    notificationOn
-                        ? <Entypo name="bell" size={normalizeHeight(35)} color={Colors.white} style={styles.bell} onPress={() => setNotificationOn(false)} />
-                        : <Entypo name="sound-mute" size={normalizeHeight(35)} color={Colors.white} style={styles.bell} onPress={() => setNotificationOn(true)} />
-                }
-
+        <View style={styles.container}>
+            <AsapText style={styles.infoText}>Up to an hour before,</AsapText>
+            <AsapTextBold style={styles.questionText}>At What Time Do You Want To Be Notified?</AsapTextBold>
+            <View style={styles.content}>
                 <Picker
                     selectedValue={notificationNum}
                     onValueChange={(itemValue: any, itemIndex: number) => setNotificationNum(parseInt(itemValue))}
@@ -40,7 +33,13 @@ export default ({ notificationNum, notificationOn, setNotificationOn, setNotific
                         <Picker.Item label={item.toString()} value={item} key={item.toString()} />
                     ))}
                 </Picker>
-                <LatoText style={styles.text}>Mins Before</LatoText>
+                <AsapText style={styles.text}>mins before</AsapText>
+                {
+                    notificationOn
+                        ? <Entypo name="bell" size={normalizeHeight(35)} color={Colors.primary} style={styles.bell} onPress={() => setNotificationOn(false)} />
+                        : <Entypo name="sound-mute" size={normalizeHeight(35)} color={Colors.primary} style={styles.bell} onPress={() => setNotificationOn(true)} />
+                }
+
             </View>
             <View style={styles.buttonContainer}>
                 <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
@@ -55,6 +54,11 @@ export default ({ notificationNum, notificationOn, setNotificationOn, setNotific
 }
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: Colors.contentBg,
+        padding: normalizeWidth(15),
+        borderRadius: 20,
+    },
     habitList: {
         padding: 5,
         paddingLeft: 10,
@@ -63,25 +67,22 @@ const styles = StyleSheet.create({
         flex: 1
     },
     text: {
-        fontSize: normalizeHeight(45),
-        color: Colors.white
+        fontSize: normalizeWidth(25),
+        color: Colors.primary
     },
-    container: {
+    content: {
         flexDirection: 'row',
-        justifyContent: 'center',
         alignItems: 'center'
     },
-    bell: {},
-    pickerItemStyle: {
-        fontSize: normalizeHeight(30),
-        color: Colors.white,
-        padding: normalizeWidth(10),
-        height: normalizeHeight(30),
-        borderRadius: 10
+    bell: {
+        marginLeft: 5
     },
-    step: {
-        marginTop: 20,
-        width: '100%',
+    pickerItemStyle: {
+        fontSize: normalizeWidth(25),
+        color: Colors.primary,
+        padding: normalizeWidth(10),
+        height: normalizeHeight(10),
+        borderRadius: 20
     },
     buttonContainer: {
         width: '100%',
@@ -91,15 +92,12 @@ const styles = StyleSheet.create({
     },
     questionText: {
         textTransform: 'capitalize',
-        fontSize: normalizeWidth(12),
-        color: Colors.white
+        fontSize: normalizeWidth(15),
+        color: Colors.primary
     },
     infoText: {
-        margin: 5,
-        marginLeft: 10,
-        fontSize: normalizeWidth(25),
-        color: Colors.white,
-        fontStyle: 'italic'
+        fontSize: normalizeWidth(30),
+        color: Colors.primary,
     },
 })
 

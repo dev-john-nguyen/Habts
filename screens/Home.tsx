@@ -9,7 +9,7 @@ import { RootStackParamList } from '../navigation/types';
 import BottomTab from '../navigation/BottomTab';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../services';
-import { HabitsProps, HabitProps, SequenceType } from '../services/habits/types';
+import { HabitsProps, HabitProps, SequenceType, HabitsActionsProps } from '../services/habits/types';
 import { convertTimeToInt, getDayName, getMonthShort, getDate } from '../utils/tools';
 import { UserProps, UserActionsProps } from '../services/user/types';
 import { DateTime } from 'luxon';
@@ -20,6 +20,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Pay from './settings/Pay';
 import HomeBadges from '../components/badges/HomeBadges';
 import { subscriptionPurchased } from '../services/user/actions';
+import { addCompletedHabit } from '../services/habits/actions';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
 
@@ -28,13 +29,14 @@ interface HomeProps {
     habits: HabitsProps['habits'];
     user: UserProps;
     archivedHabits: HabitsProps['habits'];
-    subscriptionPurchased: UserActionsProps['subscriptionPurchased']
+    subscriptionPurchased: UserActionsProps['subscriptionPurchased'];
+    addCompletedHabit: HabitsActionsProps['addCompletedHabit'];
 }
 
 
 //note: to scroll to current position I can see how many habit preview items there are to determine where to scroll to
 
-const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased }: HomeProps) => {
+const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased, addCompletedHabit }: HomeProps) => {
     const appState = useRef(AppState.currentState);
     const [activeTime, setActiveTime] = useState(0);
     const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([]);
@@ -224,6 +226,8 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased 
                             onPress={() => navToHabit(item)}
                             habit={item}
                             active={index === activeTime}
+                            addCompletedHabit={addCompletedHabit}
+                            activeDate={activeDate}
                         />
                     )}
                     keyExtractor={(item, index) => item.docId ? item.docId + index.toString() : index.toString()}
@@ -294,9 +298,9 @@ const styles = StyleSheet.create({
         zIndex: 1000
     },
     dayText: {
-        fontSize: normalizeWidth(6.5),
+        fontSize: normalizeWidth(6),
         color: Colors.primary,
-        marginRight: 10
+        marginRight: 5
     },
     dateText: {
         fontSize: normalizeWidth(25),
@@ -368,5 +372,5 @@ const mapStateToProps = (state: ReducerStateProps) => ({
     user: state.user
 })
 
-export default connect(mapStateToProps, { subscriptionPurchased })(Home);
+export default connect(mapStateToProps, { subscriptionPurchased, addCompletedHabit })(Home);
 

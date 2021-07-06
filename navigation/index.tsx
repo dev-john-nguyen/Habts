@@ -69,7 +69,7 @@ function RootNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerBackTitleVisible: false,
+        headerBackTitleVisible: true,
         gestureDirection: 'horizontal',
         transitionSpec: {
           open: TransitionSpecs.TransitionIOSSpec,
@@ -78,13 +78,16 @@ function RootNavigator() {
         cardStyleInterpolator: cardAnimation,
         headerTitle: '',
         headerTransparent: true,
-        headerTintColor: Colors.white
+        headerTintColor: Colors.grey,
+        headerBackTitleStyle: {
+          fontFamily: 'Asap_400Regular'
+        }
       }}
       mode='modal'
     >
-      <Stack.Screen name="Home" component={Home} options={{ headerTitle: '', headerShown: false }} />
+      <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
       <Stack.Screen name="New" component={New} />
-      <Stack.Screen name="Habit" component={Habit} options={{ headerTitle: '', headerTintColor: Colors.veryLightGrey }} />
+      <Stack.Screen name="Habit" component={Habit} />
       <Stack.Screen name="Review" component={Review} />
       <Stack.Screen name="Settings" component={Settings} />
       <Stack.Screen name="ReviewHistory" component={ReviewHistory} />

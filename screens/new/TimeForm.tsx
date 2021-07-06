@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated, Easing, FlatList } from 'react-native';
 import Colors from '../../constants/Colors';
 import { StyledPrimaryButton, StyledDisabledButton, StyledSecondaryButton } from '../../components/StyledButton';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { LatoText, AsapText } from '../../components/StyledText';
+import { AsapText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
 import { Entypo } from '@expo/vector-icons';
 import { formatTime, renderSequenceValue } from '../../utils/tools';
 import { HabitProps } from '../../services/habits/types';
@@ -74,16 +74,16 @@ export default ({ habits, startTime, endTime, setStartTime, setEndTime, handlePr
     }
 
     return (
-        <View style={styles.step}>
-            <LatoText style={styles.infoText}>in 5 minute intervals.</LatoText>
-            <AsapText style={styles.questionText}>What Time In The Day Do You Want To Implement This Habit?</AsapText>
+        <View style={styles.container}>
+            <AsapText style={styles.infoText}>in 5 minute intervals.</AsapText>
+            <AsapTextBold style={styles.questionText}>What Time In The Day Do You Want To Implement This Habit?</AsapTextBold>
             <View style={styles.timeContainer}>
-                <Entypo name="list" size={24} color={Colors.white} onPress={handleHabitList} style={{ position: 'absolute', zIndex: 10 }} />
+                <Entypo name="list" size={24} color={Colors.primary} onPress={handleHabitList} style={{ position: 'absolute', zIndex: 10 }} />
                 <Animated.View
                     style={[{
                         height: habitListHeight,
                         width: habitListWidth.interpolate({ inputRange: [0, 1, 2], outputRange: ['0%', '100%', '0%'] }),
-                        backgroundColor: Colors.secondary,
+                        backgroundColor: Colors.grey,
                         borderRadius: 10,
                         top: -10
                     }]}
@@ -96,15 +96,15 @@ export default ({ habits, startTime, endTime, setStartTime, setEndTime, handlePr
                         contentContainerStyle={styles.habitList}
                         renderItem={({ item }) => (
                             <View style={styles.habitListContainer}>
-                                <AsapText style={styles.habitListText}>{item.name}</AsapText>
+                                <AsapTextBold style={styles.habitListText}>{item.name}</AsapTextBold>
                                 <AsapText style={styles.habitListText}>{item.sequence.type} {renderSequenceValue(item)}</AsapText>
-                                <AsapText style={styles.habitListText}>{formatTime(item.startTime)} - {formatTime(item.endTime)}</AsapText>
+                                <AsapTextMedium style={styles.habitListText}>{formatTime(item.startTime)} - {formatTime(item.endTime)}</AsapTextMedium>
                             </View>
                         )}
                     />
                 </Animated.View>
-                <View style={styles.time}>
-                    <AsapText style={styles.timeText}>{timeStep > 0 ? "End Time" : "Start Time"}: </AsapText>
+                <AsapTextBold style={styles.timeText}>{timeStep > 0 ? "End Time" : "Start Time"}</AsapTextBold>
+                <View style={styles.datePickerContainer}>
                     <DateTimePicker
                         value={timeStep > 0 ? endTime : startTime}
                         minuteInterval={5}
@@ -113,7 +113,7 @@ export default ({ habits, startTime, endTime, setStartTime, setEndTime, handlePr
                         display="spinner"
                         onChange={(e: any, date: any) => timeStep > 0 ? setEndTime(date) : setStartTime(date)}
                         style={styles.pickerContainer}
-                        textColor='white'
+                        textColor={Colors.primary}
                     />
                 </View>
             </View>
@@ -136,15 +136,23 @@ export default ({ habits, startTime, endTime, setStartTime, setEndTime, handlePr
 }
 
 const styles = StyleSheet.create({
+    container: {
+        backgroundColor: Colors.contentBg,
+        padding: normalizeWidth(15),
+        height: normalizeHeight(2),
+        borderRadius: 20,
+        justifyContent: 'space-between'
+    },
     habitList: {
         padding: 5,
-        paddingLeft: 10,
+        paddingLeft: 10
     },
     habitContainer: {
         flex: 1
     },
     pickerContainer: {
-        flex: 1
+        flex: .5,
+        height: '100%'
     },
     habitListContainer: {
         flexDirection: 'row',
@@ -153,47 +161,38 @@ const styles = StyleSheet.create({
     habitListText: {
         flex: 1,
         textAlign: 'center',
-        color: Colors.white,
+        color: Colors.primary,
         fontSize: normalizeWidth(30),
         margin: 5,
         flexWrap: 'wrap'
     },
-    step: {
-        marginTop: 20,
-        width: '100%',
-    },
     timeText: {
         fontSize: normalizeWidth(20),
-        marginRight: 20,
-        color: Colors.white
+        color: Colors.primary
     },
     timeContainer: {
-        marginTop: normalizeHeight(20),
         paddingTop: normalizeHeight(20),
+        flex: 1
     },
-    time: {
+    datePickerContainer: {
         flexDirection: 'row',
-        height: 50,
+        flex: .5,
         alignItems: 'center',
-        marginTop: 20
+        left: -10
     },
     buttonContainer: {
         width: '100%',
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: normalizeHeight(10)
+        justifyContent: 'space-around'
     },
     questionText: {
         textTransform: 'capitalize',
-        fontSize: normalizeWidth(12),
-        color: Colors.white
+        fontSize: normalizeWidth(15),
+        color: Colors.primary
     },
     infoText: {
-        margin: 5,
-        marginLeft: 10,
-        fontSize: normalizeWidth(25),
-        color: Colors.white,
-        fontStyle: 'italic'
+        fontSize: normalizeWidth(30),
+        color: Colors.primary,
     },
 })
 
