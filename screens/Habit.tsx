@@ -20,6 +20,7 @@ import { cloneDeep, isEqual } from 'lodash';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Tracker from '../components/habit/tracker';
 import { AsapTextBold, AsapText } from '../components/StyledText';
+import HabitBadges from '../components/badges/HabitBadges';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
 type HabitComRouteProps = RouteProp<RootStackParamList, 'Habit'>
@@ -74,8 +75,8 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                 if (edit) {
                     return (
                         <View>
-                            <Entypo name="archive" size={normalizeHeight(30)} color={Colors.red} onPress={onArchivePress} style={{ zIndex: 100 }} />
-                            <Modal headerText='Are you sure? Once archived, you cannot undo.' onModalResponse={onArchiveModalResponse} showModal={showModal} loading={loading} />
+                            <Entypo name="trash" size={normalizeHeight(30)} color={Colors.red} onPress={onArchivePress} style={{ zIndex: 100 }} />
+                            <Modal headerText='Are you sure? Once archived, you cannot undo.' onModalResponse={onArchiveModalResponse} showModal={showModal} loading={loading} onClose={onArchivePress} />
                         </View>
                     )
                 }
@@ -242,6 +243,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                     setHabitEdit={setHabitEdit}
                     habitEdit={habitEdit}
                 />
+                <HabitBadges consecutive={habit.consecutive} size={normalizeHeight(25)} infoText="Earn your first badge by completing 21 consecutive days." />
                 <Tracker
                     completedHabits={habit.completedHabits}
                     startDate={habit.createdAt}

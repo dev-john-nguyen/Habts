@@ -21,7 +21,6 @@ interface HabitHeader {
     edit: boolean;
     setHabitEdit: (habit: HabitEditProps) => void;
     habitEdit: HabitEditProps;
-    setShowNotes?: (show: boolean) => void;
     showNotes?: boolean;
     newCom?: boolean;
 }
@@ -62,7 +61,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
         return consecutiveTotal.length
     }
 
-    const onShowNotes = () => setShowNotes && setShowNotes(showNotes ? false : true);
+    const onShowNotes = () => setShowNotes(showNotes ? false : true);
 
     const onUpdateNotes = (text: string) => habitEdit && setHabitEdit({ ...habitEdit, notes: text });
 
@@ -88,13 +87,13 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                     updateNotes={onUpdateNotes}
                 />
                 :
-                <View>
+                <View style={edit ? styles.contentEditBg : {}}>
                     <View>
                         <View style={styles.dataItem}>
                             {edit ?
                                 <View style={styles.timeContainer}>
                                     <Pressable style={styles.timeHeaderEdit} onPress={onTurnOnOffNotification}>
-                                        <AsapTextMedium style={styles.timeText}>Time</AsapTextMedium>
+                                        <AsapTextBold style={styles.timeText}>Time</AsapTextBold>
                                         {
                                             habitEdit.notificationOn
                                                 ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
@@ -170,12 +169,12 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                     <View style={{ marginTop: 10 }}>
 
                         <View style={styles.dataItem}>
-                            <Entypo name="bar-graph" size={normalizeHeight(40)} color={Colors.secondary} style={{ marginRight: 2 }} />
+                            <Entypo name="bar-graph" size={normalizeHeight(40)} color={Colors.secondary} style={{ marginRight: 5 }} />
                             <AsapTextMedium style={styles.dataText}>{calcConsecutiveTotal()} day(s) in a row</AsapTextMedium>
                         </View>
 
                         <View style={styles.dataItem}>
-                            <Entypo name="text-document" size={normalizeHeight(35)} color={Colors.secondary} onPress={onShowNotes} style={{ marginRight: 2 }} />
+                            <Entypo name="text-document" size={normalizeHeight(35)} color={Colors.secondary} onPress={onShowNotes} style={{ marginRight: 5 }} />
                             {
                                 edit ?
                                     <StyledTextInput
@@ -194,8 +193,6 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                     </View>
                 </View>
             }
-
-            <HabitBadges consecutive={habit.consecutive} size={normalizeHeight(25)} infoText="Earn your first badge by completing 21 consecutive days." />
         </View>
     )
 }
@@ -205,6 +202,11 @@ const styles = StyleSheet.create({
         paddingTop: 10
     },
     header: {
+    },
+    contentEditBg: {
+        backgroundColor: Colors.contentBg,
+        borderRadius: 10,
+        padding: 10
     },
     timeHeaderEdit: {
         flexDirection: 'row',
@@ -218,7 +220,7 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     timeText: {
-        fontSize: normalizeHeight(55),
+        fontSize: normalizeHeight(45),
         color: Colors.primary,
         marginRight: 2
     },

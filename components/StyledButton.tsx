@@ -38,7 +38,7 @@ export function StyledDisabledButton(props: PressableProps & ButtonAdditionalPro
 
 export function StyledRedButton(props: PressableProps & ButtonAdditionalProps) {
     return (
-        <Pressable {...props} style={({ pressed }) => [props.style, styles.container, { backgroundColor: pressed ? Colors.red : Colors.red }]}>
+        <Pressable {...props} style={({ pressed }) => [props.style, styles.container, { backgroundColor: pressed ? `rgba(${Colors.redRgb},.8)` : Colors.red }]}>
             <AsapTextBold style={styles.text}>{props.text}</AsapTextBold>
         </Pressable>
     )

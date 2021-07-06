@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { AsapText, AsapTextBold } from '../StyledText';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import Colors from '../../constants/Colors';
@@ -18,10 +18,14 @@ interface Props {
 
 const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
     return (
-        <ScrollView style={[styles.container]} contentContainerStyle={styles.content}>
-            <Feather name="arrow-left" size={normalizeWidth(20)} color={Colors.veryLightGrey} style={styles.x} onPress={onClose} />
+        <View style={styles.container}>
+            <View style={styles.headerContainer}>
+                <AsapTextBold style={styles.header}>Notes</AsapTextBold>
+                <Pressable style={styles.x} onPress={onClose} hitSlop={5}>
+                    <Feather name="x" size={normalizeWidth(20)} color={Colors.primary} onPress={onClose} />
+                </Pressable>
+            </View>
             {edit ?
-
                 <StyledTextInput
                     style={styles.textInput}
                     value={editNotes}
@@ -29,51 +33,52 @@ const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
                     autoCorrect={true}
                     multiline={true}
                     maxLength={Inputs.habitNotesMaxChar}
-                /> :
-                <AsapText style={styles.text}>{notes}</AsapText>
+                />
+                : <ScrollView contentContainerStyle={styles.content}>
+                    <AsapText style={styles.text}>{notes}</AsapText>
+                </ScrollView>
             }
-        </ScrollView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         zIndex: 100,
-        padding: 20,
-        maxHeight: normalizeHeight(2.5)
+        padding: 10,
+        backgroundColor: Colors.contentBg,
+        borderRadius: 10,
+        height: normalizeHeight(3)
     },
     content: {
-        paddingBottom: 20,
+        paddingBottom: 10
     },
     text: {
-        color: Colors.white,
+        color: Colors.primary,
         fontSize: normalizeHeight(55),
-        margin: 20
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between'
     },
     header: {
-        color: Colors.white,
+        color: Colors.primary,
         fontSize: normalizeHeight(40),
         alignSelf: 'center',
         marginBottom: 5,
         marginTop: 10
     },
     x: {
-        alignSelf: 'flex-start',
-        position: 'absolute'
     },
     textInput: {
         fontSize: normalizeHeight(55),
-        maxHeight: normalizeHeight(2),
         color: Colors.primary,
         borderRadius: 10,
-        marginTop: 20,
-        marginLeft: 10,
-        marginRight: 10,
-        marginBottom: 10,
-        backgroundColor: Colors.veryLightGrey,
+        backgroundColor: Colors.white,
         padding: 10,
         paddingTop: 10,
+        height: '80%'
     }
 })
 

@@ -1,12 +1,19 @@
 import React, { useEffect, useRef } from 'react';
-import { View, StyleSheet, Animated, Easing, ActivityIndicator } from 'react-native';
-import { AsapText } from '../StyledText';
-import Layout from '../../constants/Layout';
-import { StyledPrimaryButton, StyledSecondaryButton, StyledRedButton } from '../StyledButton';
+import { View, StyleSheet, Animated, Easing, ActivityIndicator, Pressable } from 'react-native';
+import { AsapTextMedium } from '../StyledText';
+import { StyledRedButton } from '../StyledButton';
 import Colors from '../../constants/Colors';
 import { normalizeHeight } from '../../utils/styles';
 
-export default ({ onModalResponse, headerText, showModal, loading }: { onModalResponse: () => void, headerText: string, showModal: boolean, loading: boolean }) => {
+interface Props {
+    onModalResponse: () => void,
+    headerText: string,
+    showModal: boolean,
+    loading: boolean,
+    onClose: () => void;
+}
+
+export default ({ onModalResponse, headerText, showModal, loading, onClose }: Props) => {
     const modalWidth = useRef(new Animated.Value(0)).current;
     const modalHeight = useRef(new Animated.Value(0)).current;
 
@@ -53,31 +60,31 @@ export default ({ onModalResponse, headerText, showModal, loading }: { onModalRe
             overflow: 'hidden',
             top: -5
         }}>
-            <View style={styles.container}>
+            <Pressable style={styles.container} onPress={onClose}>
                 <View style={styles.modalContent}>
-                    <AsapText style={styles.modalHeader}>{headerText}</AsapText>
+                    <AsapTextMedium style={styles.modalHeader}>{headerText}</AsapTextMedium>
                     <StyledRedButton
                         style={styles.modalButton}
                         text={loading ? <ActivityIndicator color={Colors.white} /> : "I'm sure"}
                         onPress={onModalResponse}
                     />
                 </View>
-            </View>
+            </Pressable>
         </Animated.View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        width: normalizeHeight(4),
-        height: normalizeHeight(4.5),
+        width: normalizeHeight(5),
+        height: normalizeHeight(5),
         alignItems: 'center',
         alignSelf: 'center',
         justifyContent: 'center',
         backgroundColor: Colors.secondary,
         borderColor: Colors.primary,
         borderWidth: 1,
-        borderRadius: 20,
+        borderRadius: 10,
         paddingTop: 20
     },
     modalContent: {
@@ -85,7 +92,7 @@ const styles = StyleSheet.create({
         padding: 5
     },
     modalHeader: {
-        fontSize: normalizeHeight(50),
+        fontSize: normalizeHeight(55),
         color: Colors.white
     },
     modalButtonContainer: {
