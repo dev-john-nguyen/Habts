@@ -15,6 +15,7 @@ import HabitHistory from '../screens/HabitHistory';
 import Account from '../screens/settings/Account';
 import Subscription from '../screens/settings/Subscription';
 import ContactUs from '../screens/settings/Contact';
+import { normalizeWidth } from '../utils/styles';
 
 // If you are not familiar with React Navigation, we recommend going through the
 // "Fundamentals" guide: https://reactnavigation.org/docs/getting-started
@@ -80,7 +81,8 @@ function RootNavigator() {
         headerTransparent: true,
         headerTintColor: Colors.grey,
         headerBackTitleStyle: {
-          fontFamily: 'Asap_400Regular'
+          fontFamily: 'Asap_400Regular',
+          fontSize: normalizeWidth(25)
         }
       }}
       mode='modal'

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Pressable, PressableProps, StyleSheet, TextInput, StyleProp } from 'react-native'
-import { AsapText } from './StyledText';
+import { AsapText, AsapTextBold } from './StyledText';
 import Colors from '../constants/Colors';
 import { normalizeHeight } from '../utils/styles';
 
@@ -15,7 +15,7 @@ interface ButtonAdditionalProps {
 export function StyledPrimaryButton(props: PressableProps & ButtonAdditionalProps) {
     return (
         <Pressable {...props} style={({ pressed }) => [props.style, styles.container, { backgroundColor: pressed ? Colors.secondary : Colors.primary }]}>
-            <AsapText style={[styles.text]}>{props.text}</AsapText>
+            <AsapTextBold style={[styles.text]}>{props.text}</AsapTextBold>
         </Pressable>
     )
 }
@@ -23,7 +23,7 @@ export function StyledPrimaryButton(props: PressableProps & ButtonAdditionalProp
 export function StyledSecondaryButton(props: PressableProps & ButtonAdditionalProps) {
     return (
         <Pressable {...props} style={({ pressed }) => [props.style, styles.container, { backgroundColor: pressed ? Colors.tertiary : Colors.secondary }]}>
-            <AsapText style={styles.text}>{props.text}</AsapText>
+            <AsapTextBold style={styles.text}>{props.text}</AsapTextBold>
         </Pressable>
     )
 }
@@ -31,7 +31,7 @@ export function StyledSecondaryButton(props: PressableProps & ButtonAdditionalPr
 export function StyledDisabledButton(props: PressableProps & ButtonAdditionalProps) {
     return (
         <Pressable {...props} style={[props.style, styles.container, { backgroundColor: Colors.lightGrey }]}>
-            <AsapText style={[styles.text]}>{props.text}</AsapText>
+            <AsapTextBold style={[styles.text]}>{props.text}</AsapTextBold>
         </Pressable>
     )
 }
@@ -39,7 +39,7 @@ export function StyledDisabledButton(props: PressableProps & ButtonAdditionalPro
 export function StyledRedButton(props: PressableProps & ButtonAdditionalProps) {
     return (
         <Pressable {...props} style={({ pressed }) => [props.style, styles.container, { backgroundColor: pressed ? Colors.red : Colors.red }]}>
-            <AsapText style={styles.text}>{props.text}</AsapText>
+            <AsapTextBold style={styles.text}>{props.text}</AsapTextBold>
         </Pressable>
     )
 }

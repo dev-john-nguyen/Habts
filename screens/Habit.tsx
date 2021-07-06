@@ -57,17 +57,17 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                         <View style={{ flexDirection: 'row' }}>
                             {
                                 loading ?
-                                    <ActivityIndicator size="small" color={Colors.white} style={{ marginRight: 5 }} />
+                                    <ActivityIndicator size="small" color={Colors.secondary} style={{ marginRight: 5 }} />
                                     :
                                     <>
-                                        <Entypo name="save" size={normalizeHeight(30)} color={Colors.white} style={{ marginRight: 5 }} onPress={handleSaveEditHabit} />
-                                        <Entypo name="cross" size={normalizeHeight(30)} color={Colors.white} style={{ marginRight: 5 }} onPress={() => setEdit(false)} />
+                                        <Entypo name="save" size={normalizeHeight(30)} color={Colors.secondary} style={{ marginRight: 5 }} onPress={handleSaveEditHabit} />
+                                        <Entypo name="cross" size={normalizeHeight(30)} color={Colors.secondary} style={{ marginRight: 5 }} onPress={() => setEdit(false)} />
                                     </>
                             }
                         </View>
                     )
                 } else {
-                    return <Entypo name="pencil" size={normalizeHeight(30)} color={Colors.white} style={{ marginRight: 5 }} onPress={() => setEdit(true)} />
+                    return <Entypo name="pencil" size={normalizeHeight(30)} color={Colors.secondary} style={{ marginRight: 5 }} onPress={() => setEdit(true)} />
                 }
             },
             headerTitle: () => {

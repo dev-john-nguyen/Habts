@@ -102,7 +102,7 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
                 if (consecutiveTools.datesAreOnSameDay(dateCompleted, prevDate)) return true
             });
 
-            if (foundPrevDay) {
+            if (!foundPrevDay) {
                 return (
                     <Pressable style={styles.circleInfo} onLongPress={handleCompletePress}>
                         {({ pressed }) => <AlertCircle fillColor={pressed ? `rgba(${Colors.orangeRgb}, .5)` : Colors.orange} strokeColor={Colors.white} />}

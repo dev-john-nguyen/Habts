@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Pressable } from 'react-native'
 import { AsapText, AsapTextBold, AsapTextMedium } from '../StyledText';
 import Colors from '../../constants/Colors';
-import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { HabitProps, HabitEditProps, CompletedHabitsProps } from '../../services/habits/types';
 import { StyledTextInput } from '../StyledTextInput';
@@ -66,12 +66,17 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
 
     const onUpdateNotes = (text: string) => habitEdit && setHabitEdit({ ...habitEdit, notes: text });
 
+
+    const onTurnOnOffNotification = () => {
+        edit && setHabitEdit({ ...habitEdit, notificationOn: habitEdit.notificationOn ? false : true })
+    }
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
                 <View>
-                    <AsapText style={styles.headerSubText}>{habit.remove}</AsapText>
                     <AsapTextBold style={styles.headerText}>{habit.name}</AsapTextBold>
+                    <AsapText style={styles.remove}>{habit.remove}</AsapText>
                 </View>
             </View>
             {showNotes ?
@@ -88,8 +93,15 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                         <View style={styles.dataItem}>
                             {edit ?
                                 <View style={styles.timeContainer}>
+                                    <Pressable style={styles.timeHeaderEdit} onPress={onTurnOnOffNotification}>
+                                        <AsapTextMedium style={styles.timeText}>Time</AsapTextMedium>
+                                        {
+                                            habitEdit.notificationOn
+                                                ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
+                                                : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
+                                        }
+                                    </Pressable>
                                     <View style={styles.time}>
-                                        <AsapTextMedium style={styles.timeText}>Start Time: </AsapTextMedium>
                                         <DateTimePicker
                                             value={habitEdit.startTime.date}
                                             minuteInterval={5}
@@ -99,9 +111,6 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                             onChange={(e: any, date: any) => setHabitEdit({ ...habitEdit, startTime: { date: new Date(date), hour: date.getHours(), minute: date.getMinutes(), zoneName: luxNow.zoneName } })}
                                             style={styles.datePicker}
                                         />
-                                    </View>
-                                    <View style={styles.time}>
-                                        <AsapTextMedium style={styles.timeText}>End Time: </AsapTextMedium>
                                         <DateTimePicker
                                             value={habitEdit.endTime.date}
                                             minuteInterval={5}
@@ -117,12 +126,9 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                 : <>
                                     <AsapTextMedium style={styles.dataText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)} ({habit.sequence.type}{renderSequenceValue(habit)}) </AsapTextMedium>
                                     {
-                                        edit ?
-                                            habitEdit.notificationOn
-                                                ? <Entypo name="bell" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
-                                                : <Entypo name="sound-mute" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
-                                            : habit.notificationOn ? <Entypo name="bell" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: false })} />
-                                                : <Entypo name="sound-mute" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} onPress={() => edit && setHabitEdit({ ...habitEdit, notificationOn: true })} />
+                                        habit.notificationOn ?
+                                            <Entypo name="bell" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} /> :
+                                            <Entypo name="sound-mute" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} />
                                     }
                                 </>
                             }
@@ -196,27 +202,32 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
 
 const styles = StyleSheet.create({
     container: {
+        paddingTop: 10
     },
     header: {
     },
+    timeHeaderEdit: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
     pickerItemStyle: {
-        fontSize: normalizeHeight(60),
+        fontSize: normalizeHeight(55),
         color: Colors.primary,
         padding: normalizeWidth(10),
         height: normalizeHeight(30),
         borderRadius: 10
     },
     timeText: {
-        fontSize: normalizeHeight(60),
-        color: Colors.primary
+        fontSize: normalizeHeight(55),
+        color: Colors.primary,
+        marginRight: 2
     },
     timeContainer: {
         flex: 1,
-        flexDirection: 'column',
-        marginLeft: 20
+        flexDirection: 'column'
     },
     datePicker: {
-        fontSize: normalizeHeight(60),
+        fontSize: normalizeHeight(55),
         width: 100,
         height: '100%',
     },
@@ -226,17 +237,14 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     textInput: {
-        fontSize: normalizeHeight(60),
+        fontSize: normalizeHeight(55),
         color: Colors.primary,
-        marginLeft: 10,
         borderRadius: 10,
-        borderWidth: 1,
-        borderColor: Colors.primary,
         padding: 10,
         paddingTop: 10,
         flex: 1,
         maxHeight: 100,
-        backgroundColor: Colors.secondary
+        backgroundColor: Colors.white
     },
     bell: {
 
@@ -246,11 +254,11 @@ const styles = StyleSheet.create({
         color: Colors.primary,
         textTransform: 'capitalize'
     },
-    headerSubText: {
+    remove: {
         fontSize: normalizeHeight(70),
         color: Colors.primary,
         textDecorationLine: 'line-through',
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-end',
     },
     data: {
         marginTop: 10,
@@ -263,7 +271,7 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap'
     },
     dataText: {
-        fontSize: normalizeHeight(60),
+        fontSize: normalizeHeight(55),
         color: Colors.primary,
     },
     notifiedText: {

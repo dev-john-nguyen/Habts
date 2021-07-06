@@ -162,11 +162,17 @@ const Tracker = ({ completedHabits, startDate, consecutive }: Props) => {
                 continue;
             }
 
-            preparedData.unshift({
-                date: cDate,
-                type: 'warning'
-            })
-
+            if (i < 1) {
+                preparedData.unshift({
+                    date: cDate,
+                    type: 'action'
+                })
+            } else {
+                preparedData.unshift({
+                    date: cDate,
+                    type: 'warning'
+                })
+            }
             missCount++
         }
 
