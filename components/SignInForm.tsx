@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { isEqual } from 'lodash';
 import { validateEmail } from './utils';
 import { BannerActionsProps } from '../services/banner/types';
-import { AsapTextBold, AsapText, AsapTextMedium } from './StyledText';
+import { StyledTextBold, StyledText, StyledTextMedium } from './StyledText';
 import BottomSvg from '../assets/svgs/bottom';
 import HeaderBgImg from '../assets/svgs/home/HeaderBgImg';
 import HeaderImg from '../assets/svgs/home/HeaderImg';
@@ -120,8 +120,8 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                         justifyContent: 'space-evenly'
                     }}>
                         <View>
-                            <AsapTextBold style={styles.headerText}>Habts</AsapTextBold>
-                            <AsapTextMedium style={styles.headerSubText}>We are what we repeatedly do.</AsapTextMedium>
+                            <StyledTextBold style={styles.headerText}>Habts</StyledTextBold>
+                            <StyledTextMedium style={styles.headerSubText}>We are what we repeatedly do.</StyledTextMedium>
                         </View>
                         <View style={styles.ovalContainer}>
                             <Oval fillColor={Colors.secondary} />
@@ -134,9 +134,9 @@ export default ({ signUp, signIn, setBanner }: Props) => {
 
                 <View style={[styles.loginContainer, Colors.boxShadow]} >
                     <View style={styles.loginHeaderContainer}>
-                        <AsapTextBold style={styles.loginHeaderText}>Login</AsapTextBold>
-                        <AsapTextMedium style={styles.loginHeaderSubText}>One month free trail</AsapTextMedium>
-                        <AsapTextMedium style={styles.loginHeaderSecSubText}>and then $1.99 / month to continue using our service.</AsapTextMedium>
+                        <StyledTextBold style={styles.loginHeaderText}>Login</StyledTextBold>
+                        <StyledTextMedium style={styles.loginHeaderSubText}>One month free trail</StyledTextMedium>
+                        <StyledTextMedium style={styles.loginHeaderSecSubText}>and then $1.99 / month to continue using our service.</StyledTextMedium>
                     </View>
 
                     <View style={styles.loginInputContainer}>
@@ -205,7 +205,7 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                 </View>
 
                 <View style={styles.bottomSectionContainer}>
-                    <AsapTextMedium style={styles.bottomSectionText}>{showSignUp ? "Have an account?" : "Don't have an account?"}</AsapTextMedium>
+                    <StyledTextMedium style={styles.bottomSectionText}>{showSignUp ? "Have an account?" : "Don't have an account?"}</StyledTextMedium>
                     <StyledSecondaryButton
                         text={showSignUp ? 'Login' : 'Register'}
                         onPress={() => setShowSignUp(showSignUp ? false : true)}
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
         color: Colors.white
     },
     headerText: {
-        fontSize: normalizeHeight(20),
+        fontSize: normalizeHeight(15),
         color: Colors.white
     },
     loginContainer: {

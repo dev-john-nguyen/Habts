@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, Pressable, Animated, Easing, Keyboard } from 'react-native';
-import { AsapText } from '../components/StyledText';
+import { StyledText } from '../components/StyledText';
 import Colors from '../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
 import { getDayName, getDate, getMonthShort } from '../utils/tools';
@@ -115,7 +115,7 @@ const ReviewHistory = ({ reviews, setBanner, updateReview }: ReviewHistoryProps)
                     setTargetReview(item)
                     handleShowFilterList()
                 }} style={styles.filterItem}>
-                    <AsapText style={styles.filterItemText}>{getDate(item.createdAt)}</AsapText>
+                    <StyledText style={styles.filterItemText}>{getDate(item.createdAt)}</StyledText>
                 </Pressable>
             )}
         />
@@ -130,10 +130,10 @@ const ReviewHistory = ({ reviews, setBanner, updateReview }: ReviewHistoryProps)
 
         return (
             <View style={styles.headerDate}>
-                <AsapText style={styles.headerDateDay}>{date.getDate()}</AsapText>
+                <StyledText style={styles.headerDateDay}>{date.getDate()}</StyledText>
                 <View>
-                    <AsapText style={styles.headerDateMonYr}>{getDayName(date)}</AsapText>
-                    <AsapText style={styles.headerDateMonYr}>{getMonthShort(date)} {date.getFullYear()}</AsapText>
+                    <StyledText style={styles.headerDateMonYr}>{getDayName(date)}</StyledText>
+                    <StyledText style={styles.headerDateMonYr}>{getMonthShort(date)} {date.getFullYear()}</StyledText>
                     {renderEditIcon()}
                 </View>
             </View>
@@ -144,8 +144,8 @@ const ReviewHistory = ({ reviews, setBanner, updateReview }: ReviewHistoryProps)
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <AsapText style={styles.headerSubText}>history</AsapText>
-                    <AsapText style={styles.headerTitle}>Review</AsapText>
+                    <StyledText style={styles.headerSubText}>history</StyledText>
+                    <StyledText style={styles.headerTitle}>Review</StyledText>
                 </View>
                 <View style={styles.filterContainer}>
                     <View>

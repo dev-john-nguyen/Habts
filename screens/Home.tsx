@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, FlatList, AppState, AppStateStatus, Pressable } from 'react-native';
-import { AsapText, AsapTextBold } from '../components/StyledText'
+import { StyledText, StyledTextBold } from '../components/StyledText'
 import Colors from '../constants/Colors';
-import { FontAwesome, Entypo } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 import HabitPreview from '../components/habit/Preview';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/types';
@@ -170,15 +170,29 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
         return activeDate.getDate() === todaysDate.getDate() && activeDate.getMonth() === todaysDate.getMonth() && activeDate.getFullYear() === todaysDate.getFullYear()
     }
 
+    if (expired) return (
+        <SafeAreaView style={{ flex: 1 }}>
+            <Pay
+                subscriptionPurchased={subscriptionPurchased}
+            />
+            <BottomTab
+                navtoNew={navToNew}
+                navToHabitHistory={navToHabitHistory}
+                navToSettings={navToSettings}
+                expired={expired}
+            />
+        </SafeAreaView>
+    )
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.headerContainer}>
                 <View style={styles.headerLeftContainer}>
                     <View style={styles.dateContainer}>
-                        <AsapTextBold style={styles.dayText}>{activeDate.getDate()}</AsapTextBold>
+                        <StyledTextBold style={styles.dayText}>{activeDate.getDate()}</StyledTextBold>
                         <View>
-                            <AsapText style={styles.dateText}>{getDayName(activeDate)}</AsapText>
-                            <AsapText style={[styles.dateText, { marginTop: 5 }]}>{getMonthShort(activeDate)} {activeDate.getFullYear()}</AsapText>
+                            <StyledText style={styles.dateText}>{getDayName(activeDate)}</StyledText>
+                            <StyledText style={[styles.dateText, { marginTop: 5 }]}>{getMonthShort(activeDate)} {activeDate.getFullYear()}</StyledText>
                         </View>
                     </View>
                     <View style={styles.ovalContainer}>
@@ -207,9 +221,9 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                     ref={ref => listRef.current = ref}
                     ListHeaderComponent={() => (
                         <View style={styles.listTitleContainer}>
-                            <AsapText style={styles.listHeaderText}>Time</AsapText>
+                            <StyledText style={styles.listHeaderText}>Time</StyledText>
                             <View style={{ flex: .1 }} />
-                            <AsapText style={styles.listHeaderText}>Habit</AsapText>
+                            <StyledText style={styles.listHeaderText}>Habit</StyledText>
                         </View>
                     )}
                     ListHeaderComponentStyle={styles.listHeader}
@@ -232,10 +246,8 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                 navtoNew={navToNew}
                 navToHabitHistory={navToHabitHistory}
                 navToSettings={navToSettings}
+                expired={expired}
             />
-            {expired && <Pay
-                subscriptionPurchased={subscriptionPurchased}
-            />}
         </SafeAreaView>
     )
 }

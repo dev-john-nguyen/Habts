@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
-import { LatoText, AsapTextBold } from '../StyledText';
+import { StyledText, StyledTextBold } from '../StyledText';
 import { HabitProps, HabitsActionsProps } from '../../services/habits/types';
 import { formatTime } from '../../utils/tools';
 import { normalizeWidth } from '../../utils/styles';
@@ -110,8 +110,8 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
         <Pressable style={styles.container} onPress={onPress}
         >
             <View style={styles.timeContainer}>
-                <AsapTextBold style={styles.timeStart}>{formatTime(habit.startTime)}</AsapTextBold>
-                <AsapTextBold style={styles.timeEnd}>{formatTime(habit.endTime)}</AsapTextBold>
+                <StyledTextBold style={styles.timeStart}>{formatTime(habit.startTime)}</StyledTextBold>
+                <StyledTextBold style={styles.timeEnd}>{formatTime(habit.endTime)}</StyledTextBold>
             </View>
             <View style={styles.containerGap}>
                 <View style={styles.gapLine} />
@@ -128,25 +128,25 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
                     }
                 </View>
 
-                <AsapTextBold style={styles.contentHeader}>{habit.name}</AsapTextBold>
+                <StyledTextBold style={styles.contentHeader}>{habit.name}</StyledTextBold>
                 <View style={styles.borderLineBottom} />
                 <View style={styles.contentItem}>
-                    <LatoText style={styles.contentItemText}>{habit.cue}</LatoText>
+                    <StyledText style={styles.contentItemText}>{habit.cue}</StyledText>
                 </View>
 
                 <View style={styles.contentItem}>
-                    <LatoText style={styles.contentItemText}>{habit.locationDes}</LatoText>
+                    <StyledText style={styles.contentItemText}>{habit.locationDes}</StyledText>
                 </View>
 
                 <View style={{ marginTop: 5 }}>
                     <View style={styles.contentItem}>
                         <Entypo name="bar-graph" size={normalizeWidth(30)} color={iconColor} style={{ marginRight: 5 }} />
-                        <LatoText style={styles.contentItemText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</LatoText>
+                        <StyledText style={styles.contentItemText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</StyledText>
                     </View>
 
                     <View style={styles.contentItem}>
                         <Entypo name="text-document" size={normalizeWidth(30)} color={iconColor} style={{ marginRight: 5 }} />
-                        <LatoText style={styles.contentItemText} numberOfLines={2} ellipsizeMode='tail'>{habit.notes}</LatoText>
+                        <StyledText style={styles.contentItemText} numberOfLines={2} ellipsizeMode='tail'>{habit.notes}</StyledText>
                     </View>
                 </View>
             </View>

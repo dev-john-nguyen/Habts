@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
-import { AsapText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
+import { StyledText, StyledTextBold, StyledTextMedium } from '../../components/StyledText';
 import Colors from '../../constants/Colors';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../../services';
@@ -45,20 +45,20 @@ const Subscription = ({ user }: { user: UserProps }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <AsapTextBold style={styles.header}>Subscription</AsapTextBold>
+                <StyledTextBold style={styles.header}>Subscription</StyledTextBold>
                 <View style={styles.underline} />
                 <View style={styles.content}>
                     <View style={styles.section}>
-                        <AsapTextBold style={[styles.itemHeaderText, { marginTop: 0 }]}>Status</AsapTextBold>
-                        <AsapText style={{ fontSize: normalizeHeight(60), color: expired ? Colors.red : Colors.primary }}>{expired ? 'Expired' : 'Active'}</AsapText>
-                        <AsapTextBold style={styles.itemHeaderText}>Name</AsapTextBold>
-                        <AsapText style={styles.text}>{subscription.name}</AsapText>
-                        <AsapTextBold style={styles.itemHeaderText}>Price</AsapTextBold>
-                        <AsapText style={styles.text}>{subscription.price}</AsapText>
-                        <AsapTextBold style={styles.itemHeaderText}>Description</AsapTextBold>
-                        <AsapText style={styles.text}>{subscription.description}</AsapText>
-                        <AsapTextBold style={styles.itemHeaderText}>Access</AsapTextBold>
-                        <AsapText style={styles.text}>With this subscription, you have ALL ACCESS to this app until your subscription expires.</AsapText>
+                        <StyledTextBold style={[styles.itemHeaderText, { marginTop: 0 }]}>Status</StyledTextBold>
+                        <StyledText style={{ fontSize: normalizeHeight(60), color: expired ? Colors.red : Colors.primary }}>{expired ? 'Expired' : 'Active'}</StyledText>
+                        <StyledTextBold style={styles.itemHeaderText}>Name</StyledTextBold>
+                        <StyledText style={styles.text}>{subscription.name}</StyledText>
+                        <StyledTextBold style={styles.itemHeaderText}>Price</StyledTextBold>
+                        <StyledText style={styles.text}>{subscription.price}</StyledText>
+                        <StyledTextBold style={styles.itemHeaderText}>Description</StyledTextBold>
+                        <StyledText style={styles.text}>{subscription.description}</StyledText>
+                        <StyledTextBold style={styles.itemHeaderText}>Access</StyledTextBold>
+                        <StyledText style={styles.text}>With this subscription, you have ALL ACCESS to this app until your subscription expires.</StyledText>
                     </View>
                 </View>
             </View>

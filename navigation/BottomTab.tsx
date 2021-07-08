@@ -12,9 +12,10 @@ interface BottomTabProps {
     navtoNew: () => void;
     navToHabitHistory: () => void;
     navToSettings: () => void;
+    expired: boolean;
 }
 
-export default ({ navtoNew, navToHabitHistory, navToSettings }: BottomTabProps) => {
+export default ({ navtoNew, navToHabitHistory, navToSettings, expired }: BottomTabProps) => {
     const handleOnPress = (screen: string) => {
         switch (screen) {
             case 'HabitHistory':
@@ -34,12 +35,13 @@ export default ({ navtoNew, navToHabitHistory, navToSettings }: BottomTabProps) 
                 <BottomSvg />
             </View>
             <View style={styles.content}>
-                <View style={styles.menu}>
-                    <Pressable onPress={() => handleOnPress('New')} hitSlop={5} style={styles.menuItemAdd}>
+                <View style={[styles.menu, { justifyContent: expired ? 'flex-end' : 'space-between' }]}>
+                    {!expired && <Pressable onPress={() => handleOnPress('New')} hitSlop={5} style={styles.menuItemAdd}>
                         <CircleAdd
                             color={Colors.white}
                         />
                     </Pressable>
+                    }
                     <Pressable
                         onPress={() => handleOnPress('Settings')}
                         hitSlop={5}
@@ -69,7 +71,7 @@ const styles = StyleSheet.create({
         marginRight: normalizeWidth(12),
         marginLeft: normalizeWidth(4.5),
         alignItems: 'center',
-        justifyContent: 'space-between'
+        justifyContent: 'flex-end'
     },
     bottomSvg: {
         position: 'absolute',

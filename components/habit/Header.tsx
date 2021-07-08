@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native'
-import { AsapText, AsapTextBold, AsapTextMedium } from '../StyledText';
+import { StyledText, StyledTextBold, StyledTextMedium } from '../StyledText';
 import Colors from '../../constants/Colors';
 import { Entypo } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -45,7 +45,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
     //             ))}
     //         </Picker>
     //     } else {
-    //         return <AsapText style={styles.totalMinsText}>{habit.notificationTime.totalMins ? habit.notificationTime.totalMins : '0'}</AsapText>
+    //         return <StyledText style={styles.totalMinsText}>{habit.notificationTime.totalMins ? habit.notificationTime.totalMins : '0'}</StyledText>
     //     }
     // }
 
@@ -62,8 +62,8 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
         <View style={styles.container}>
             <View style={styles.header}>
                 <View>
-                    <AsapTextBold style={styles.headerText}>{habit.name}</AsapTextBold>
-                    {!!habit.remove && <AsapText style={styles.remove}>{habit.remove}</AsapText>}
+                    <StyledTextBold style={styles.headerText}>{habit.name}</StyledTextBold>
+                    {!!habit.remove && <StyledText style={styles.remove}>{habit.remove}</StyledText>}
                 </View>
             </View>
             <View style={styles.underline} />
@@ -82,7 +82,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                             {edit ?
                                 <View style={styles.timeContainer}>
                                     <Pressable style={styles.timeHeaderEdit} onPress={onTurnOnOffNotification}>
-                                        <AsapTextBold style={styles.timeText}>Time</AsapTextBold>
+                                        <StyledTextBold style={styles.timeText}>Time</StyledTextBold>
                                         {
                                             habitEdit.notificationOn
                                                 ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
@@ -112,7 +112,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                     </View>
                                 </View>
                                 : <>
-                                    <AsapTextMedium style={styles.dataText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)} ({habit.sequence.type}{renderSequenceValue(habit)}) </AsapTextMedium>
+                                    <StyledTextMedium style={styles.dataText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)} ({habit.sequence.type}{renderSequenceValue(habit)}) </StyledTextMedium>
                                     {
                                         habit.notificationOn ?
                                             <Entypo name="bell" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} /> :
@@ -133,7 +133,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                         multiline={true}
                                         maxLength={Inputs.habitLocationMaxChar}
                                     />
-                                    : <AsapTextMedium style={styles.dataText}>{habit.locationDes}</AsapTextMedium>
+                                    : <StyledTextMedium style={styles.dataText}>{habit.locationDes}</StyledTextMedium>
                             }
                         </View>
 
@@ -148,7 +148,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                         multiline={true}
                                         maxLength={Inputs.habitCueMaxChar}
                                     />
-                                    : <AsapTextMedium style={styles.dataText}>{habit.cue}</AsapTextMedium>
+                                    : <StyledTextMedium style={styles.dataText}>{habit.cue}</StyledTextMedium>
                             }
                         </View>
 
@@ -159,7 +159,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
 
                         <View style={styles.dataItem}>
                             <Entypo name="bar-graph" size={normalizeHeight(40)} color={Colors.secondary} style={{ marginRight: 5 }} />
-                            <AsapTextMedium style={styles.dataText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</AsapTextMedium>
+                            <StyledTextMedium style={styles.dataText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</StyledTextMedium>
                         </View>
 
                         <View style={styles.dataItem}>
@@ -175,7 +175,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                         maxLength={Inputs.habitNotesMaxChar}
                                     />
                                     : <ScrollView style={{ maxHeight: normalizeHeight(20) }}>
-                                        <AsapText style={styles.dataText}>{habit.notes}</AsapText>
+                                        <StyledText style={styles.dataText}>{habit.notes}</StyledText>
                                     </ScrollView>
                             }
                         </View>
@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
         fontSize: normalizeHeight(70),
         color: Colors.primary,
         textDecorationLine: 'line-through',
-        alignSelf: 'flex-end',
+        alignSelf: 'flex-start',
     },
     data: {
         marginTop: 10,

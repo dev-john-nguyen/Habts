@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { AsapText, LatoText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
+import { StyledText, StyledTextBold, StyledTextMedium } from '../../components/StyledText';
 import { StyledPrimaryButton, StyledRedButton } from '../../components/StyledButton';
 import { firebaseDb, firestoreDb } from '../../firebase';
 import { StyledTextInput } from '../../components/StyledTextInput';
@@ -114,16 +114,16 @@ const Account = ({ navigation, signOut, signOutUser }: Props) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <AsapTextBold style={styles.header}>Account</AsapTextBold>
+                <StyledTextBold style={styles.header}>Account</StyledTextBold>
                 <View style={styles.underline} />
                 <View>
-                    <AsapTextMedium style={styles.sectionHeaderText}>Notification</AsapTextMedium>
-                    <LatoText style={styles.subText}>You can update your notification settings by navigating to your settings on your phone.</LatoText>
-                    <LatoText style={styles.subText}>If you want to turn off/on a notification for a habit, navigate to the habit, tap the edit icon (pencil icon) located in the top right corner, and tap the notification icon (bell icon) to turn off/on.</LatoText>
+                    <StyledTextBold style={styles.sectionHeaderText}>Notification</StyledTextBold>
+                    <StyledText style={styles.subText}>You can update your notification settings by navigating to your settings on your phone.</StyledText>
+                    <StyledText style={styles.subText}>If you want to turn off/on a notification for a habit, navigate to the habit, tap the edit icon (pencil icon) located in the top right corner, and tap the notification icon (bell icon) to turn off/on.</StyledText>
                 </View>
                 <View style={styles.section}>
-                    <AsapTextMedium style={styles.sectionHeaderText}>Password</AsapTextMedium>
-                    <AsapText style={styles.subText}>Send Email To Reset Password</AsapText>
+                    <StyledTextBold style={styles.sectionHeaderText}>Password</StyledTextBold>
+                    <StyledText style={styles.subText}>Send Email To Reset Password</StyledText>
                     <StyledTextInput
                         style={styles.input}
                         placeholder='Confirm Email Address'
@@ -134,7 +134,7 @@ const Account = ({ navigation, signOut, signOutUser }: Props) => {
                     <StyledPrimaryButton text={loading ? <ActivityIndicator color={Colors.white} size='small' /> : 'Send'} style={styles.button} onPress={sendPasswordResetEmail} />
                 </View>
                 <View style={styles.section}>
-                    <AsapTextMedium style={styles.sectionHeaderText}>Delete Account</AsapTextMedium>
+                    <StyledTextBold style={styles.sectionHeaderText}>Delete Account</StyledTextBold>
                     <StyledRedButton text={deleteLoading ? <ActivityIndicator color={Colors.white} size='small' /> : 'Remove'} style={styles.button} onPress={handleConfirm} />
                 </View>
             </View>

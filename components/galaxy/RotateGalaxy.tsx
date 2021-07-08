@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { StyleSheet, Animated, View, Easing, Image } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import Colors from '../../constants/Colors';
-import { AsapText } from '../StyledText';
+import { StyledText } from '../StyledText';
 import { CompletedHabitsProps } from '../../services/habits/types';
 import Stars from './Stars';
 import SmallStars from '../Stars';
@@ -63,7 +63,7 @@ export default ({ balls, login }: Props) => {
                 <View style={[styles.centerStar, { backgroundColor: login ? Colors.primary : Colors.yellow }]}>
                     {login ? <Image source={require('../../assets/logo.png')} style={{ height: '100%', width: '100%', borderRadius: 20 }} />
                         : <View style={styles.centerStar}>
-                            <AsapText style={styles.centerStartText}>{balls.length}</AsapText>
+                            <StyledText style={styles.centerStartText}>{balls.length}</StyledText>
                         </View>}
                 </View>
             </View>

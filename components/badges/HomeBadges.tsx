@@ -6,7 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/types';
 import HabitBadges from './HabitBadges';
-import { AsapText, AsapTextBold } from '../StyledText';
+import { StyledText, StyledTextBold } from '../StyledText';
 import Colors from '../../constants/Colors';
 import { Entypo } from '@expo/vector-icons';
 
@@ -31,14 +31,14 @@ const HomeBadges = ({ habits, navigation }: Props) => {
         return count.length >= goal
     }).map((habit) => (
         <Pressable key={habit.docId} onPress={() => onNavigate(habit.docId)} style={styles.star}>
-            <HabitBadges consecutive={habit.consecutive} size={normalizeWidth(7)} name={habit.name} home={true} />
+            <HabitBadges consecutive={habit.consecutive} name={habit.name} home={true} />
         </Pressable>
     ))
 
     return (
         <View style={styles.container}>
             <View style={[styles.background, Colors.boxShadowLight]}>
-                <AsapTextBold style={styles.title}>Awards</AsapTextBold>
+                <StyledTextBold style={styles.title}>Awards</StyledTextBold>
                 <View style={styles.borderBottom} />
             </View>
             <ScrollView horizontal={true}>
@@ -46,7 +46,7 @@ const HomeBadges = ({ habits, navigation }: Props) => {
                     mappedBadges.length ? mappedBadges :
                         <View style={styles.infoContainer}>
                             <Entypo name="info-with-circle" size={normalizeHeight(60)} color={Colors.white} />
-                            <AsapText style={styles.text}>Badges are shown here</AsapText>
+                            <StyledText style={styles.text}>Badges are shown here</StyledText>
                         </View>
                 }
             </ScrollView>
@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
         marginLeft: normalizeWidth(40),
         padding: 5,
         alignItems: 'center',
-        top: normalizeHeight(30)
+        top: normalizeHeight(30),
+        height: '70%'
     },
     borderBottom: {
         width: '100%',

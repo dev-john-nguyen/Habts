@@ -4,7 +4,7 @@ import CircleCheck from '../../../../assets/svgs/CircleCheck';
 import Colors from '../../../../constants/Colors';
 import CirclSquare from '../../../../assets/svgs/CircleSquare';
 import Badge from '../../../../assets/svgs/badge';
-import { AsapTextMedium, AsapTextBold, AsapText } from '../../../StyledText';
+import { StyledTextMedium, StyledTextBold, StyledText } from '../../../StyledText';
 import { normalizeWidth } from '../../../../utils/styles';
 import XCircle from '../../../../assets/svgs/XCircle';
 import { TrackProps } from '../types';
@@ -72,16 +72,16 @@ const Track = ({ type, date, badge, missCountRows }: Props) => {
         }]}>
             <View style={{ flexDirection: 'row' }}>
                 <View style={[styles.dateContainer, { backgroundColor: borderColor }]}>
-                    <AsapTextMedium style={styles.date}>
+                    <StyledTextMedium style={styles.date}>
                         {dateString}
-                    </AsapTextMedium>
+                    </StyledTextMedium>
                 </View>
                 <View style={styles.missCountContainer}>
                     {
                         missCountRows &&
-                        <AsapTextBold style={styles.missCountText}>
+                        <StyledTextBold style={styles.missCountText}>
                             x {missCountRows}
-                        </AsapTextBold>
+                        </StyledTextBold>
 
                     }
                 </View>

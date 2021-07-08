@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated, PanResponder, Easing } from 'react-native';
 import { normalizeWidth } from '../../utils/styles';
 import Colors from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AsapText } from '../StyledText';
+import { StyledText } from '../StyledText';
 import { getMonthShort } from '../../utils/tools';
 
 interface Props {
@@ -52,8 +52,8 @@ export default ({ index, jarHeight, dateCompleted, resetBalls }: Props) => {
             <View
                 style={styles.ball}
             >
-                <AsapText style={styles.ballText}>{dateCompleted.getDate()}</AsapText>
-                <AsapText style={styles.ballSubText}>{getMonthShort(dateCompleted)}</AsapText>
+                <StyledText style={styles.ballText}>{dateCompleted.getDate()}</StyledText>
+                <StyledText style={styles.ballSubText}>{getMonthShort(dateCompleted)}</StyledText>
                 <LinearGradient
                     colors={[`rgba(255,255,255,.2)`, Colors.secondary, Colors.primary]}
                     style={styles.ballGlare}

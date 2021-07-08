@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Pressable, Linking, SafeAreaView } from 'react-native';
-import { AsapText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
+import { StyledText, StyledTextBold, StyledTextMedium } from '../../components/StyledText';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { RootStackParamList } from '../../navigation/types';
@@ -50,12 +50,12 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
 
-                <AsapTextBold style={styles.header}>Settings</AsapTextBold>
+                <StyledTextBold style={styles.header}>Settings</StyledTextBold>
                 <View style={styles.underline} />
                 <Pressable style={[styles.itemContainer, { marginTop: 10 }]} onPress={() => navigation.navigate('Account')}>
                     <View style={styles.item}>
                         <Entypo name="user" size={normalizeHeight(40)} color={Colors.white} />
-                        <AsapTextMedium style={styles.itemText}>Account</AsapTextMedium>
+                        <StyledTextBold style={styles.itemText}>Account</StyledTextBold>
                     </View>
                     <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
                 </Pressable>
@@ -63,7 +63,7 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
                 <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('Subscription')}>
                     <View style={styles.item}>
                         <Entypo name="wallet" size={normalizeHeight(40)} color={Colors.white} />
-                        <AsapTextMedium style={styles.itemText}>Subscription</AsapTextMedium>
+                        <StyledTextBold style={styles.itemText}>Subscription</StyledTextBold>
                     </View>
                     <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
                 </Pressable>
@@ -71,7 +71,7 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
                 <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('ContactUs')}>
                     <View style={styles.item}>
                         <Entypo name="phone" size={normalizeHeight(40)} color={Colors.white} />
-                        <AsapTextMedium style={styles.itemText}>Contact</AsapTextMedium>
+                        <StyledTextBold style={styles.itemText}>Contact</StyledTextBold>
                     </View>
                     <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
                 </Pressable>
@@ -81,21 +81,21 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
                         <View style={{ height: normalizeHeight(40), width: normalizeHeight(40) }}>
                             <History color={Colors.white} />
                         </View>
-                        <AsapTextMedium style={styles.itemText}>History</AsapTextMedium>
+                        <StyledTextBold style={styles.itemText}>History</StyledTextBold>
                     </View>
                     <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
                 </Pressable>
 
                 <View style={{ marginTop: 10 }}>
                     <Pressable style={styles.linkContainer} onPress={openPrivacyUrl}>
-                        <AsapTextMedium style={styles.linkText}>Privacy Policy</AsapTextMedium>
+                        <StyledTextMedium style={styles.linkText}>Privacy Policy</StyledTextMedium>
                     </Pressable>
                     <Pressable style={styles.linkContainer} onPress={openTermsUrl}>
-                        <AsapTextMedium style={styles.linkText}>Terms of Use</AsapTextMedium>
+                        <StyledTextMedium style={styles.linkText}>Terms of Use</StyledTextMedium>
                     </Pressable>
                 </View>
                 <Pressable style={styles.creditContainer} onPress={openIconUrl}>
-                    <AsapText style={styles.creditText}>Icons made by <AsapTextBold style={styles.creditText}>Google</AsapTextBold> from www.flaticon.com</AsapText>
+                    <StyledText style={styles.creditText}>Icons made by <StyledTextBold style={styles.creditText}>Google</StyledTextBold> from www.flaticon.com</StyledText>
                 </Pressable>
             </View>
         </SafeAreaView>
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     creditContainer: {
         position: 'absolute',
         bottom: 0,
-        left: normalizeWidth(20)
+        left: normalizeWidth(10)
     },
     creditText: {
         fontSize: normalizeHeight(80),

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing, ActivityIndicator, Pressable } from 'react-native';
-import { AsapTextMedium } from '../StyledText';
+import { StyledTextMedium } from '../StyledText';
 import { StyledRedButton } from '../StyledButton';
 import Colors from '../../constants/Colors';
 import { normalizeHeight } from '../../utils/styles';
@@ -62,7 +62,7 @@ export default ({ onModalResponse, headerText, showModal, loading, onClose }: Pr
         }}>
             <Pressable style={styles.container} onPress={onClose}>
                 <View style={styles.modalContent}>
-                    <AsapTextMedium style={styles.modalHeader}>{headerText}</AsapTextMedium>
+                    <StyledTextMedium style={styles.modalHeader}>{headerText}</StyledTextMedium>
                     <StyledRedButton
                         style={styles.modalButton}
                         text={loading ? <ActivityIndicator color={Colors.white} /> : "I'm sure"}

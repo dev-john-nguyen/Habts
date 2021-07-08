@@ -4,7 +4,7 @@ import { genCalendarVals } from '../utils/tools';
 import Colors from '../constants/Colors';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import { FlatList } from 'react-native-gesture-handler';
-import { AsapText, AsapTextBold, AsapTextMedium } from './StyledText';
+import { StyledText, StyledTextBold, StyledTextMedium } from './StyledText';
 import { Entypo } from '@expo/vector-icons';
 
 interface props {
@@ -55,8 +55,8 @@ export default ({ setActiveDate, activeDate }: props) => {
                     style={[styles.itemContainer, { backgroundColor: isActiveDate(item) ? Colors.primary : undefined }]}
                     onPress={() => onDayPress(item)}
                 >
-                    <AsapTextMedium style={[styles.text, { color: isActiveDate(item) ? Colors.white : Colors.primary }]}>{item.dayName}</AsapTextMedium>
-                    <AsapTextBold style={[styles.dayText, { color: isActiveDate(item) ? Colors.white : Colors.primary }]}>{item.day}</AsapTextBold>
+                    <StyledTextMedium style={[styles.text, { color: isActiveDate(item) ? Colors.white : Colors.primary }]}>{item.dayName}</StyledTextMedium>
+                    <StyledTextBold style={[styles.dayText, { color: isActiveDate(item) ? Colors.white : Colors.primary }]}>{item.day}</StyledTextBold>
                     <View>
                     </View>
                 </Pressable>

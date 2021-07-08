@@ -4,8 +4,11 @@ import * as InAppPurchases from 'expo-in-app-purchases';
 import Database from '../../constants/Database';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import Colors from '../../constants/Colors';
-import { AsapText, AsapTextBold } from '../../components/StyledText';
+import { StyledText, StyledTextBold, StyledTextMedium } from '../../components/StyledText';
 import { UserActionsProps } from '../../services/user/types';
+import HeaderBgImg from '../../assets/svgs/home/HeaderBgImg';
+import HeaderImg from '../../assets/svgs/home/HeaderImg';
+import Oval from '../../assets/svgs/home/Oval';
 
 const privacyUrl = 'https://habt-b0f23.web.app/privacy';
 const termsUrl = 'https://habt-b0f23.web.app/terms';
@@ -26,11 +29,11 @@ export default ({ subscriptionPurchased }: { subscriptionPurchased: UserActionsP
         InAppPurchases.getProductsAsync([Database.monthlyPurchaseId])
             .then(() => mount.current && setLoading({ ...loading, com: false }))
             .catch((err) => {
-                // console.log(err)
-                // if (mount.current) {
-                //     setLoading({ ...loading, com: false });
-                //     setError('Error occured while fetching products. Please try again.')
-                // }
+                console.log(err)
+                if (mount.current) {
+                    setLoading({ ...loading, com: false });
+                    setError('An error occured. Please try again.')
+                }
             })
 
         return () => {
@@ -81,100 +84,143 @@ export default ({ subscriptionPurchased }: { subscriptionPurchased: UserActionsP
         }
     }
 
-    if (error) {
-        return (
-            <View style={styles.container}>
-                <AsapText style={styles.error}>Error Occured. Please try again.</AsapText>
-                <Pressable onPress={handleRefresh} style={styles.buttons}>
-                    <AsapText style={styles.buttonText}>Refresh</AsapText>
-                </Pressable>
-            </View>
-        )
-    }
-
     return (
-        <View style={styles.container}>
-            <AsapText style={styles.smallText}>Your subscription has expired.</AsapText>
-            <AsapTextBold style={styles.largeText}>Subscribe for unlimited access.</AsapTextBold>
-            <AsapText style={styles.mediumText}>Unlock access to our habit tracker, reminders, notes, scheduling, and reflection tools.</AsapText>
-            <Pressable onPress={purchaseMonthly} style={styles.buttons}>
-                <AsapText style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : 'Subscribe for $1.99 / Month'}</AsapText>
-            </Pressable>
-            <AsapText style={styles.smallText}>Become the best version of yourself.</AsapText>
-            <AsapText style={styles.info}><AsapTextBold style={styles.docs} onPress={openTermsUrl}>Terms of Use</AsapTextBold> and <AsapTextBold style={styles.docs} onPress={openPrivacyUrl}>Privacy Policy.</AsapTextBold></AsapText>
-            <AsapText style={styles.info}>If you are unable to access the app after purchase, please try to close and open the app again.</AsapText>
+        <>
+            <View style={styles.headerBgContainer}>
+                <HeaderBgImg />
+            </View>
+            <View style={styles.container}>
+                <View style={styles.headerContainer}>
+                    <View style={{
+                        flex: 1,
+                        justifyContent: 'space-evenly'
+                    }}>
+                        <View>
+                            <StyledTextBold style={styles.headerText}>Habts</StyledTextBold>
+                            <StyledTextMedium style={styles.headerSubText}>Lets continue to pursue your unknown potential.</StyledTextMedium>
+                        </View>
+                        <View style={styles.ovalContainer}>
+                            <Oval fillColor={Colors.secondary} />
+                        </View>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <HeaderImg />
+                    </View>
+                </View>
 
-            {/* <Pressable onPress={continueForFree} style={styles.buttons}>
-                <AsapText style={styles.buttonText}>{loading.free ? <ActivityIndicator size='small' color={Colors.white} /> : 'Continue for free'}</AsapText>
+
+                <View style={{ flex: 1 }}>
+                    <View style={[styles.content, Colors.boxShadow]}>
+                        <StyledText style={styles.smallText}>Your subscription has expired.</StyledText>
+                        <StyledTextBold style={styles.largeText}>Subscribe for unlimited access</StyledTextBold>
+                        <View style={styles.underline} />
+                        <StyledText style={styles.mediumText}>Unlock access to our habit tracker, reminders, notes, and scheduling.</StyledText>
+                        <Pressable onPress={purchaseMonthly} style={styles.buttons}>
+                            <StyledTextBold style={styles.buttonText}>{loading.month ? <ActivityIndicator size='small' color={Colors.white} /> : 'Subscribe for $1.99 / Month'}</StyledTextBold>
+                        </Pressable>
+                        <StyledText style={styles.error}>
+                            {error}
+                        </StyledText>
+                        {/* <Pressable onPress={continueForFree} style={styles.buttons}>
+                <StyledText style={styles.buttonText}>{loading.free ? <ActivityIndicator size='small' color={Colors.white} /> : 'Continue for free'}</StyledText>
             </Pressable> */}
-        </View >
+                    </View>
+                </View>
+                <View style={{ flex: .3 }}>
+                    <StyledText style={styles.info}><StyledTextBold style={styles.docs} onPress={openTermsUrl}>Terms of Use</StyledTextBold> and <StyledTextBold style={styles.docs} onPress={openPrivacyUrl}>Privacy Policy.</StyledTextBold></StyledText>
+                    <StyledText style={styles.info}>If you are unable to access the app after purchase, please try to close and open the app again.</StyledText>
+                </View>
+            </View >
+        </>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        position: 'absolute',
-        top: 0,
-        width: normalizeWidth(1),
-        backgroundColor: Colors.primary,
-        alignItems: 'center',
+        padding: 20,
+        flex: 1
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        flex: .5,
+        marginBottom: 20
+    },
+    ovalContainer: {
+        width: '90%',
+        height: normalizeHeight(50)
+    },
+    headerSubText: {
+        fontSize: normalizeHeight(60),
+        color: Colors.white
+    },
+    headerText: {
+        fontSize: normalizeHeight(15),
+        color: Colors.white
+    },
+    content: {
         justifyContent: 'center',
-        padding: 5,
-        paddingTop: normalizeHeight(15),
-        paddingBottom: normalizeHeight(25)
+        alignItems: 'center',
+        backgroundColor: Colors.white,
+        padding: 20,
+        width: '90%',
+        borderRadius: 10,
+        alignSelf: 'center',
+        flex: .9
+    },
+    headerBgContainer: {
+        position: 'absolute', width: '100%', height: '60%', top: '-5%', zIndex: -100
+    },
+    underline: {
+        height: 1,
+        width: '100%',
+        backgroundColor: Colors.secondary,
+        marginTop: 10,
+        marginBottom: 10
     },
     docs: {
         fontSize: normalizeWidth(30),
-        color: Colors.white,
-        textDecorationLine: 'underline'
+        color: Colors.secondary
     },
     error: {
-        fontSize: normalizeWidth(20),
+        fontSize: normalizeWidth(40),
         color: Colors.red,
-        marginBottom: 10
-    },
-    headerContainer: {
-        width: '100%',
-        borderBottomColor: Colors.tertiary,
-        borderBottomWidth: 1,
-        alignItems: 'center',
-        marginBottom: 10
     },
     smallText: {
         fontSize: normalizeWidth(30),
-        width: '80%',
+        width: '100%',
+        color: Colors.primary,
         textAlign: 'center',
-        color: Colors.white,
-        marginBottom: 10
+        marginBottom: 5
     },
     mediumText: {
         fontSize: normalizeWidth(27),
-        width: '80%',
+        width: '100%',
+        color: Colors.primary,
         textAlign: 'center',
-        color: Colors.white,
         marginBottom: 10
     },
     largeText: {
         fontSize: normalizeWidth(15),
-        width: '100%',
         textAlign: 'center',
-        color: Colors.white,
-        marginBottom: 10
+        width: '100%',
+        color: Colors.primary,
+        textTransform: 'capitalize'
     },
     info: {
         fontSize: normalizeWidth(35),
         textAlign: 'center',
-        color: Colors.white,
-        width: '80%',
+        color: Colors.primary,
+        width: '100%',
         marginBottom: 10
     },
     buttons: {
-        margin: 10,
         alignSelf: 'stretch',
         padding: 20,
-        backgroundColor: Colors.secondary,
+        backgroundColor: Colors.primary,
         borderRadius: 20,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom: 10
     },
     buttonText: {
         color: Colors.white,

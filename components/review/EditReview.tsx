@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Keyboard } from 'react-native';
-import { AsapText, LatoText } from '../StyledText';
+import { StyledText } from '../StyledText';
 import Colors from '../../constants/Colors';
 import StarRating from '../StarRating';
 import { StyledTextInput } from '../StyledTextInput';
@@ -50,12 +50,12 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
     return (
         <View style={styles.container}>
             <View style={[styles.questionContainer, Colors.boxShadowLight]}>
-                <AsapText style={styles.questionText}>Out of 5, how do you feel about your habits since your last review?</AsapText>
+                <StyledText style={styles.questionText}>Out of 5, how do you feel about your habits since your last review?</StyledText>
                 <StarRating setStarRating={(number) => setItem({ ...item, rating: number })} starRating={item.rating} edit={edit} />
             </View>
 
             <View style={[styles.questionContainer, Colors.boxShadowLight]}>
-                <AsapText style={styles.questionText}>What Went Well?</AsapText>
+                <StyledText style={styles.questionText}>What Went Well?</StyledText>
                 {edit ? <StyledTextInput
                     value={item.good}
                     onChangeText={(text) => setItem({ ...item, good: text })}
@@ -66,15 +66,15 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                     maxLength={Inputs.reviewInputMaxChar}
                     onSubmitEditing={Keyboard.dismiss}
                 /> : <View style={styles.textContainer}>
-                        <LatoText style={styles.text}>
+                        <StyledText style={styles.text}>
                             {item.good}
-                        </LatoText>
+                        </StyledText>
                     </View>
                 }
             </View>
 
             <View style={[styles.questionContainer, Colors.boxShadowLight]}>
-                <AsapText style={styles.questionText}>What Didn't Go So Well?</AsapText>
+                <StyledText style={styles.questionText}>What Didn't Go So Well?</StyledText>
                 {edit ? <StyledTextInput
                     value={item.bad}
                     onChangeText={(text) => setItem({ ...item, bad: text })}
@@ -85,15 +85,15 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                     maxLength={Inputs.reviewInputMaxChar}
                     onSubmitEditing={Keyboard.dismiss}
                 /> : <View style={styles.textContainer}>
-                        <LatoText style={styles.text}>
+                        <StyledText style={styles.text}>
                             {item.bad}
-                        </LatoText>
+                        </StyledText>
                     </View>
                 }
             </View>
 
             <View style={[styles.questionContainer, Colors.boxShadowLight]}>
-                <AsapText style={styles.questionText}>What Did I Learn?</AsapText>
+                <StyledText style={styles.questionText}>What Did I Learn?</StyledText>
                 {edit ? <StyledTextInput
                     value={item.learn}
                     onChangeText={(text) => setItem({ ...item, learn: text })}
@@ -104,9 +104,9 @@ export default ({ edit, review, onSubmitReview, setBanner }: ComponentProps) => 
                     onSubmitEditing={Keyboard.dismiss}
                     maxLength={Inputs.reviewInputMaxChar}
                 /> : <View style={styles.textContainer}>
-                        <LatoText style={styles.text}>
+                        <StyledText style={styles.text}>
                             {item.learn}
-                        </LatoText>
+                        </StyledText>
                     </View>
                 }
             </View>

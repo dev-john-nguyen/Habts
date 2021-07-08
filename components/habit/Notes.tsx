@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
-import { AsapText, AsapTextBold } from '../StyledText';
+import { StyledText, StyledTextBold } from '../StyledText';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import Colors from '../../constants/Colors';
 import { Feather } from '@expo/vector-icons';
@@ -20,7 +20,7 @@ const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
     return (
         <View style={styles.container}>
             <View style={styles.headerContainer}>
-                <AsapTextBold style={styles.header}>Notes</AsapTextBold>
+                <StyledTextBold style={styles.header}>Notes</StyledTextBold>
                 <Pressable style={styles.x} onPress={onClose} hitSlop={5}>
                     <Feather name="x" size={normalizeWidth(20)} color={Colors.primary} onPress={onClose} />
                 </Pressable>
@@ -35,7 +35,7 @@ const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
                     maxLength={Inputs.habitNotesMaxChar}
                 />
                 : <ScrollView contentContainerStyle={styles.content}>
-                    <AsapText style={styles.text}>{notes}</AsapText>
+                    <StyledText style={styles.text}>{notes}</StyledText>
                 </ScrollView>
             }
         </View>

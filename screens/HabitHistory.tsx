@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable, Animated, Easing, SafeAreaView } from 'react-native';
-import { AsapText, AsapTextBold } from '../components/StyledText';
+import { StyledText, StyledTextBold } from '../components/StyledText';
 import Colors from '../constants/Colors';
 import { HabitProps, HabitsProps } from '../services/habits/types';
 import { ReducerStateProps } from '../services';
@@ -32,7 +32,7 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                                 <Pressable onPress={() => {
                                     setTargetHabit(item)
                                 }} style={[styles.filterItem, { backgroundColor: isSelected ? Colors.primary : Colors.white }]}>
-                                    <AsapText style={[styles.filterItemText, { color: isSelected ? Colors.white : Colors.primary }]}>{item.name}</AsapText>
+                                    <StyledText style={[styles.filterItemText, { color: isSelected ? Colors.white : Colors.primary }]}>{item.name}</StyledText>
                                 </Pressable>
                             )
                         }}
@@ -47,7 +47,7 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                                 setHabitEdit={() => undefined}
                                 habitEdit={emptyHabitEdit}
                             />
-                            <HabitBadges consecutive={targetHabit.consecutive} size={normalizeHeight(25)} infoText="Earn your first badge by completing 21 consecutive days." />
+                            <HabitBadges consecutive={targetHabit.consecutive} />
                             <Tracker
                                 completedHabits={targetHabit.completedHabits}
                                 startDate={targetHabit.createdAt}
@@ -57,8 +57,8 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                                 consecutive={targetHabit.consecutive}
                             />
                             <View style={styles.totalContainer}>
-                                <AsapText>Total: </AsapText>
-                                <AsapTextBold>{targetHabit.completedHabits.length}</AsapTextBold>
+                                <StyledText>Total: </StyledText>
+                                <StyledTextBold>{targetHabit.completedHabits.length}</StyledTextBold>
                             </View>
 
                         </>

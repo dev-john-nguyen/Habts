@@ -3,7 +3,7 @@ import { View, StyleSheet, Animated, Easing, FlatList } from 'react-native';
 import Colors from '../../constants/Colors';
 import { StyledPrimaryButton, StyledDisabledButton, StyledSecondaryButton } from '../../components/StyledButton';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { AsapText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
+import { StyledText, StyledTextBold, StyledTextMedium } from '../../components/StyledText';
 import { Entypo } from '@expo/vector-icons';
 import { formatTime, renderSequenceValue } from '../../utils/tools';
 import { HabitProps } from '../../services/habits/types';
@@ -75,8 +75,8 @@ export default ({ habits, startTime, endTime, setStartTime, setEndTime, handlePr
 
     return (
         <View style={styles.container}>
-            <AsapText style={styles.infoText}>in 5 minute intervals.</AsapText>
-            <AsapTextBold style={styles.questionText}>What Time In The Day Do You Want To Implement This Habit?</AsapTextBold>
+            <StyledText style={styles.infoText}>in 5 minute intervals.</StyledText>
+            <StyledTextBold style={styles.questionText}>What Time In The Day Do You Want To Implement This Habit?</StyledTextBold>
             <View style={styles.timeContainer}>
                 <Entypo name="list" size={24} color={Colors.primary} onPress={handleHabitList} style={{ position: 'absolute', zIndex: 10 }} />
                 <Animated.View
@@ -91,19 +91,19 @@ export default ({ habits, startTime, endTime, setStartTime, setEndTime, handlePr
                     <FlatList
                         data={habits}
                         keyExtractor={(item, index) => item.docId}
-                        ListEmptyComponent={<AsapText style={styles.habitListText}>No Habits</AsapText>}
+                        ListEmptyComponent={<StyledText style={styles.habitListText}>No Habits</StyledText>}
                         style={styles.habitContainer}
                         contentContainerStyle={styles.habitList}
                         renderItem={({ item }) => (
                             <View style={styles.habitListContainer}>
-                                <AsapTextBold style={styles.habitListText}>{item.name}</AsapTextBold>
-                                <AsapText style={styles.habitListText}>{item.sequence.type} {renderSequenceValue(item)}</AsapText>
-                                <AsapTextMedium style={styles.habitListText}>{formatTime(item.startTime)} - {formatTime(item.endTime)}</AsapTextMedium>
+                                <StyledTextBold style={styles.habitListText}>{item.name}</StyledTextBold>
+                                <StyledText style={styles.habitListText}>{item.sequence.type} {renderSequenceValue(item)}</StyledText>
+                                <StyledTextMedium style={styles.habitListText}>{formatTime(item.startTime)} - {formatTime(item.endTime)}</StyledTextMedium>
                             </View>
                         )}
                     />
                 </Animated.View>
-                <AsapTextBold style={styles.timeText}>{timeStep > 0 ? "End Time" : "Start Time"}</AsapTextBold>
+                <StyledTextBold style={styles.timeText}>{timeStep > 0 ? "End Time" : "Start Time"}</StyledTextBold>
                 <View style={styles.datePickerContainer}>
                     <DateTimePicker
                         value={timeStep > 0 ? endTime : startTime}

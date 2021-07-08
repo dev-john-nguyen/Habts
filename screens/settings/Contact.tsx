@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { AsapText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
+import { StyledText, StyledTextBold, StyledTextMedium } from '../../components/StyledText';
 import Colors from '../../constants/Colors';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,14 +10,14 @@ const ContactUs = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <AsapTextBold style={styles.header}>Contact Us</AsapTextBold>
+                <StyledTextBold style={styles.header}>Contact Us</StyledTextBold>
                 <View style={styles.underline} />
-                <AsapText style={styles.text}>Feel free to contact us with any questions, concerns, or advice about this app. We would love to hear from you.</AsapText>
+                <StyledText style={styles.text}>Feel free to contact us with any questions, concerns, or advice about this app. We would love to hear from you.</StyledText>
                 <View style={styles.section}>
-                    <AsapTextBold style={styles.itemHeaderText}>Email</AsapTextBold>
-                    <AsapText style={styles.text}>softlete@gmail.com</AsapText>
-                    <AsapTextBold style={styles.itemHeaderText}>Website</AsapTextBold>
-                    <AsapText style={styles.text}>habt-b0f23.web.app</AsapText>
+                    <StyledTextBold style={styles.itemHeaderText}>Email</StyledTextBold>
+                    <StyledText style={styles.text}>softlete@gmail.com</StyledText>
+                    <StyledTextBold style={styles.itemHeaderText}>Website</StyledTextBold>
+                    <StyledText style={styles.text}>habt-b0f23.web.app</StyledText>
                 </View>
             </View>
         </SafeAreaView>

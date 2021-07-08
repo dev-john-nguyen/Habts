@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
 import { StyledPrimaryButton, StyledDisabledButton, StyledSecondaryButton } from '../../components/StyledButton';
-import { AsapText, AsapTextBold } from '../../components/StyledText';
+import { StyledText, StyledTextBold } from '../../components/StyledText';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import { Entypo } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
@@ -21,8 +21,8 @@ export default ({ notificationNum, notificationOn, setNotificationOn, setNotific
 
     return (
         <View style={styles.container}>
-            <AsapText style={styles.infoText}>Up to an hour before,</AsapText>
-            <AsapTextBold style={styles.questionText}>At What Time Do You Want To Be Notified?</AsapTextBold>
+            <StyledText style={styles.infoText}>Up to an hour before,</StyledText>
+            <StyledTextBold style={styles.questionText}>At What Time Do You Want To Be Notified?</StyledTextBold>
             <View style={styles.content}>
                 <Picker
                     selectedValue={notificationNum}
@@ -33,7 +33,7 @@ export default ({ notificationNum, notificationOn, setNotificationOn, setNotific
                         <Picker.Item label={item.toString()} value={item} key={item.toString()} />
                     ))}
                 </Picker>
-                <AsapText style={styles.text}>mins before</AsapText>
+                <StyledText style={styles.text}>mins before</StyledText>
                 {
                     notificationOn
                         ? <Entypo name="bell" size={normalizeHeight(35)} color={Colors.primary} style={styles.bell} onPress={() => setNotificationOn(false)} />

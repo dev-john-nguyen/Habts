@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { View, StyleSheet, Animated, PanResponder, ImageBackground, Easing } from 'react-native';
-import { AsapText, AsapTextBold } from '../StyledText';
+import { StyledText, StyledTextBold } from '../StyledText';
 import Colors from '../../constants/Colors';
 import { LinearGradient } from 'expo-linear-gradient';
 import { cloneDeep } from 'lodash'
@@ -298,8 +298,8 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                                 ballHeight.current = height;
                             })}
                         >
-                            <AsapText style={styles.ballText}>{new Date().getDate()}</AsapText>
-                            <AsapText style={styles.ballSubText}>{getMonthShort(new Date())}</AsapText>
+                            <StyledText style={styles.ballText}>{new Date().getDate()}</StyledText>
+                            <StyledText style={styles.ballSubText}>{getMonthShort(new Date())}</StyledText>
                             <LinearGradient
                                 colors={[`rgba(255,255,255,.2)`, Colors.secondary, Colors.primary]}
                                 style={styles.ballGlare}
@@ -308,7 +308,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                     </Animated.View>
                 }
                 <View style={styles.messageContainer}>
-                    <AsapText style={styles.message}>{quotes.current.quote}</AsapText>
+                    <StyledText style={styles.message}>{quotes.current.quote}</StyledText>
                     {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeHeight(20)} color={Colors.white} />}
                 </View>
             </Animated.View>
@@ -320,7 +320,7 @@ export default ({ setScrollEnabled, completedHabits, handleAddCompletedHabit, ac
                 })}
             >
                 <View style={styles.progressInfo}>
-                    <AsapText style={styles.progressInfoText}>count: <AsapTextBold style={styles.progressInfoText}>{completedHabits.length}</AsapTextBold></AsapText>
+                    <StyledText style={styles.progressInfoText}>count: <StyledTextBold style={styles.progressInfoText}>{completedHabits.length}</StyledTextBold></StyledText>
                 </View>
                 <ImageBackground
                     style={styles.jarBallsContainer}

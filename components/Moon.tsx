@@ -1,13 +1,13 @@
 import React from 'react';
 import { Pressable, View, StyleSheet } from 'react-native';
-import { AsapText } from './StyledText';
+import { StyledText } from './StyledText';
 import Colors from '../constants/Colors';
 import { normalizeWidth } from '../utils/styles';
 
 export default ({ onPress }: { onPress: () => void; }) => {
     return (
         <Pressable style={styles.container} onPress={onPress}>
-            <AsapText style={styles.text}>New</AsapText>
+            <StyledText style={styles.text}>New</StyledText>
             <View style={styles.crator1} />
             <View style={styles.crator2} />
             <View style={styles.crator3} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView } from 'react-native'
-import { AsapText, LatoText } from '../StyledText';
+import { StyledText } from '../StyledText';
 import Colors from '../../constants/Colors';
 import { Entypo, MaterialCommunityIcons } from '@expo/vector-icons';
 import { HabitProps } from '../../services/habits/types';
@@ -27,40 +27,40 @@ export default ({ habit }: { habit: HabitProps }) => {
             <View style={styles.data}>
                 <View style={styles.header}>
                     <View>
-                        <AsapText style={styles.headerText}>{name}</AsapText>
-                        <LatoText style={styles.headerSubText}>{remove}</LatoText>
+                        <StyledText style={styles.headerText}>{name}</StyledText>
+                        <StyledText style={styles.headerSubText}>{remove}</StyledText>
                     </View>
                 </View>
                 <View style={styles.dataItem}>
                     <Entypo name="clock" size={normalizeHeight(30)} color={Colors.primary} />
-                    <LatoText style={styles.dataText}>{formatTime(startTime)} - {formatTime(endTime)}</LatoText>
+                    <StyledText style={styles.dataText}>{formatTime(startTime)} - {formatTime(endTime)}</StyledText>
                 </View>
 
                 <View style={styles.dataItem}>
                     <Entypo name="bar-graph" size={normalizeHeight(30)} color={Colors.primary} />
-                    <LatoText style={styles.dataText}>{consecutive.length} days in a row!</LatoText>
+                    <StyledText style={styles.dataText}>{consecutive.length} days in a row!</StyledText>
                 </View>
 
                 <View style={styles.dataItem}>
                     <Entypo name="link" size={normalizeHeight(30)} color={Colors.primary} />
-                    <LatoText style={styles.dataText}>{cue}</LatoText>
+                    <StyledText style={styles.dataText}>{cue}</StyledText>
                 </View>
 
                 <View style={styles.dataItem}>
                     <Entypo name="location-pin" size={normalizeHeight(30)} color={Colors.primary} />
-                    <LatoText style={styles.dataText}>{locationDes}</LatoText>
+                    <StyledText style={styles.dataText}>{locationDes}</StyledText>
                 </View>
 
                 <View style={styles.dataItem}>
                     <Entypo name="text-document" size={normalizeHeight(30)} color={Colors.primary} />
                     <ScrollView style={{ maxHeight: normalizeHeight(20) }}>
-                        <LatoText style={styles.dataText}>{notes}</LatoText>
+                        <StyledText style={styles.dataText}>{notes}</StyledText>
                     </ScrollView>
                 </View>
 
                 <View style={styles.dataItem}>
                     <MaterialCommunityIcons name="sigma" size={normalizeHeight(30)} color={Colors.primary} />
-                    <LatoText style={styles.dataText}>{totalCount.toString()}</LatoText>
+                    <StyledText style={styles.dataText}>{totalCount.toString()}</StyledText>
                 </View>
             </View>
         </View>

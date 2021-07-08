@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { randomIntFromInterval } from '../../utils/tools';
 import { StyleSheet, Animated, Easing } from 'react-native';
 import Colors from '../../constants/Colors';
-import { AsapText } from '../StyledText';
+import { StyledText } from '../StyledText';
 import { normalizeWidth, normalizeHeight } from '../../utils/styles';
 
 
@@ -65,7 +65,7 @@ export default ({ text, index, login }: Props) => {
             }, { rotateZ: '180deg' }, { perspective: 800 }]
         }
         ]}>
-            <AsapText style={[styles.text, { color: renderColor() }]}>{text}</AsapText>
+            <StyledText style={[styles.text, { color: renderColor() }]}>{text}</StyledText>
         </Animated.View>
     )
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Keyboard } from 'react-native';
-import { AsapText } from '../components/StyledText';
+import { StyledText } from '../components/StyledText';
 import Colors from '../constants/Colors';
 import EditReview from '../components/review/EditReview';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -75,20 +75,20 @@ const Review = ({ navigation, addNewReview, setBanner, reviews }: ReviewComProps
             <View style={styles.container}>
                 <View style={styles.header}>
                     <View style={styles.headerDate}>
-                        <AsapText style={styles.headerDateDay}>{currentDate.getDate()}</AsapText>
+                        <StyledText style={styles.headerDateDay}>{currentDate.getDate()}</StyledText>
                         <View>
-                            <AsapText style={styles.headerDateMonYr}>{getDayName(currentDate)}</AsapText>
-                            <AsapText style={styles.headerDateMonYr}>{getMonthShort(currentDate)} {currentDate.getFullYear()}</AsapText>
+                            <StyledText style={styles.headerDateMonYr}>{getDayName(currentDate)}</StyledText>
+                            <StyledText style={styles.headerDateMonYr}>{getMonthShort(currentDate)} {currentDate.getFullYear()}</StyledText>
                         </View>
                     </View>
-                    <AsapText style={styles.headerTitle}>Review</AsapText>
+                    <StyledText style={styles.headerTitle}>Review</StyledText>
                 </View>
                 {reviews.findIndex(review => getDate(review.createdAt) === getDate(currentDate)) < 0 ?
                     <ScrollView style={styles.review}>
                         <EditReview edit={true} onSubmitReview={handleAddNewReview} setBanner={setBanner} />
                     </ScrollView> :
                     <View style={styles.doneContainer}>
-                        <AsapText style={styles.doneText}>Today's Review Already Completed.</AsapText>
+                        <StyledText style={styles.doneText}>Today's Review Already Completed.</StyledText>
                     </View>
                 }
                 <Animated.View style={{ height: keyboardRef, width: '100%' }} />

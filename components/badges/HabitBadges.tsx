@@ -3,19 +3,17 @@ import { View, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { normalizeWidth, normalizeHeight } from '../../utils/styles';
-import { AsapText, AsapTextBold } from '../StyledText';
+import { StyledText, StyledTextBold } from '../StyledText';
 import { HabitProps } from '../../services/habits/types';
 import Badge from "../../assets/svgs/badge";
 
 interface Props {
     consecutive: HabitProps['consecutive'];
-    size: number;
-    infoText?: string;
     name?: string;
     home?: boolean;
 }
 
-const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
+const HabitBadges = ({ consecutive, name, home }: Props) => {
     const goalKeys = Object.keys(consecutive);
 
 
@@ -30,7 +28,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
             const color = i < 2 ? Colors.primary : Colors.yellow
             mappedBadges.push(
                 <View style={styles.star} key={i}>
-                    {!name && <AsapText style={[styles.text, { color: color }]} numberOfLines={1}>{total}</AsapText>}
+                    {!name && <StyledText style={[styles.text, { color: color }]} numberOfLines={1}>{total}</StyledText>}
                     <Badge fill={color} style={styles.badge} outlineBadge={outlineBadge} />
                 </View>
             )
@@ -39,7 +37,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
             mappedBadges.push(
                 <View style={styles.nextGoalContainer} key={i}>
                     <MaterialCommunityIcons name="target" size={normalizeHeight(60)} color={Colors.primary} />
-                    <AsapTextBold style={styles.nextGoal} numberOfLines={1}>{count.length}<AsapText style={styles.nextGoal}>/{goal}</AsapText></AsapTextBold>
+                    <StyledTextBold style={styles.nextGoal} numberOfLines={1}>{count.length}<StyledText style={styles.nextGoal}>/{goal}</StyledText></StyledTextBold>
                 </View>
             )
             break;
@@ -58,7 +56,7 @@ const HabitBadges = ({ consecutive, size, infoText, name, home }: Props) => {
     return (
         <View style={[styles.container, Colors.boxShadowLight]}>
             <View style={styles.content}>
-                {mappedBadges.length > 0 ? mappedBadges : <AsapTextBold>Badges</AsapTextBold>}
+                {mappedBadges.length > 0 ? mappedBadges : <StyledTextBold>Badges</StyledTextBold>}
             </View>
         </View>
     )

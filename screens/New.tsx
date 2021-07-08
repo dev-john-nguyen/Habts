@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import { View, StyleSheet, ActivityIndicator, Pressable, Keyboard, Animated, SafeAreaView } from 'react-native';
-import { AsapText, AsapTextBold } from '../components/StyledText';
+import { StyledText, StyledTextBold } from '../components/StyledText';
 import Colors from '../constants/Colors';
 import { StyledPrimaryButton, StyledSecondaryButton, StyledDisabledButton } from '../components/StyledButton';
 import { StyledTextInput } from '../components/StyledTextInput';
@@ -178,7 +178,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
             case 0:
                 return (
                     <View style={[styles.content, { height: normalizeHeight(5) }]}>
-                        <AsapTextBold style={styles.questionText}>Removing An Old Habit?</AsapTextBold>
+                        <StyledTextBold style={styles.questionText}>Removing An Old Habit?</StyledTextBold>
                         <View style={styles.buttonContainer}>
                             <StyledPrimaryButton text='Yes' style={{ flex: .4 }} onPress={() => handleRemoveOldHabit(true)} />
                             <StyledSecondaryButton text='No' style={{ flex: .4 }} onPress={() => handleRemoveOldHabit(false)} />
@@ -188,7 +188,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
             case 1:
                 return (
                     <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
-                        <AsapTextBold style={styles.questionText}>What Habit Do You Want To Remove From Your Life?</AsapTextBold>
+                        <StyledTextBold style={styles.questionText}>What Habit Do You Want To Remove From Your Life?</StyledTextBold>
                         <StyledTextInput
                             value={remove}
                             style={styles.responseInput}
@@ -211,7 +211,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
             case 2:
                 return (
                     <View style={[styles.content, { height: normalizeHeight(4) }]}>
-                        <AsapTextBold style={styles.questionText}>We Recommend Replacing The Old Habit With A New One.</AsapTextBold>
+                        <StyledTextBold style={styles.questionText}>We Recommend Replacing The Old Habit With A New One.</StyledTextBold>
                         <View style={styles.buttonContainer}>
                             <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
                             <StyledPrimaryButton text='Next' style={{ flex: .4 }} onPress={handleNextStep} />
@@ -221,7 +221,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
             case 3:
                 return (
                     <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
-                        <AsapTextBold style={styles.questionText}>What Habit Do You Want To Implement Into Your Life?</AsapTextBold>
+                        <StyledTextBold style={styles.questionText}>What Habit Do You Want To Implement Into Your Life?</StyledTextBold>
                         <StyledTextInput
                             value={name}
                             style={styles.responseInput}
@@ -265,8 +265,8 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 return (
                     <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
                         <View>
-                            <AsapTextBold style={styles.questionText}>Location of which the habit will be performed</AsapTextBold>
-                            <AsapText style={styles.infoText}>Ex. Home - Living Room</AsapText>
+                            <StyledTextBold style={styles.questionText}>Location of which the habit will be performed</StyledTextBold>
+                            <StyledText style={styles.infoText}>Ex. Home - Living Room</StyledText>
 
                         </View>
 
@@ -295,8 +295,8 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 return (
                     <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
                         <View>
-                            <AsapTextBold style={styles.questionText}>What Cue Do You Want To Trigger The Habit?</AsapTextBold>
-                            <AsapText style={styles.infoText}>Ex. “I will meditate after I drink my morning coffee.”</AsapText>
+                            <StyledTextBold style={styles.questionText}>What Cue Do You Want To Trigger The Habit?</StyledTextBold>
+                            <StyledText style={styles.infoText}>Ex. “I will meditate after I drink my morning coffee.”</StyledText>
                         </View>
 
                         <StyledTextInput
@@ -335,8 +335,8 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                     <Pressable style={[styles.content, { height: normalizeHeight(2.5) }]} onPress={Keyboard.dismiss}>
 
                         <View>
-                            <AsapTextBold style={styles.questionText}>Any Personal Notes You Want To Add?</AsapTextBold>
-                            <AsapText style={styles.infoText}>Maybe include the reason WHY you want to implement this habit into your life.</AsapText>
+                            <StyledTextBold style={styles.questionText}>Any Personal Notes You Want To Add?</StyledTextBold>
+                            <StyledText style={styles.infoText}>Maybe include the reason WHY you want to implement this habit into your life.</StyledText>
                         </View>
 
                         <StyledTextInput

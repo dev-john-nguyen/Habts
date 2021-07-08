@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet, Animated, Easing, Pressable } from 'react-native';
 import { BannerActionsProps, BannerProps } from '../services/banner/types';
-import { AsapText, AsapTextMedium } from './StyledText';
+import { StyledText, StyledTextMedium } from './StyledText';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 import { normalizeHeight } from '../utils/styles';
@@ -61,7 +61,7 @@ export default ({ removeBanner, banner }: Props) => {
     return (
         <Animated.View style={[styles.container, { top: topAdmin, backgroundColor: handleBackgroundColor() }]}>
             <Pressable style={styles.messageContainer} onPress={hide}>
-                <AsapTextMedium style={styles.messageText}>{banner.message}</AsapTextMedium>
+                <StyledTextMedium style={styles.messageText}>{banner.message}</StyledTextMedium>
             </Pressable>
         </Animated.View>
     )

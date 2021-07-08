@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Pressable, StyleProp } from 'react-native';
-import { AsapText, LatoText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
+import { StyledTextBold, StyledTextMedium } from '../../components/StyledText';
 import { SequenceType, SequenceProps, WeekDay } from '../../services/habits/types';
 import { StyledSecondaryButton, StyledPrimaryButton } from '../../components/StyledButton';
 import { BannerActionsProps } from '../../services/banner/types';
@@ -68,25 +68,25 @@ export default ({ sequence, setSequence, handleNextStep, handlePreviousStep, set
     const renderWeekly = () => (
         <View style={styles.weekContainer}>
             <Pressable onPress={() => handleValueChange(0)} style={() => renderDayStyles(0)}>
-                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(0) ? Colors.white : Colors.primary }]}>Sunday</AsapTextMedium>
+                <StyledTextMedium style={[styles.weekDayText, { color: isSelectedDay(0) ? Colors.white : Colors.primary }]}>Sunday</StyledTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(1)} style={() => renderDayStyles(1)}>
-                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(1) ? Colors.white : Colors.primary }]}>Monday</AsapTextMedium>
+                <StyledTextMedium style={[styles.weekDayText, { color: isSelectedDay(1) ? Colors.white : Colors.primary }]}>Monday</StyledTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(2)} style={() => renderDayStyles(2)}>
-                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(2) ? Colors.white : Colors.primary }]}>Tuesday</AsapTextMedium>
+                <StyledTextMedium style={[styles.weekDayText, { color: isSelectedDay(2) ? Colors.white : Colors.primary }]}>Tuesday</StyledTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(3)} style={() => renderDayStyles(3)}>
-                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(3) ? Colors.white : Colors.primary }]}>Wednesday</AsapTextMedium>
+                <StyledTextMedium style={[styles.weekDayText, { color: isSelectedDay(3) ? Colors.white : Colors.primary }]}>Wednesday</StyledTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(4)} style={() => renderDayStyles(4)}>
-                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(4) ? Colors.white : Colors.primary }]}>Thursday</AsapTextMedium>
+                <StyledTextMedium style={[styles.weekDayText, { color: isSelectedDay(4) ? Colors.white : Colors.primary }]}>Thursday</StyledTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(5)} style={() => renderDayStyles(5)}>
-                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(5) ? Colors.white : Colors.primary }]}>Friday</AsapTextMedium>
+                <StyledTextMedium style={[styles.weekDayText, { color: isSelectedDay(5) ? Colors.white : Colors.primary }]}>Friday</StyledTextMedium>
             </Pressable>
             <Pressable onPress={() => handleValueChange(6)} style={() => renderDayStyles(6)}>
-                <AsapTextMedium style={[styles.weekDayText, { color: isSelectedDay(6) ? Colors.white : Colors.primary }]}>Saturday</AsapTextMedium>
+                <StyledTextMedium style={[styles.weekDayText, { color: isSelectedDay(6) ? Colors.white : Colors.primary }]}>Saturday</StyledTextMedium>
             </Pressable>
         </View>
     )
@@ -102,7 +102,7 @@ export default ({ sequence, setSequence, handleNextStep, handlePreviousStep, set
                         onPress={() => handleValueChange(item)}
                         style={[styles.monthly, isSelected ? styles.monthlyActive : undefined]}
                     >
-                        <AsapTextMedium style={[styles.monthlyText, { color: isSelected ? Colors.white : Colors.primary }]}>{item}</AsapTextMedium>
+                        <StyledTextMedium style={[styles.monthlyText, { color: isSelected ? Colors.white : Colors.primary }]}>{item}</StyledTextMedium>
                     </Pressable>
                 )
             }
@@ -127,17 +127,17 @@ export default ({ sequence, setSequence, handleNextStep, handlePreviousStep, set
     return (
         <View style={styles.container}>
             <View>
-                <AsapTextBold style={styles.questionText}>How Frequent Do You Want To Do This Habit?</AsapTextBold>
+                <StyledTextBold style={styles.questionText}>How Frequent Do You Want To Do This Habit?</StyledTextBold>
             </View>
             <View style={styles.optionsContainer}>
                 <Pressable style={() => renderOptionStyle(SequenceType.daily)} onPress={() => setSequence({ type: SequenceType.daily, value: [] })}>
-                    <AsapTextBold style={[styles.optionText, { color: sequence.type === SequenceType.daily ? Colors.white : Colors.primary }]}>Daily</AsapTextBold>
+                    <StyledTextBold style={[styles.optionText, { color: sequence.type === SequenceType.daily ? Colors.white : Colors.primary }]}>Daily</StyledTextBold>
                 </Pressable>
                 <Pressable style={() => renderOptionStyle(SequenceType.weekly)} onPress={() => setSequence({ type: SequenceType.weekly, value: [] })}>
-                    <AsapTextBold style={[styles.optionText, { color: sequence.type === SequenceType.weekly ? Colors.white : Colors.primary }]}>Weekly</AsapTextBold>
+                    <StyledTextBold style={[styles.optionText, { color: sequence.type === SequenceType.weekly ? Colors.white : Colors.primary }]}>Weekly</StyledTextBold>
                 </Pressable>
                 <Pressable style={() => renderOptionStyle(SequenceType.monthly)} onPress={() => setSequence({ type: SequenceType.monthly, value: [] })}>
-                    <AsapTextBold style={[styles.optionText, { color: sequence.type === SequenceType.monthly ? Colors.white : Colors.primary }]}>Monthly</AsapTextBold>
+                    <StyledTextBold style={[styles.optionText, { color: sequence.type === SequenceType.monthly ? Colors.white : Colors.primary }]}>Monthly</StyledTextBold>
                 </Pressable>
             </View>
             <View style={styles.optionValuesContainer}>

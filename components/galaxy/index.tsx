@@ -9,7 +9,7 @@ import Layout from '../../constants/Layout';
 import Stars from './Stars';
 import SmallStars from '../Stars';
 import HabitGuy from '../../assets/svgs/habitGuy';
-import { AsapText } from '../StyledText';
+import { StyledText } from '../StyledText';
 import { Entypo } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import RotateGalaxy from './RotateGalaxy';
@@ -121,11 +121,11 @@ export default ({ completedHabits, handleAddCompletedHabit, activeDay }: DropBal
                 </Animated.View>
                 }
                 <Pressable style={styles.habitGuy} onPress={ballIntoGalaxy}>
-                    <AsapText style={styles.tap}>Tap</AsapText>
+                    <StyledText style={styles.tap}>Tap</StyledText>
                     <HabitGuy />
                 </Pressable>
                 <View style={styles.messageContainer}>
-                    <AsapText style={styles.message}>{quotes.current.quote}  </AsapText>
+                    <StyledText style={styles.message}>{quotes.current.quote}  </StyledText>
                     {quotes.current.thumb && <Entypo name="thumbs-up" size={normalizeHeight(35)} color={Colors.white} />}
                 </View>
             </View>

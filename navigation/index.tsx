@@ -45,14 +45,14 @@ const cardAnimation = ({ current, next, layouts }: StackCardInterpolationProps) 
       {
         translateX: current.progress.interpolate({
           inputRange: [0, 1],
-          outputRange: [layouts.screen.width, 0]
+          outputRange: [layouts.screen.width, -1]
         })
       },
       {
         translateX: next
           ? next.progress.interpolate({
             inputRange: [0, 1],
-            outputRange: [0, -layouts.screen.width]
+            outputRange: [-1, layouts.screen.width]
           })
           : 1
       }

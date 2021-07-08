@@ -15,11 +15,11 @@ import { BannerActionsProps } from '../services/banner/types';
 import { addCompletedHabit, updateHabit, archiveHabit } from '../services/habits/actions';
 import Modal from '../components/habit/ArchiveModal';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
-import CongratsStar from '../components/congrats/Star';
+import CongratsBanner from '../components/CongratsBanner';
 import { cloneDeep, isEqual } from 'lodash';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Tracker from '../components/habit/tracker';
-import { AsapTextBold, AsapText } from '../components/StyledText';
+import { StyledTextBold, StyledText } from '../components/StyledText';
 import HabitBadges from '../components/badges/HabitBadges';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
@@ -37,15 +37,11 @@ interface HabitComProps {
 
 const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, updateHabit, archiveHabit }: HabitComProps) => {
     const [habit, setHabit] = useState<HabitProps>();
-    const [consecCompletedHabits, setConsecCompletedHabits] = useState<CompletedHabitsProps[]>([])
     const [habitEdit, setHabitEdit] = useState<HabitEditProps>();
     const [edit, setEdit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [scrollEnabled, setScrollEnabled] = useState(true);
-    const [resetBalls, setResetBalls] = useState(0);
     const [congratsIndex, setCongratsIndex] = useState<number>();
-    const [showInfo, setShowInfo] = useState(false);
     const mount = useRef(false);
 
     useLayoutEffect(() => {
@@ -137,12 +133,10 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
         }
 
         if (habit) {
-            checkResetConsecutive(habit.consecutive, foundHabit.consecutive);
+            handleShowBadgeBanner(habit.consecutive, foundHabit.consecutive);
         }
 
         setHabit(cloneDeep(foundHabit));
-
-        setConsecCompletedHabits(getTotalConsecutive(foundHabit.consecutive));
 
         setHabitEdit({
             docId: foundHabit.docId,
@@ -157,21 +151,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
 
     }, [habits, route.params])
 
-    const getTotalConsecutive = (consecutive: HabitProps['consecutive']) => {
-        //need to get all the completed habits from consecutive
-        let consecutiveTotal: CompletedHabitsProps[] = [];
-
-        Object.keys(consecutive).forEach((goalKey, i) => {
-            const { count } = consecutive[goalKey];
-            if (count.length > 0) {
-                consecutiveTotal = consecutiveTotal.concat(count)
-            }
-        })
-
-        return consecutiveTotal;
-    }
-
-    const checkResetConsecutive = (prevConsec: HabitProps['consecutive'], newConsec: HabitProps['consecutive']) => {
+    const handleShowBadgeBanner = (prevConsec: HabitProps['consecutive'], newConsec: HabitProps['consecutive']) => {
         if (isEqual(prevConsec, newConsec)) return;
 
         const keys = Object.keys(newConsec);
@@ -186,32 +166,6 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                     setCongratsIndex(i)
                     return;
                 }
-
-                if (newGoal.count.length < newGoal.goal || i == keys.length - 1) {
-                    if (newGoal.count.length < oldGoal.count.length) {
-                        //go to previous goal count
-                        const diff = oldGoal.count.length;
-
-                        if (diff < 7) {
-                            setResetBalls(1);
-                        } else {
-                            const amt = Math.ceil(diff / 6);
-                            setResetBalls(amt ? amt : 1);
-                            setBanner('warning', 'Missed two or more days. Resetting to the previous goal reached.')
-                        }
-                        return;
-                    }
-                    break;
-                }
-            }
-        }
-
-        //if count is over 60 then drop balls at 66
-        const consecTotalLen = getTotalConsecutive(newConsec).length;
-        if (consecTotalLen > 60) {
-            const reminder = consecTotalLen % 6;
-            if (reminder < 1) {
-                setResetBalls(1);
             }
         }
     }
@@ -236,14 +190,14 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                {congratsIndex != undefined && <CongratsStar goalIndex={congratsIndex} />}
+                <CongratsBanner goalIndex={congratsIndex} />
                 <HabitHeader
                     habit={habit}
                     edit={edit}
                     setHabitEdit={setHabitEdit}
                     habitEdit={habitEdit}
                 />
-                <HabitBadges consecutive={habit.consecutive} size={normalizeHeight(25)} infoText="Earn your first badge by completing 21 consecutive days." />
+                <HabitBadges consecutive={habit.consecutive} />
                 <Tracker
                     completedHabits={habit.completedHabits}
                     startDate={habit.createdAt}
@@ -253,8 +207,8 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                     consecutive={habit.consecutive}
                 />
                 <View style={styles.totalContainer}>
-                    <AsapText>Total: </AsapText>
-                    <AsapTextBold>{habit.completedHabits.length}</AsapTextBold>
+                    <StyledText>Total: </StyledText>
+                    <StyledTextBold>{habit.completedHabits.length}</StyledTextBold>
                 </View>
             </View>
         </SafeAreaView>
