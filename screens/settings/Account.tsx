@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, ActivityIndicator, Alert } from 'react-native';
-import { AsapText, LatoText } from '../../components/StyledText';
+import { AsapText, LatoText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
 import { StyledPrimaryButton, StyledRedButton } from '../../components/StyledButton';
 import { firebaseDb, firestoreDb } from '../../firebase';
 import { StyledTextInput } from '../../components/StyledTextInput';
@@ -13,7 +13,7 @@ import { signOut } from '../../services/user/actions';
 import { connect } from 'react-redux';
 import { UserActionsProps } from '../../services/user/types';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { normalizeHeight } from '../../utils/styles';
+import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import Database from '../../constants/Database';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SIGN_OUT } from '../../services/user/actionTypes';
@@ -114,30 +114,29 @@ const Account = ({ navigation, signOut, signOutUser }: Props) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <AsapText style={styles.header}>Account</AsapText>
-                <ScrollView style={styles.content}>
-                    <View style={styles.section}>
-                        <AsapText style={styles.headerText}>Notification</AsapText>
-                        <LatoText style={styles.subText}>You can update your notification settings by navigating to your settings on your phone.</LatoText>
-                        <LatoText style={styles.subText}>If you want to turn off/on a notification for a habit, navigate to the habit, tap the edit icon (pencil icon) located in the top right corner, and tap the notification icon (bell icon) to turn off/on.</LatoText>
-                    </View>
-                    <View style={styles.section}>
-                        <AsapText style={styles.headerText}>Password</AsapText>
-                        <AsapText style={styles.subText}>Send Email To Reset Password</AsapText>
-                        <StyledTextInput
-                            style={styles.input}
-                            placeholder='Confirm Email Address'
-                            textContentType='emailAddress'
-                            autoCapitalize={"none"}
-                            onChangeText={(text) => setEmail(text)}
-                        />
-                        <StyledPrimaryButton text={loading ? <ActivityIndicator color={Colors.white} size='small' /> : 'Send'} style={styles.button} onPress={sendPasswordResetEmail} />
-                    </View>
-                    <View style={styles.section}>
-                        <AsapText style={styles.headerText}>Delete Account</AsapText>
-                        <StyledRedButton text={deleteLoading ? <ActivityIndicator color={Colors.white} size='small' /> : 'Remove'} style={styles.button} onPress={handleConfirm} />
-                    </View>
-                </ScrollView>
+                <AsapTextBold style={styles.header}>Account</AsapTextBold>
+                <View style={styles.underline} />
+                <View>
+                    <AsapTextMedium style={styles.sectionHeaderText}>Notification</AsapTextMedium>
+                    <LatoText style={styles.subText}>You can update your notification settings by navigating to your settings on your phone.</LatoText>
+                    <LatoText style={styles.subText}>If you want to turn off/on a notification for a habit, navigate to the habit, tap the edit icon (pencil icon) located in the top right corner, and tap the notification icon (bell icon) to turn off/on.</LatoText>
+                </View>
+                <View style={styles.section}>
+                    <AsapTextMedium style={styles.sectionHeaderText}>Password</AsapTextMedium>
+                    <AsapText style={styles.subText}>Send Email To Reset Password</AsapText>
+                    <StyledTextInput
+                        style={styles.input}
+                        placeholder='Confirm Email Address'
+                        textContentType='emailAddress'
+                        autoCapitalize={"none"}
+                        onChangeText={(text) => setEmail(text)}
+                    />
+                    <StyledPrimaryButton text={loading ? <ActivityIndicator color={Colors.white} size='small' /> : 'Send'} style={styles.button} onPress={sendPasswordResetEmail} />
+                </View>
+                <View style={styles.section}>
+                    <AsapTextMedium style={styles.sectionHeaderText}>Delete Account</AsapTextMedium>
+                    <StyledRedButton text={deleteLoading ? <ActivityIndicator color={Colors.white} size='small' /> : 'Remove'} style={styles.button} onPress={handleConfirm} />
+                </View>
             </View>
         </SafeAreaView>
     )
@@ -145,8 +144,15 @@ const Account = ({ navigation, signOut, signOutUser }: Props) => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        justifyContent: 'center'
+        padding: normalizeWidth(15),
+        paddingTop: normalizeHeight(25),
+    },
+    underline: {
+        height: 1,
+        width: '100%',
+        backgroundColor: Colors.contentBg,
+        marginTop: 5,
+        marginBottom: 5
     },
     content: {
         padding: 20,
@@ -156,38 +162,33 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     header: {
-        fontSize: normalizeHeight(30),
-        margin: 10,
-        textAlign: 'center',
-        color: Colors.white
+        fontSize: normalizeHeight(20),
+        color: Colors.primary,
     },
     section: {
-        margin: 10
+        marginTop: 20
     },
-    headerText: {
-        fontSize: normalizeHeight(40),
-        margin: 10,
-        textAlign: 'center',
-        color: Colors.primary
+    sectionHeaderText: {
+        fontSize: normalizeHeight(50),
+        color: Colors.primary,
+        marginBottom: 1
     },
     subText: {
         fontSize: normalizeHeight(60),
-        textAlign: 'center',
-        margin: 10,
-        color: Colors.primary
+        color: Colors.primary,
+        marginBottom: 1
     },
     input: {
         borderRadius: 20,
-        borderWidth: 1,
-        borderColor: Colors.primary,
-        fontSize: normalizeHeight(50),
+        fontSize: normalizeWidth(25),
         padding: 10,
         paddingTop: 10,
-        color: Colors.white,
-        margin: 10
+        color: Colors.primary,
+        backgroundColor: Colors.white,
+        marginTop: 10
     },
     button: {
-        margin: 10
+        marginTop: 10
     }
 })
 

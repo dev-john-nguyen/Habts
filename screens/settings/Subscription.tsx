@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, SafeAreaView } from 'react-native';
-import { AsapText, AsapTextBold } from '../../components/StyledText';
+import { AsapText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
 import Colors from '../../constants/Colors';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../../services';
 import { UserProps } from '../../services/user/types';
 import { DateTime } from 'luxon';
-import { normalizeHeight } from '../../utils/styles';
+import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import Database from '../../constants/Database';
 
 const Subscription = ({ user }: { user: UserProps }) => {
@@ -45,18 +45,20 @@ const Subscription = ({ user }: { user: UserProps }) => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <AsapText style={styles.header}>Subscription</AsapText>
+                <AsapTextBold style={styles.header}>Subscription</AsapTextBold>
+                <View style={styles.underline} />
                 <View style={styles.content}>
                     <View style={styles.section}>
-                        {expired && <AsapTextBold style={[styles.headerText, { color: Colors.red, fontSize: normalizeHeight(40) }]}>Your subscription has expired</AsapTextBold>}
-                        <AsapText style={styles.headerText}>Name:</AsapText>
-                        <AsapTextBold style={styles.headerText}>{subscription.name}</AsapTextBold>
-                        <AsapText style={styles.headerText}>Price:</AsapText>
-                        <AsapTextBold style={styles.headerText}>{subscription.price}</AsapTextBold>
-                        <AsapText style={styles.headerText}>Description:</AsapText>
-                        <AsapTextBold style={styles.headerText}>{subscription.description}</AsapTextBold>
-                        <AsapText style={styles.headerText}>Access:</AsapText>
-                        <AsapTextBold style={styles.headerText}>With this subscription, you have ALL ACCESS to this app until your subscription expires.</AsapTextBold>
+                        <AsapTextBold style={[styles.itemHeaderText, { marginTop: 0 }]}>Status</AsapTextBold>
+                        <AsapText style={{ fontSize: normalizeHeight(60), color: expired ? Colors.red : Colors.primary }}>{expired ? 'Expired' : 'Active'}</AsapText>
+                        <AsapTextBold style={styles.itemHeaderText}>Name</AsapTextBold>
+                        <AsapText style={styles.text}>{subscription.name}</AsapText>
+                        <AsapTextBold style={styles.itemHeaderText}>Price</AsapTextBold>
+                        <AsapText style={styles.text}>{subscription.price}</AsapText>
+                        <AsapTextBold style={styles.itemHeaderText}>Description</AsapTextBold>
+                        <AsapText style={styles.text}>{subscription.description}</AsapText>
+                        <AsapTextBold style={styles.itemHeaderText}>Access</AsapTextBold>
+                        <AsapText style={styles.text}>With this subscription, you have ALL ACCESS to this app until your subscription expires.</AsapText>
                     </View>
                 </View>
             </View>
@@ -75,35 +77,32 @@ export default connect(mapStateToProps, {})(Subscription);
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        padding: normalizeWidth(15),
+        paddingTop: normalizeHeight(25),
+    },
+    underline: {
+        height: 1,
+        width: '100%',
+        backgroundColor: Colors.contentBg,
+        marginTop: 5,
+        marginBottom: 5
     },
     content: {
-        margin: 5,
-        backgroundColor: Colors.white,
-        borderRadius: 10
     },
     header: {
-        fontSize: normalizeHeight(30),
-        margin: 10,
-        textAlign: 'center',
-        color: Colors.white
+        fontSize: normalizeHeight(20),
+        color: Colors.primary,
     },
     section: {
-        marginBottom: normalizeHeight(40),
-        alignItems: 'center',
     },
-    headerText: {
+    itemHeaderText: {
         fontSize: normalizeHeight(50),
-        color: Colors.black,
-        padding: 10
+        color: Colors.primary,
+        marginTop: 10
     },
     text: {
-        fontSize: normalizeHeight(35),
-        color: Colors.black,
-        margin: 10
-    },
-    button: {
-        alignSelf: 'stretch'
+        fontSize: normalizeHeight(60),
+        color: Colors.primary,
     }
 })
 

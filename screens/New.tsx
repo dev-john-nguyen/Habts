@@ -357,40 +357,38 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             default:
                 return (
-                    <View style={styles.finalPreview}>
-                        <View style={styles.overviewContainer}>
-                            <HabitHeader
-                                newCom={true}
-                                setHabitEdit={() => undefined}
-                                habitEdit={emptyHabitEdit}
-                                edit={false}
-                                habit={{
-                                    startTime: {
-                                        date: startTime,
-                                        hour: startTime.getHours(),
-                                        minute: startTime.getMinutes(),
-                                        zoneName: DateTime.now().zoneName
-                                    },
-                                    endTime: {
-                                        date: endTime,
-                                        hour: endTime.getHours(),
-                                        minute: endTime.getMinutes(),
-                                        zoneName: DateTime.now().zoneName
-                                    },
-                                    cue,
-                                    locationDes,
-                                    notes,
-                                    remove,
-                                    name,
-                                    sequence,
-                                    notificationTime: genNotificationTime(),
-                                    notificationOn,
-                                    consecutive: sequence.type === SequenceType.daily ? dailyGoals() : otherGoals(sequence.value.length),
-                                    ...emptyHabitExtra
-                                }}
-                            />
-                        </View>
-                        <View style={styles.overviewBtns}>
+                    <View style={[styles.content, { height: normalizeHeight(2.5) }]}>
+                        <HabitHeader
+                            newCom={true}
+                            setHabitEdit={() => undefined}
+                            habitEdit={emptyHabitEdit}
+                            edit={false}
+                            habit={{
+                                startTime: {
+                                    date: startTime,
+                                    hour: startTime.getHours(),
+                                    minute: startTime.getMinutes(),
+                                    zoneName: DateTime.now().zoneName
+                                },
+                                endTime: {
+                                    date: endTime,
+                                    hour: endTime.getHours(),
+                                    minute: endTime.getMinutes(),
+                                    zoneName: DateTime.now().zoneName
+                                },
+                                cue,
+                                locationDes,
+                                notes,
+                                remove,
+                                name,
+                                sequence,
+                                notificationTime: genNotificationTime(),
+                                notificationOn,
+                                consecutive: sequence.type === SequenceType.daily ? dailyGoals() : otherGoals(sequence.value.length),
+                                ...emptyHabitExtra
+                            }}
+                        />
+                        <View style={styles.buttonContainer}>
                             <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
                             <StyledPrimaryButton text={loading ? <ActivityIndicator color={Colors.primary} /> : 'Save'} style={{ flex: .4, zIndex: 100 }} onPress={handleSave} />
                         </View>
@@ -416,10 +414,11 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: normalizeWidth(15),
-        alignItems: 'center',
-        marginTop: normalizeHeight(10)
+        paddingTop: normalizeHeight(25),
     },
-    finalPreview: {},
+    finalPreview: {
+        flex: 1
+    },
     content: {
         backgroundColor: Colors.contentBg,
         padding: normalizeWidth(15),
@@ -455,15 +454,17 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around',
     },
     overviewBtns: {
+        flex: 1,
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'space-around',
+        alignItems: 'flex-start',
         zIndex: 100,
         marginTop: normalizeHeight(10)
     },
     overviewContainer: {
         justifyContent: 'center',
-        flex: .6,
+        flex: 1,
     }
 })
 

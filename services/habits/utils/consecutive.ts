@@ -1,4 +1,4 @@
-import { HabitProps, SequenceProps } from "../types";
+import { HabitProps, SequenceProps, CompletedHabitsProps, SequenceType, ConsecutiveProps } from "../types";
 
 class ConsecutiveTools {
 
@@ -16,40 +16,143 @@ class ConsecutiveTools {
         return new Date(d.getFullYear(), d.getMonth() + monthAdd, d.getDate());
     }
 
+    getDiffBetweenDates(past: Date, future: Date) {
+        let pastTime = new Date(past.getFullYear(), past.getMonth(), past.getDate()).getTime();
+        let futureTime = new Date(future.getFullYear(), future.getMonth(), future.getDate()).getTime();
+        let diff = futureTime - pastTime;
+        return Math.ceil(diff / (1000 * 3600 * 24));
+    }
+
     getFutureWeek(d: Date, weekAdd: number) {
         const totalDays = weekAdd * 7;
         return new Date(d.getFullYear(), d.getMonth(), d.getDate() + totalDays);
     }
 
-    calcDaily(consecutive: HabitProps['consecutive'], newCompletedHabit: Date) {
-        //loop through current goal.
-        //determine what current goal they are own
-        //see if the latest matches sequence
-        //if not then reset array
-        //if so, push into array
+    shouldReset(habit: HabitProps, targetDate: Date) {
+        switch (habit.sequence.type) {
+            case SequenceType.weekly:
+                return this.shouldResetWeekly(habit.consecutive, habit.sequence.value, targetDate);
+            case SequenceType.monthly:
+                return this.shouldResetMonthly(habit.consecutive, habit.sequence.value, targetDate)
+            case SequenceType.daily:
+            default:
+                return this.shouldResetDaily(habit.consecutive, targetDate);
+        }
+    }
+
+    shouldResetMonthly(consecutive: HabitProps['consecutive'], sequenceVals: SequenceProps['value'], targetDate: Date) {
+        sequenceVals.sort((a, b) => a - b);
+
+        const targetDateNum = targetDate.getDate()
 
         const goalKeys = Object.keys(consecutive);
 
         for (let i = 0; i < goalKeys.length; i++) {
-            const currentGoal = consecutive[goalKeys[i]];
-            const { count, goal } = currentGoal;
-            //find current goal
-            if (i == goalKeys.length - 1) {
-                currentGoal.count.push({ dateCompleted: newCompletedHabit })
-                break;
-            }
+            const goalKey = goalKeys[i];
+            const currentGoal = consecutive[goalKey];
+            const {
+                count,
+                goal
+            } = currentGoal;
 
-            if (count.length < goal) {
+            //find current goal
+            if (count.length < goal || goal === 0) {
+                //check consecutive
+                //make sure there's an item
+                if (count.length < 1) {
+                    return { goalKey }
+                } else {
+                    //sort
+                    count.sort((a, b) => a.dateCompleted.getTime() - b.dateCompleted.getTime())
+                    //get last item
+
+                    const lastCompletedDate = count[count.length - 1].dateCompleted;
+
+                    if (sequenceVals.length > 1) {
+                        const lastDateIndex = sequenceVals.findIndex(val => lastCompletedDate.getDate() == val);
+
+                        if (lastDateIndex < 0) {
+                            //invalid sequence item
+                            return { invalid: true }
+                        }
+
+                        let lastDateVal;
+                        //get the next sequence item in which the target date should be equal to
+                        if (lastDateIndex >= sequenceVals.length - 1) {
+                            //last item so go to first
+                            lastDateVal = sequenceVals[0]
+                        } else {
+                            lastDateVal = sequenceVals[lastDateIndex + 1];
+                        }
+
+
+                        if (lastDateVal !== targetDateNum) {
+                            //miss one, check if missed multiple 
+                            let secondLastVal;
+
+                            if (lastDateIndex >= sequenceVals.length - 2) {
+                                secondLastVal = sequenceVals[1]
+                            } else {
+                                secondLastVal = sequenceVals[lastDateIndex + 2];
+                            }
+
+                            if (secondLastVal !== targetDateNum) {
+                                return { reset: true, goalKey }
+                            }
+
+                            return { warning: true, goalKey }
+                        }
+                    }
+
+                    //theres only one sequence item, so check if equal and if within 2 months since allowed one miss;
+                    if (sequenceVals[0] !== targetDateNum) {
+                        //this indicates there is invalid taget date
+                        console.log('invalid')
+                        return { invalid: true }
+                    }
+
+                    const diffInDays = this.getDiffBetweenDates(lastCompletedDate, targetDate);
+
+                    if (diffInDays <= 32) {
+                        //it's been one month, we good
+                        return { goalKey }
+                    }
+
+                    if (diffInDays <= 64) {
+                        //miss one month, warning
+                        return { warning: true, goalKey }
+                    }
+
+                    return { reset: true, goalKey }
+                }
+            }
+        }
+
+        return { invalid: true }
+    }
+
+    shouldResetDaily(consecutive: HabitProps['consecutive'], date: Date) {
+        //check the last completed item and ensure it fits sequence. If it doesn't match first sequence date
+        //then it's a warning. check 2nd next and if it doesn't match. It's a miss.
+
+        const goalKeys = Object.keys(consecutive);
+
+        for (let i = 0; i < goalKeys.length; i++) {
+            const goalKey = goalKeys[i];
+            const currentGoal = consecutive[goalKey];
+            const { count, goal } = currentGoal;
+
+            if (count.length < goal || goal === 0) {
 
                 //check if day already exists
-                const duplicate = count.find(item => this.datesAreOnSameDay(item.dateCompleted, newCompletedHabit))
+                const duplicate = count.find(item => this.datesAreOnSameDay(item.dateCompleted, date))
                 //duplicate item break from loop
                 if (duplicate) break;
 
                 //check consecutive
                 //make sure there's an item
-                if (count.length < 2) {
-                    currentGoal.count.push({ dateCompleted: newCompletedHabit })
+                if (count.length < 1) {
+                    return { goalKey }
                 } else {
                     //sort
                     count.sort((a, b) => a.dateCompleted.getTime() - b.dateCompleted.getTime())
@@ -60,225 +163,164 @@ class ConsecutiveTools {
                     const nextDay = this.getNextDays(dateCompleted, 1);
                     const nextNextDay = this.getNextDays(dateCompleted, 2);
 
-                    if (!this.datesAreOnSameDay(nextDay, newCompletedHabit)
-                        && !this.datesAreOnSameDay(nextNextDay, newCompletedHabit)
-                    ) {
+                    if (this.datesAreOnSameDay(nextDay, date)) {
+                        return { goalKey }
+                    }
+
+                    if (!this.datesAreOnSameDay(nextNextDay, date)) {
                         //reset
-                        currentGoal.count = [{ dateCompleted: newCompletedHabit }]
-                    } else {
-                        //push
-                        currentGoal.count.push({ dateCompleted: newCompletedHabit })
+                        return { warning: true, goalKey }
                     }
+
+                    //push
+                    return { reset: true, goalKey };
+
                 }
                 break;
             }
         }
-
-        return consecutive
+        return { invalid: true }
     }
 
-    calcMonthy(consecutive: HabitProps['consecutive'], sequenceVals: SequenceProps['value'], newCompletedHabit: Date) {
+    shouldResetWeekly(consecutive: HabitProps['consecutive'], sequenceVals: SequenceProps['value'], targetDate: Date) {
         sequenceVals.sort((a, b) => a - b);
-
+        const targetDateNum = targetDate.getDate()
         const goalKeys = Object.keys(consecutive);
 
         for (let i = 0; i < goalKeys.length; i++) {
-            const currentGoal = consecutive[goalKeys[i]];
+            const goalKey = goalKeys[i]
+            const currentGoal = consecutive[goalKey];
             const {
                 count,
                 goal
             } = currentGoal;
 
-            if (i == goalKeys.length - 1) {
-                currentGoal.count.push({ dateCompleted: newCompletedHabit })
-                break;
-            }
-
             //find current goal
-            if (count.length < goal) {
+            if (count.length < goal || goal === 0) {
                 //check consecutive
                 //make sure there's an item
-                if (count.length < 2) {
-                    currentGoal.count.push({
-                        dateCompleted: newCompletedHabit
-                    })
+                if (count.length < 1) {
+                    return { goalKey }
                 } else {
                     //sort
                     count.sort((a, b) => a.dateCompleted.getTime() - b.dateCompleted.getTime())
                     //get last item
 
-                    const lastCompletedDates = {
-                        last: count[count.length - 1].dateCompleted,
-                        secondLast: count[count.length - 2].dateCompleted
-                    }
+                    const lastCompletedDate = count[count.length - 1].dateCompleted;
 
 
                     if (sequenceVals.length > 1) {
-                        const lastDateIndex = sequenceVals.findIndex(val => lastCompletedDates.last.getDate() == val);
+                        const lastDateIndex = sequenceVals.findIndex(val => lastCompletedDate.getDate() == val);
 
                         if (lastDateIndex < 0) {
                             //invalid sequence item
-                            console.log('invalid item')
-                            break;
+                            return { invalid: true }
                         }
-
 
                         let lastDateVal;
-
+                        //get the next sequence item in which the target date should be equal to
                         if (lastDateIndex >= sequenceVals.length - 1) {
+                            //last item so go to first
                             lastDateVal = sequenceVals[0]
                         } else {
-                            lastDateVal = sequenceVals[lastDateIndex + 1]
+                            lastDateVal = sequenceVals[lastDateIndex + 1];
                         }
 
-                        if (lastDateVal != newCompletedHabit.getDate()) {
 
-                            let secondDateVal;
+                        if (lastDateVal !== targetDateNum) {
+                            //miss one, check if missed multiple 
+                            let secondLastVal;
 
                             if (lastDateIndex >= sequenceVals.length - 2) {
-                                secondDateVal = sequenceVals[1]
+                                secondLastVal = sequenceVals[1]
                             } else {
-                                secondDateVal = sequenceVals[lastDateIndex + 2]
+                                secondLastVal = sequenceVals[lastDateIndex + 2];
                             }
 
-                            if (secondDateVal != newCompletedHabit.getDate()) {
-                                //missed twice so reset count and break;
-                                currentGoal.count = [{
-                                    dateCompleted: newCompletedHabit
-                                }];
-                                break;
+                            if (secondLastVal !== targetDateNum) {
+                                return { reset: true, goalKey }
                             }
 
-
+                            return { warning: true, goalKey }
                         }
-
                     }
 
-
-                    //check if date is within a 2 months
-                    const twoNextMonths = this.getFutureMonth(lastCompletedDates.last, 2);
-
-                    if (twoNextMonths < newCompletedHabit) {
-                        currentGoal.count = [{
-                            dateCompleted: newCompletedHabit
-                        }];
-                        break;
+                    if (sequenceVals[0] !== targetDateNum) {
+                        console.log('invalid')
+                        return { invalid: true }
                     }
 
-                    currentGoal.count.push({
-                        dateCompleted: newCompletedHabit
-                    })
+                    const diffInDays = this.getDiffBetweenDates(lastCompletedDate, targetDate);
 
+                    if (diffInDays <= 7) {
+                        //it's been one week, we good
+                        return { goalKey }
+                    }
 
+                    if (diffInDays <= 14) {
+                        //it's been two weeks, display warning
+                        return { warning: true, goalKey }
+                    }
+
+                    //reset
+                    return { reset: true, goalKey }
                 }
                 break;
             }
         }
 
-        return consecutive
+        return { invalid: true }
     }
 
-    calcWeekly(consecutive: HabitProps['consecutive'], sequenceVals: SequenceProps['value'], newCompletedHabit: Date) {
+    updateConsecutive(habit: HabitProps, targetDate: Date) {
+        const { consecutive, sequence } = habit;
 
-        sequenceVals.sort((a, b) => a - b);
+        let response;
 
-        const goalKeys = Object.keys(consecutive);
-
-        for (let i = 0; i < goalKeys.length; i++) {
-            const currentGoal = consecutive[goalKeys[i]];
-            const {
-                count,
-                goal
-            } = currentGoal;
-
-            if (i == goalKeys.length - 1) {
-                currentGoal.count.push({ dateCompleted: newCompletedHabit })
+        switch (sequence.type) {
+            case SequenceType.weekly:
+                response = consecutiveTools.shouldResetWeekly(habit.consecutive, habit.sequence.value, targetDate);
                 break;
-            }
-
-            //find current goal
-            if (count.length < goal) {
-                //check consecutive
-                //make sure there's an item
-                if (count.length < 2) {
-                    currentGoal.count.push({
-                        dateCompleted: newCompletedHabit
-                    })
-                } else {
-                    //sort
-                    count.sort((a, b) => a.dateCompleted.getTime() - b.dateCompleted.getTime())
-                    //get last item
-
-                    const lastCompletedDates = {
-                        last: count[count.length - 1].dateCompleted,
-                        secondLast: count[count.length - 2].dateCompleted
-                    }
-
-
-                    if (sequenceVals.length > 1) {
-                        const lastDateIndex = sequenceVals.findIndex(val => lastCompletedDates.last.getDay() == val);
-
-                        if (lastDateIndex < 0) {
-                            //invalid sequence item
-                            console.log('invalid item')
-                            break;
-                        }
-
-
-                        let lastDateVal;
-
-                        if (lastDateIndex >= sequenceVals.length - 1) {
-                            lastDateVal = sequenceVals[0]
-                        } else {
-                            lastDateVal = sequenceVals[lastDateIndex + 1]
-                        }
-
-                        if (lastDateVal != newCompletedHabit.getDay()) {
-
-                            let secondDateVal;
-
-                            if (lastDateIndex >= sequenceVals.length - 2) {
-                                secondDateVal = sequenceVals[1]
-                            } else {
-                                secondDateVal = sequenceVals[lastDateIndex + 2]
-                            }
-
-                            if (secondDateVal != newCompletedHabit.getDay()) {
-                                //missed twice so reset count and break;
-                                currentGoal.count = [{
-                                    dateCompleted: newCompletedHabit
-                                }];
-                                break;
-                            }
-
-
-                        }
-
-                    }
-
-                    const nextTwoWeeks = this.getFutureWeek(lastCompletedDates.last, 2);
-
-                    if (nextTwoWeeks < newCompletedHabit) {
-                        currentGoal.count = [{
-                            dateCompleted: newCompletedHabit
-                        }];
-                        break;
-                    }
-
-
-                    currentGoal.count.push({
-                        dateCompleted: newCompletedHabit
-                    })
-
-
-                }
+            case SequenceType.monthly:
+                response = consecutiveTools.shouldResetMonthly(habit.consecutive, habit.sequence.value, targetDate);
                 break;
-            }
+            case SequenceType.daily:
+            default:
+                response = consecutiveTools.shouldResetDaily(habit.consecutive, targetDate);
         }
 
-        return consecutive
+        const { invalid, goalKey, reset } = response;
+
+        if (invalid) {
+            console.log('invalid. Something wrong with logic or date')
+            return consecutive;
+        }
+
+        if (!goalKey) {
+            console.log('not able to find goal key. Something wrong with logic')
+            return consecutive;
+        }
+
+        if (reset) {
+            consecutive[goalKey].count = [{ dateCompleted: targetDate }]
+        } else {
+            consecutive[goalKey].count = [...consecutive[goalKey].count, { dateCompleted: targetDate }]
+        }
+
+        return consecutive;
     }
 
+    getCurrentConsecutiveTotal(consecutive: HabitProps['consecutive']) {
+        let keys = Object.keys(consecutive)
+
+        for (let i = 0; i < keys.length; i++) {
+            const { count, goal } = consecutive[keys[i]];
+            if (count.length < goal || goal === 0) {
+                return count.length;
+            }
+        }
+        return 0
+    }
 }
 
 export const consecutiveTools = new ConsecutiveTools();

@@ -1,17 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, Image, Keyboard, ActivityIndicator, Animated } from 'react-native';
+import { View, StyleSheet, Keyboard, ActivityIndicator, Animated } from 'react-native';
 import { StyledTextInput } from './StyledTextInput';
 import Colors from '../constants/Colors';
 import { UserActionsProps } from '../services/user/types';
 import { StyledPrimaryButton, StyledSecondaryButton } from './StyledButton';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Superman from '../assets/svgs/superman';
 import { isEqual } from 'lodash';
 import { validateEmail } from './utils';
 import { BannerActionsProps } from '../services/banner/types';
-import { AsapTextBold, AsapText } from './StyledText';
+import { AsapTextBold, AsapText, AsapTextMedium } from './StyledText';
 import BottomSvg from '../assets/svgs/bottom';
+import HeaderBgImg from '../assets/svgs/home/HeaderBgImg';
+import HeaderImg from '../assets/svgs/home/HeaderImg';
+import { FontAwesome } from '@expo/vector-icons';
+import Oval from '../assets/svgs/home/Oval';
 
 interface Props {
     setBanner: BannerActionsProps['setBanner'];
@@ -106,58 +109,108 @@ export default ({ signUp, signIn, setBanner }: Props) => {
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
+            <View style={styles.headerBgContainer}>
+                <HeaderBgImg />
+            </View>
             <Animated.View style={[styles.container, { bottom: keyboardRef }]}>
-                <Image source={require('../assets/logo.png')} style={styles.logo} />
-                <AsapTextBold style={styles.header}>"We are what we repeatedly do"</AsapTextBold>
-                <View style={styles.infoContainer}>
-                    <AsapTextBold style={styles.subHeader}>One month free trail</AsapTextBold>
-                    <AsapText style={styles.subSubHeader}>and then $1.99 / month to continue using our service.</AsapText>
+
+                <View style={styles.headerContainer}>
+                    <View style={{
+                        flex: 1,
+                        justifyContent: 'space-evenly'
+                    }}>
+                        <View>
+                            <AsapTextBold style={styles.headerText}>Habts</AsapTextBold>
+                            <AsapTextMedium style={styles.headerSubText}>We are what we repeatedly do.</AsapTextMedium>
+                        </View>
+                        <View style={styles.ovalContainer}>
+                            <Oval fillColor={Colors.secondary} />
+                        </View>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                        <HeaderImg />
+                    </View>
                 </View>
-                <StyledTextInput
-                    value={email}
-                    onChangeText={(text) => setEmail(text)}
-                    autoCapitalize='none'
-                    autoCorrect={false}
-                    textContentType='emailAddress'
-                    placeholder='email'
-                    style={styles.textInput}
-                />
 
-                <StyledTextInput
-                    value={password}
-                    onChangeText={(text) => setPassword(text)}
-                    autoCorrect={false}
-                    autoCapitalize='none'
-                    secureTextEntry={true}
-                    placeholder='password'
-                    onSubmitEditing={Keyboard.dismiss}
-                    style={styles.textInput}
-                />
+                <View style={[styles.loginContainer, Colors.boxShadow]} >
+                    <View style={styles.loginHeaderContainer}>
+                        <AsapTextBold style={styles.loginHeaderText}>Login</AsapTextBold>
+                        <AsapTextMedium style={styles.loginHeaderSubText}>One month free trail</AsapTextMedium>
+                        <AsapTextMedium style={styles.loginHeaderSecSubText}>and then $1.99 / month to continue using our service.</AsapTextMedium>
+                    </View>
 
-                {
-                    showSignUp && <StyledTextInput
-                        value={password2}
-                        onChangeText={(text) => setPassword2(text)}
-                        autoCorrect={false}
-                        autoCapitalize='none'
-                        secureTextEntry={true}
-                        placeholder='confirm Password'
-                        onSubmitEditing={Keyboard.dismiss}
-                        style={styles.textInput}
+                    <View style={styles.loginInputContainer}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <StyledTextInput
+                                value={email}
+                                onChangeText={(text) => setEmail(text)}
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                textContentType='emailAddress'
+                                placeholder='email'
+                                style={styles.textInput}
+                            />
+                            <FontAwesome name='envelope' size={normalizeHeight(60)} color={Colors.secondary} style={{
+                                position: 'absolute',
+                                right: normalizeWidth(40),
+                            }} />
+                        </View>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <StyledTextInput
+                                value={password}
+                                onChangeText={(text) => setPassword(text)}
+                                autoCorrect={false}
+                                autoCapitalize='none'
+                                secureTextEntry={true}
+                                placeholder='password'
+                                onSubmitEditing={Keyboard.dismiss}
+                                style={styles.textInput}
+                            />
+                            <FontAwesome name='lock' size={normalizeHeight(50)} color={Colors.secondary} style={{
+                                position: 'absolute',
+                                right: normalizeWidth(40),
+                            }} />
+                        </View>
+
+                        {
+                            showSignUp &&
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <StyledTextInput
+                                    value={password2}
+                                    onChangeText={(text) => setPassword2(text)}
+                                    autoCorrect={false}
+                                    autoCapitalize='none'
+                                    secureTextEntry={true}
+                                    placeholder='confirm Password'
+                                    onSubmitEditing={Keyboard.dismiss}
+                                    style={styles.textInput}
+                                />
+                                <FontAwesome name='lock' size={normalizeHeight(50)} color={Colors.secondary} style={{
+                                    position: 'absolute',
+                                    right: normalizeWidth(40),
+                                }} />
+                            </View>
+                        }
+
+                    </View>
+
+                    <View style={styles.loginButtonsContainer}>
+                        <StyledPrimaryButton
+                            text={loading ? <ActivityIndicator size='small' color={Colors.white} /> : showSignUp ? 'Register' : 'Login'}
+                            style={styles.buttons}
+                            onPress={handleOnSubmit}
+                        />
+                    </View>
+                </View>
+
+                <View style={styles.bottomSectionContainer}>
+                    <AsapTextMedium style={styles.bottomSectionText}>{showSignUp ? "Have an account?" : "Don't have an account?"}</AsapTextMedium>
+                    <StyledSecondaryButton
+                        text={showSignUp ? 'Login' : 'Register'}
+                        onPress={() => setShowSignUp(showSignUp ? false : true)}
+                        style={styles.buttons}
                     />
-                }
-                <StyledPrimaryButton
-                    text={loading ? <ActivityIndicator size='small' color={Colors.white} /> : showSignUp ? 'Start Free Trail' : 'Login'}
-                    style={styles.buttons}
-                    onPress={handleOnSubmit}
-                />
-                <StyledSecondaryButton
-                    text={showSignUp ? 'Login' : 'Sign Up'}
-                    onPress={() => setShowSignUp(showSignUp ? false : true)}
-                    style={styles.buttons}
-                />
-                <View style={styles.superman}>
-                    <Superman />
                 </View>
             </Animated.View>
             <View style={styles.bottomSvg}>
@@ -170,63 +223,81 @@ export default ({ signUp, signIn, setBanner }: Props) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
         flexDirection: 'column',
-        marginTop: 10,
         padding: 20
     },
-    infoContainer: {
-        marginTop: normalizeHeight(45),
-        marginBottom: normalizeHeight(30),
+    headerBgContainer: {
+        position: 'absolute', width: '100%', height: '60%', top: '-5%', zIndex: -100
     },
-    header: {
-        fontSize: normalizeHeight(20),
-        marginTop: normalizeHeight(30),
-        color: `rgba(${Colors.whiteRgb}, .8)`
+    ovalContainer: {
+        height: normalizeHeight(50),
+        width: '100%',
     },
-    subHeader: {
-        fontSize: normalizeHeight(50),
-        marginBottom: 5,
-        color: `rgba(${Colors.whiteRgb}, .8)`,
-        textAlign: 'center'
+    headerContainer: {
+        flexDirection: 'row',
+        flex: .5,
+        marginBottom: 20
     },
-    subSubHeader: {
+    headerSubText: {
         fontSize: normalizeHeight(60),
-        color: `rgba(${Colors.whiteRgb}, .8)`
+        color: Colors.white
     },
-    galaxy: {
-        position: 'absolute',
-        zIndex: -2,
-        bottom: 10,
+    headerText: {
+        fontSize: normalizeHeight(20),
+        color: Colors.white
     },
-    superman: {
-        position: 'absolute',
-        top: normalizeHeight(20),
-        left: normalizeWidth(20),
-        height: normalizeWidth(4),
-        width: normalizeWidth(4),
-        transform: [{ scaleX: -1 }, { rotate: '-45deg' }],
-        zIndex: -10
+    loginContainer: {
+        flex: .8,
+        backgroundColor: Colors.contentBg,
+        borderRadius: 10,
+        padding: 20,
+        margin: 20,
+    },
+    loginHeaderContainer: {
+        flex: .5,
+        justifyContent: 'space-evenly'
+    },
+    loginInputContainer: {
+        flex: 1,
+        justifyContent: 'space-evenly'
+    },
+    loginButtonsContainer: {
+        flex: .5,
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    loginHeaderText: {
+        color: Colors.primary,
+        textAlign: 'center',
+        fontSize: normalizeHeight(30)
+    },
+    loginHeaderSubText: {
+        color: Colors.primary,
+        fontSize: normalizeHeight(70),
+    },
+    loginHeaderSecSubText: {
+        color: Colors.primary,
+        fontSize: normalizeHeight(100)
+    },
+    bottomSectionContainer: {
+        flex: .5, alignItems: 'center', justifyContent: 'center'
+    },
+    bottomSectionText: {
+        fontSize: normalizeHeight(60),
+        color: Colors.primary
     },
     buttons: {
         alignSelf: 'center',
         width: '50%',
-        margin: 10
-    },
-    logo: {
-        borderRadius: 20,
-        height: normalizeHeight(10),
-        width: normalizeHeight(10),
+        margin: 10,
     },
     textInput: {
         width: '100%',
-        borderColor: Colors.secondary,
-        borderWidth: 2,
         borderRadius: 20,
         padding: 10,
-        marginBottom: 20,
-        fontSize: normalizeHeight(50),
-        color: Colors.white
+        fontSize: normalizeHeight(60),
+        color: Colors.primary,
+        backgroundColor: Colors.bgColor
     },
     bottomSvg: {
         position: 'absolute',

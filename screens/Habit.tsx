@@ -269,7 +269,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        padding: normalizeWidth(15)
+        padding: normalizeWidth(15),
+        paddingTop: normalizeHeight(25),
     },
     totalContainer: {
         flexDirection: 'row',

@@ -40,7 +40,7 @@ export default function App() {
       <Provider store={configureStore()}>
         <SafeAreaProvider>
           <Main />
-          <StatusBar style="light" />
+          <StatusBar style="auto" />
         </SafeAreaProvider>
       </Provider>
     );

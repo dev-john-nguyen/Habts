@@ -51,7 +51,7 @@ export function handleCompletedHabit(habits: HabitProps[], payload: { habitDocId
     return habits;
 }
 
-function handleConsecutiveDays(habit: HabitProps, newCompletedHabit: Date): HabitProps['consecutive'] {
+function handleConsecutiveDays(habit: HabitProps, newCompletedDate: Date): HabitProps['consecutive'] {
     const { completedHabits, sequence } = habit;
 
     if (completedHabits.length < 1) return habit.consecutive;
@@ -59,15 +59,7 @@ function handleConsecutiveDays(habit: HabitProps, newCompletedHabit: Date): Habi
     //sort ascending
     completedHabits.sort((a, b) => b.dateCompleted.getTime() - a.dateCompleted.getTime());
 
-    switch (sequence.type) {
-        case SequenceType.weekly:
-            return consecutiveTools.calcWeekly(habit.consecutive, habit.sequence.value, newCompletedHabit)
-        case SequenceType.monthly:
-            return consecutiveTools.calcMonthy(habit.consecutive, habit.sequence.value, newCompletedHabit)
-        case SequenceType.daily:
-        default:
-            return consecutiveTools.calcDaily(habit.consecutive, newCompletedHabit);
-    }
+    return consecutiveTools.updateConsecutive(habit, newCompletedDate)
 }
 
 export function orderAndFormatHabits(habits: HabitProps[]) {

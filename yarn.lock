@@ -1119,6 +1119,11 @@
   resolved "https://registry.npmjs.org/@expo-google-fonts/asap/-/asap-0.1.0.tgz"
   integrity sha512-U/n7wvS7/6vsBZ1iI0x2r1SCi5ap05Glua9r+TgAcoJxZ/tvZRAkP2PsD9jEDWBG577XyYUlOKsAdJ9WuAw4Pg==
 
+"@expo-google-fonts/cabin@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@expo-google-fonts/cabin/-/cabin-0.2.0.tgz#31fe31393d6039941d3b20a03e0343a7a4adc900"
+  integrity sha512-6eV2JRwmaUNO2cn5qlxGkuw6ZmN9AEYcXQS7zkeui9we7y/wRLx8+lqZoHEvoa6ZTsWDWEiBoluXanNHsqeu3Q==
+
 "@expo-google-fonts/lato@^0.1.0":
   version "0.1.0"
   resolved "https://registry.npmjs.org/@expo-google-fonts/lato/-/lato-0.1.0.tgz"

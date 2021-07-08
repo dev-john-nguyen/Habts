@@ -5,6 +5,8 @@ import Colors from '../constants/Colors';
 import BottomSvg from '../assets/svgs/bottom';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import Layout from '../constants/Layout';
+import CircleAdd from '../assets/svgs/CircleAdd';
+import Gear from '../assets/svgs/Gear';
 
 interface BottomTabProps {
     navtoNew: () => void;
@@ -33,23 +35,18 @@ export default ({ navtoNew, navToHabitHistory, navToSettings }: BottomTabProps) 
             </View>
             <View style={styles.content}>
                 <View style={styles.menu}>
-                    <Pressable onPress={() => handleOnPress('New')} hitSlop={5}>
-                        <FontAwesome5
-                            name="calendar-plus"
-                            size={normalizeHeight(30)}
+                    <Pressable onPress={() => handleOnPress('New')} hitSlop={5} style={styles.menuItemAdd}>
+                        <CircleAdd
                             color={Colors.white}
-                            onPress={() => handleOnPress('New')}
                         />
                     </Pressable>
                     <Pressable
                         onPress={() => handleOnPress('Settings')}
                         hitSlop={5}
+                        style={styles.menuItemGear}
                     >
-                        <FontAwesome
-                            name="gear"
-                            size={normalizeHeight(30)}
+                        <Gear
                             color={Colors.white}
-                            onPress={() => handleOnPress('Settings')}
                         />
                     </Pressable>
                 </View>
@@ -78,6 +75,14 @@ const styles = StyleSheet.create({
         position: 'absolute',
         width: '100%',
         height: '100%'
+    },
+    menuItemAdd: {
+        height: normalizeWidth(12),
+        width: normalizeWidth(12)
+    },
+    menuItemGear: {
+        height: normalizeWidth(12),
+        width: normalizeWidth(12)
     },
     content: { flex: 1, flexDirection: 'row' },
 })

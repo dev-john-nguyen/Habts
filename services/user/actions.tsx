@@ -190,7 +190,13 @@ export const signIn = (email: string, password: string) => async (dispatch: AppD
 export const signOut = () => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
     const { habits, user } = getState();
     try {
-        await removeNotifys(habits.habits, user.uid);
+
+        try {
+            await removeNotifys(habits.habits, user.uid);
+        } catch (err) {
+            //getting permission deneid because some items might not exist
+            console.log(err)
+        }
         try {
             const { ref } = getReviewDate(user.uid, user.createdAt)
             await realtimeDb.ref(ref).remove()

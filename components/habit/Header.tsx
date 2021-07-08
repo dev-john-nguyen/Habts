@@ -15,6 +15,7 @@ import HabitBadges from '../badges/HabitBadges';
 import Inputs from '../../constants/Inputs';
 import { DateTime } from 'luxon';
 import Notes from './Notes';
+import { consecutiveTools } from '../../services/habits/utils/consecutive';
 
 interface HabitHeader {
     habit: HabitProps;
@@ -32,34 +33,21 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
 
     const luxNow = DateTime.now();
 
-    const renderNotificationEdit = () => {
-        if (edit) {
-            return <Picker
-                selectedValue={habitEdit.notificationTime.totalMins}
-                onValueChange={(itemValue: any, itemIndex: number) => setHabitEdit({ ...habitEdit, notificationTime: { ...habitEdit.notificationTime, totalMins: parseInt(itemValue) } })}
-                itemStyle={styles.pickerItemStyle}
-            >
-                {arrayOfNums(61).map((item) => (
-                    <Picker.Item label={item.toString()} value={item} key={item.toString()} />
-                ))}
-            </Picker>
-        } else {
-            return <AsapText style={styles.totalMinsText}>{habit.notificationTime.totalMins ? habit.notificationTime.totalMins : '0'}</AsapText>
-        }
-    }
-
-    const calcConsecutiveTotal = () => {
-        let consecutiveTotal: CompletedHabitsProps[] = [];
-
-        Object.keys(habit.consecutive).forEach((goalKey, i) => {
-            const { count } = habit.consecutive[goalKey];
-            if (count.length > 0) {
-                consecutiveTotal = consecutiveTotal.concat(count)
-            }
-        })
-
-        return consecutiveTotal.length
-    }
+    // const renderNotificationEdit = () => {
+    //     if (edit) {
+    //         return <Picker
+    //             selectedValue={habitEdit.notificationTime.totalMins}
+    //             onValueChange={(itemValue: any, itemIndex: number) => setHabitEdit({ ...habitEdit, notificationTime: { ...habitEdit.notificationTime, totalMins: parseInt(itemValue) } })}
+    //             itemStyle={styles.pickerItemStyle}
+    //         >
+    //             {arrayOfNums(61).map((item) => (
+    //                 <Picker.Item label={item.toString()} value={item} key={item.toString()} />
+    //             ))}
+    //         </Picker>
+    //     } else {
+    //         return <AsapText style={styles.totalMinsText}>{habit.notificationTime.totalMins ? habit.notificationTime.totalMins : '0'}</AsapText>
+    //     }
+    // }
 
     const onShowNotes = () => setShowNotes(showNotes ? false : true);
 
@@ -75,9 +63,10 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
             <View style={styles.header}>
                 <View>
                     <AsapTextBold style={styles.headerText}>{habit.name}</AsapTextBold>
-                    <AsapText style={styles.remove}>{habit.remove}</AsapText>
+                    {!!habit.remove && <AsapText style={styles.remove}>{habit.remove}</AsapText>}
                 </View>
             </View>
+            <View style={styles.underline} />
             {showNotes ?
                 <Notes
                     notes={habit.notes}
@@ -170,7 +159,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
 
                         <View style={styles.dataItem}>
                             <Entypo name="bar-graph" size={normalizeHeight(40)} color={Colors.secondary} style={{ marginRight: 5 }} />
-                            <AsapTextMedium style={styles.dataText}>{calcConsecutiveTotal()} day(s) in a row</AsapTextMedium>
+                            <AsapTextMedium style={styles.dataText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</AsapTextMedium>
                         </View>
 
                         <View style={styles.dataItem}>
@@ -199,9 +188,14 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 10
     },
     header: {
+    },
+    underline: {
+        height: 1,
+        width: '100%',
+        backgroundColor: Colors.contentBg,
+        marginBottom: 5
     },
     contentEditBg: {
         backgroundColor: Colors.contentBg,

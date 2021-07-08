@@ -4,6 +4,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import * as React from 'react';
 import { Lato_400Regular, Lato_400Regular_Italic } from '@expo-google-fonts/lato';
 import { Asap_400Regular, Asap_700Bold, Asap_500Medium } from '@expo-google-fonts/asap';
+import { Cabin_400Regular, Cabin_500Medium, Cabin_700Bold } from '@expo-google-fonts/cabin';
 
 export default function useCachedResources() {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -22,7 +23,10 @@ export default function useCachedResources() {
           Asap_400Regular,
           Lato_400Regular_Italic,
           Asap_700Bold,
-          Asap_500Medium
+          Asap_500Medium,
+          Cabin_400Regular,
+          Cabin_500Medium,
+          Cabin_700Bold
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service

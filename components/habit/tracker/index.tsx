@@ -33,7 +33,7 @@ type BadgeProps = Array<{
 }>
 
 
-const Tracker = ({ completedHabits, startDate, consecutive }: Props) => {
+const Tracker = ({ completedHabits, startDate, consecutive, endDate }: Props) => {
     const [data, setData] = useState<DataArray>();
 
 
@@ -80,10 +80,10 @@ const Tracker = ({ completedHabits, startDate, consecutive }: Props) => {
         })
 
         //get the difference between today and the start date
-        let d = new Date();
-        let startDateTime = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate() - 100).getTime();
-        let todaysDate = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-        let diff = todaysDate - startDateTime;
+        let eDate = endDate ? endDate : new Date();
+        let startDateTime = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime();
+        let endDateTime = new Date(eDate.getFullYear(), eDate.getMonth(), eDate.getDate()).getTime();
+        let diff = endDateTime - startDateTime;
         let diffInDays = Math.ceil(diff / (1000 * 3600 * 24));
 
         let preparedData: DataArray = [];
@@ -91,7 +91,7 @@ const Tracker = ({ completedHabits, startDate, consecutive }: Props) => {
         let missSDate;
 
         for (let i = diffInDays; i >= 0; i--) {
-            let cDate = new Date(d.getFullYear(), d.getMonth(), d.getDate() - i);
+            let cDate = new Date(eDate.getFullYear(), eDate.getMonth(), eDate.getDate() - i);
 
             //check if completed
             let foundCompleted = completedHabits.find(({ dateCompleted }) => {

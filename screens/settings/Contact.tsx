@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import { AsapText, AsapTextBold } from '../../components/StyledText';
+import { AsapText, AsapTextBold, AsapTextMedium } from '../../components/StyledText';
 import Colors from '../../constants/Colors';
-import { normalizeHeight } from '../../utils/styles';
+import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ContactUs = () => {
@@ -10,17 +10,14 @@ const ContactUs = () => {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <AsapText style={styles.header}>Contact Us</AsapText>
-                <View style={styles.content}>
-                    <View style={styles.section}>
-                        <AsapText style={styles.headerText}>Feel free to contact us with any questions, concerns, or advice about this app. We would love to hear from you.</AsapText>
-                    </View>
-                    <View style={styles.section}>
-                        <AsapText style={styles.headerText}>You can reach us @</AsapText>
-                        <AsapTextBold style={styles.text}>softlete@gmail.com</AsapTextBold>
-                        <AsapText style={styles.headerText}>Our our website @</AsapText>
-                        <AsapTextBold style={styles.text}>habt-b0f23.web.app</AsapTextBold>
-                    </View>
+                <AsapTextBold style={styles.header}>Contact Us</AsapTextBold>
+                <View style={styles.underline} />
+                <AsapText style={styles.text}>Feel free to contact us with any questions, concerns, or advice about this app. We would love to hear from you.</AsapText>
+                <View style={styles.section}>
+                    <AsapTextBold style={styles.itemHeaderText}>Email</AsapTextBold>
+                    <AsapText style={styles.text}>softlete@gmail.com</AsapText>
+                    <AsapTextBold style={styles.itemHeaderText}>Website</AsapTextBold>
+                    <AsapText style={styles.text}>habt-b0f23.web.app</AsapText>
                 </View>
             </View>
         </SafeAreaView>
@@ -29,36 +26,30 @@ const ContactUs = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        padding: normalizeWidth(15),
+        paddingTop: normalizeHeight(25),
     },
-    content: {
-        margin: 5,
-        backgroundColor: Colors.white,
-        borderRadius: 10
+    underline: {
+        height: 1,
+        width: '100%',
+        backgroundColor: Colors.contentBg,
+        marginTop: 5,
+        marginBottom: 5
     },
     header: {
-        fontSize: normalizeHeight(30),
-        margin: 10,
-        textAlign: 'center',
-        color: Colors.white
+        fontSize: normalizeHeight(20),
+        color: Colors.primary,
     },
     section: {
-        marginBottom: normalizeHeight(40),
-        alignItems: 'center',
     },
-    headerText: {
-        textAlign: 'center',
+    itemHeaderText: {
         fontSize: normalizeHeight(50),
-        color: Colors.black,
-        padding: 20
+        color: Colors.primary,
+        marginTop: 10
     },
     text: {
-        fontSize: normalizeHeight(35),
-        color: Colors.black,
-        margin: 20
-    },
-    button: {
-        alignSelf: 'stretch'
+        fontSize: normalizeHeight(60),
+        color: Colors.primary,
     }
 })
 

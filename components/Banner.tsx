@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet, Animated, Easing, Pressable } from 'react-native';
 import { BannerActionsProps, BannerProps } from '../services/banner/types';
-import { AsapText } from './StyledText';
+import { AsapText, AsapTextMedium } from './StyledText';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 import { normalizeHeight } from '../utils/styles';
@@ -21,7 +21,7 @@ export default ({ removeBanner, banner }: Props) => {
             Animated.sequence([
                 Animated.timing(topAdmin, {
                     useNativeDriver: false,
-                    toValue: 20,
+                    toValue: 40,
                     easing: Easing.out(Easing.circle),
                     duration: 1000
                 }),
@@ -52,7 +52,7 @@ export default ({ removeBanner, banner }: Props) => {
             case 'error':
                 return Colors.red;
             default:
-                return Colors.white;
+                return Colors.primary;
         }
     }
 
@@ -61,7 +61,7 @@ export default ({ removeBanner, banner }: Props) => {
     return (
         <Animated.View style={[styles.container, { top: topAdmin, backgroundColor: handleBackgroundColor() }]}>
             <Pressable style={styles.messageContainer} onPress={hide}>
-                <AsapText style={styles.messageText}>{banner.message}</AsapText>
+                <AsapTextMedium style={styles.messageText}>{banner.message}</AsapTextMedium>
             </Pressable>
         </Animated.View>
     )
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     },
     messageText: {
         fontSize: normalizeHeight(55),
-        color: Colors.black
+        color: Colors.white
     }
 })
 

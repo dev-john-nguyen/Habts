@@ -70,7 +70,7 @@ function RootNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerBackTitleVisible: true,
+        headerBackTitleVisible: false,
         gestureDirection: 'horizontal',
         transitionSpec: {
           open: TransitionSpecs.TransitionIOSSpec,
@@ -79,7 +79,7 @@ function RootNavigator() {
         cardStyleInterpolator: cardAnimation,
         headerTitle: '',
         headerTransparent: true,
-        headerTintColor: Colors.grey,
+        headerTintColor: Colors.secondary,
         headerBackTitleStyle: {
           fontFamily: 'Asap_400Regular',
           fontSize: normalizeWidth(25)

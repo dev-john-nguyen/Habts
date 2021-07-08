@@ -21,6 +21,7 @@ import Pay from './settings/Pay';
 import HomeBadges from '../components/badges/HomeBadges';
 import { subscriptionPurchased } from '../services/user/actions';
 import { addCompletedHabit } from '../services/habits/actions';
+import Oval from '../assets/svgs/home/Oval';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
 
@@ -41,7 +42,6 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
     const [activeTime, setActiveTime] = useState(0);
     const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([]);
     const [activeDate, setActiveDate] = useState<Date>(new Date());
-    const [showCal, setShowCal] = useState(false);
     const listRef: any = useRef();
     const [expired, setExpired] = useState(false)
 
@@ -163,7 +163,6 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
 
     const onRefresh = () => {
         setActiveDate(new Date())
-        setShowCal(false)
     }
 
     const isTodaysDate = (): Boolean => {
@@ -181,8 +180,11 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                             <AsapText style={styles.dateText}>{getDayName(activeDate)}</AsapText>
                             <AsapText style={[styles.dateText, { marginTop: 5 }]}>{getMonthShort(activeDate)} {activeDate.getFullYear()}</AsapText>
                         </View>
-                        {!isTodaysDate() && <Entypo name="back-in-time" size={normalizeHeight(30)} color="white" style={styles.refreshTime} onPress={onRefresh} />}
                     </View>
+                    <View style={styles.ovalContainer}>
+                        <Oval fillColor={Colors.secondary} />
+                    </View>
+                    {!isTodaysDate() && <Entypo name="back-in-time" size={normalizeHeight(30)} color={Colors.primary} style={styles.refreshTime} onPress={onRefresh} />}
                 </View>
                 <View style={styles.headerRightContainer}>
                     <HomeBadges habits={[...habits, ...archivedHabits]} navigation={navigation} />
@@ -211,16 +213,8 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                         </View>
                     )}
                     ListHeaderComponentStyle={styles.listHeader}
-                    ListEmptyComponent={() => (
-                        <Pressable style={styles.empty} onPress={navToNew}>
-                            <Entypo
-                                name="add-to-list"
-                                size={normalizeHeight(25)}
-                                color={Colors.white}
-                                onPress={navToNew}
-                            />
-                        </Pressable>
-                    )}
+                    // ListEmptyComponent={() => (
+                    // )}
                     renderItem={({ item, index }) => (
                         <HabitPreview
                             onPress={() => navToHabit(item)}
@@ -253,25 +247,31 @@ const styles = StyleSheet.create({
         paddingRight: 20,
         paddingBottom: 50,
     },
+    ovalContainer: {
+        width: '90%',
+        height: normalizeHeight(50)
+    },
     contentContainerStyle: {
-        paddingBottom: normalizeHeight(5)
+        paddingBottom: normalizeHeight(20)
     },
     borderLineBottom: {
         width: '100%',
         height: 1,
         backgroundColor: Colors.mediumGrey,
-        marginTop: 5
     },
     content: {
         backgroundColor: Colors.contentBg,
-        marginTop: normalizeHeight(20),
+        marginTop: normalizeHeight(30),
         paddingTop: normalizeHeight(50),
         borderTopRightRadius: 60,
         borderTopLeftRadius: 60,
+        flex: 1,
     },
     contentBg: {
-        backgroundColor: Colors.contentBg, width: normalizeWidth(.9), alignSelf: 'center',
-        height: '100%',
+        backgroundColor: Colors.contentBg,
+        width: normalizeWidth(.9),
+        alignSelf: 'center',
+        height: normalizeHeight(1),
         borderTopRightRadius: 100,
         borderTopLeftRadius: 100,
         zIndex: -100,
@@ -289,12 +289,13 @@ const styles = StyleSheet.create({
     dateContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        justifyContent: 'center',
         width: normalizeWidth(2.5),
     },
     refreshTime: {
         position: 'absolute',
         top: 0,
-        right: 0,
+        right: '1%',
         zIndex: 1000
     },
     dayText: {
@@ -334,7 +335,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     headerLeftContainer: {
-        flexDirection: 'row',
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         flex: .7
     },
     headerRightContainer: {

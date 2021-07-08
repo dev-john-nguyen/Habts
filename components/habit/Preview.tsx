@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
-import { AsapText, LatoText, AsapTextBold } from '../StyledText';
-import { HabitProps, CompletedHabitsProps, HabitsActionsProps } from '../../services/habits/types';
-import { DateTime, Interval } from 'luxon';
+import { LatoText, AsapTextBold } from '../StyledText';
+import { HabitProps, HabitsActionsProps } from '../../services/habits/types';
 import { formatTime } from '../../utils/tools';
 import { normalizeWidth } from '../../utils/styles';
 import CircleChecked from '../../assets/svgs/CircleCheck';
@@ -22,20 +21,10 @@ interface HabitPreviewProps {
 
 export default ({ onPress, habit, active, addCompletedHabit, activeDate }: HabitPreviewProps) => {
     const [loading, setLoading] = useState(false);
+    const [styles] = useState(genStyles(active));
+    const [iconColor] = useState(active ? Colors.white : Colors.grey);
     // const [pressed, setPressed] = useState(false);
     // const [pressedColor, setPressedColor] = useState(Colors.orange)
-    const styles = genStyles(active);
-    const iconColor = active ? Colors.white : Colors.grey;
-
-    let consecutiveTotal: CompletedHabitsProps[] = [];
-
-    Object.keys(habit.consecutive).forEach((goalKey, i) => {
-        const { count } = habit.consecutive[goalKey];
-        if (count.length > 0) {
-            consecutiveTotal = consecutiveTotal.concat(count)
-        }
-    })
-
 
     // useEffect(() => {
     //     let interval: any;
@@ -77,6 +66,7 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
     const renderActionIcons = () => {
         let todayDate = new Date();
 
+        //check if choosen date (activeDate) isn't on the same day as today
         if (!consecutiveTools.datesAreOnSameDay(todayDate, activeDate)) {
             return (
                 <View style={styles.circleInfo}>
@@ -84,6 +74,8 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
                 </View>
             )
         }
+
+        console.log(habit.consecutive, todayDate)
 
         let foundCompleted = habit.completedHabits.find(({ dateCompleted }) => {
             if (consecutiveTools.datesAreOnSameDay(dateCompleted, todayDate)) return true
@@ -96,13 +88,9 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
                 </View>
             )
         } else {
-            let prevDate = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() - 1);
+            const { warning, reset } = consecutiveTools.shouldReset(habit, todayDate)
 
-            let foundPrevDay = habit.completedHabits.find(({ dateCompleted }) => {
-                if (consecutiveTools.datesAreOnSameDay(dateCompleted, prevDate)) return true
-            });
-
-            if (!foundPrevDay) {
+            if (warning && !reset) {
                 return (
                     <Pressable style={styles.circleInfo} onLongPress={handleCompletePress}>
                         {({ pressed }) => <AlertCircle fillColor={pressed ? `rgba(${Colors.orangeRgb}, .5)` : Colors.orange} strokeColor={Colors.white} />}
@@ -153,12 +141,12 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
                 <View style={{ marginTop: 5 }}>
                     <View style={styles.contentItem}>
                         <Entypo name="bar-graph" size={normalizeWidth(30)} color={iconColor} style={{ marginRight: 5 }} />
-                        <LatoText style={styles.contentItemText}>{consecutiveTotal.length} day(s) in a row</LatoText>
+                        <LatoText style={styles.contentItemText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</LatoText>
                     </View>
 
                     <View style={styles.contentItem}>
                         <Entypo name="text-document" size={normalizeWidth(30)} color={iconColor} style={{ marginRight: 5 }} />
-                        <LatoText style={styles.contentItemText} numberOfLines={3} ellipsizeMode='tail'>{habit.notes}</LatoText>
+                        <LatoText style={styles.contentItemText} numberOfLines={2} ellipsizeMode='tail'>{habit.notes}</LatoText>
                     </View>
                 </View>
             </View>
@@ -205,7 +193,7 @@ const genStyles = (active: boolean) => StyleSheet.create({
         backgroundColor: Colors.mediumGrey
     },
     timeContainer: {
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
     },
     timeStart: {
         color: active ? Colors.primary : Colors.grey,
