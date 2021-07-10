@@ -160,22 +160,24 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: Colors.contentBg,
         padding: normalizeWidth(15),
-        borderRadius: 20,
-        height: normalizeHeight(2),
-        justifyContent: 'space-between'
+        borderRadius: 20
     },
     weekContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        flex: 1
+        padding: 10,
     },
     monthlyContainer: {
-        flex: 1,
-        width: '60%'
+        width: '60%',
+        height: '40%',
+        paddingTop: 10,
+        paddingBottom: 10
     },
     optionValuesContainer: {
-        flex: 1,
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: normalizeHeight(20),
+        backgroundColor: Colors.white,
+        borderRadius: 10
     },
     monthly: {
         padding: 10,
@@ -231,6 +233,6 @@ const styles = StyleSheet.create({
     buttonContainer: {
         width: '100%',
         flexDirection: 'row',
-        justifyContent: 'space-around',
+        justifyContent: 'space-around'
     }
 })

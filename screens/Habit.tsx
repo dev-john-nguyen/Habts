@@ -21,6 +21,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Tracker from '../components/habit/tracker';
 import { StyledTextBold, StyledText } from '../components/StyledText';
 import HabitBadges from '../components/badges/HabitBadges';
+import { consecutiveTools } from '../services/habits/utils/consecutive';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
 type HabitComRouteProps = RouteProp<RootStackParamList, 'Habit'>
@@ -174,9 +175,15 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
         if (!habit) {
             setBanner('error', "Sorry, couldn't found the habit id.");
             navigation.goBack()
-        } else {
-            addCompletedHabit(habit.docId)
+            return;
         }
+
+        if (!consecutiveTools.datesAreOnSameDay(new Date(route.params.activeDay), new Date())) {
+            setBanner('warning', "Please go back to today to complete this habit.");
+            return;
+        }
+
+        addCompletedHabit(habit.docId);
     }
 
     if (!habit || !habitEdit) {
@@ -202,13 +209,12 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                     completedHabits={habit.completedHabits}
                     startDate={habit.createdAt}
                     endDate={habit.archivedAt}
-                    activeDay={route.params.activeDay}
                     handleAddCompletedHabit={handleAddCompletedHabit}
                     consecutive={habit.consecutive}
                 />
                 <View style={styles.totalContainer}>
-                    <StyledText>Total: </StyledText>
-                    <StyledTextBold>{habit.completedHabits.length}</StyledTextBold>
+                    <StyledText style={styles.totalText}>Total: </StyledText>
+                    <StyledTextBold style={styles.totalText}>{habit.completedHabits.length}</StyledTextBold>
                 </View>
             </View>
         </SafeAreaView>
@@ -229,6 +235,10 @@ const styles = StyleSheet.create({
     totalContainer: {
         flexDirection: 'row',
         marginTop: 5
+    },
+    totalText: {
+        fontSize: normalizeWidth(30),
+        color: Colors.primary
     }
 })
 

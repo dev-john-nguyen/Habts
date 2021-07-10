@@ -9,6 +9,7 @@ import { normalizeWidth } from '../../../../utils/styles';
 import XCircle from '../../../../assets/svgs/XCircle';
 import { TrackProps } from '../types';
 import AlertCircle from '../../../../assets/svgs/AlertCircle';
+import ActionItem from './ActionItem';
 
 interface Props {
     type: TrackProps['type'];
@@ -18,32 +19,31 @@ interface Props {
         outline: boolean;
     };
     missCountRows?: number;
+    handleAddCompletedHabit: () => void;
 }
 
-const Track = ({ type, date, badge, missCountRows }: Props) => {
+const Track = ({ type, date, badge, missCountRows, handleAddCompletedHabit }: Props) => {
 
     let borderColor = '';
     let icon;
+
+    const dateString = (date.getMonth() + 1) + '/' + date.getDate();
+
+    if (type === 'action') {
+        return <ActionItem dateString={dateString} handleAddCompletedHabit={handleAddCompletedHabit} />
+    }
 
     switch (type) {
         case 'check':
             icon = <CircleCheck color={Colors.green} />
             borderColor = Colors.primary
             break;
-        case 'action':
-            icon = (
-                <View style={styles.circleSquare}>
-                    <CirclSquare circleColor={Colors.primary} squareColor={Colors.white} />
-                </View>
-            )
-            borderColor = Colors.primary;
-            break;
         case 'miss':
             icon = <XCircle color={Colors.red} />
             borderColor = Colors.red;
             break;
         case 'warning':
-            icon = <AlertCircle fillColor={Colors.white} strokeColor={Colors.orange} />
+            icon = <AlertCircle fillColor={Colors.white} strokeColor={Colors.orange} strokeOutlineColor={Colors.orange} />
             borderColor = Colors.orange;
             break;
         case 'badge':
@@ -64,7 +64,6 @@ const Track = ({ type, date, badge, missCountRows }: Props) => {
             }
     }
 
-    const dateString = (date.getMonth() + 1) + '/' + date.getDate()
 
     return (
         <View style={[styles.container, {
@@ -80,7 +79,7 @@ const Track = ({ type, date, badge, missCountRows }: Props) => {
                     {
                         missCountRows &&
                         <StyledTextBold style={styles.missCountText}>
-                            x {missCountRows}
+                            x{missCountRows}
                         </StyledTextBold>
 
                     }

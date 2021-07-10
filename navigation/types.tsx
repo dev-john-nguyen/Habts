@@ -5,7 +5,7 @@ export type RootStackParamList = {
   New: undefined;
   Habit: {
     habitDocId: HabitProps['docId'];
-    activeDay: number;
+    activeDay: string;
   };
   Review: undefined;
   Settings: undefined;

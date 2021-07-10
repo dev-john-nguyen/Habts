@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import Colors from '../../constants/Colors';
 import { StyledPrimaryButton, StyledDisabledButton, StyledSecondaryButton } from '../../components/StyledButton';
 import { StyledText, StyledTextBold } from '../../components/StyledText';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
-import { Entypo } from '@expo/vector-icons';
-import { Picker } from '@react-native-picker/picker';
-import { arrayOfNums } from '../utils';
+import { FontAwesome } from '@expo/vector-icons';
 
 interface Props {
     notificationOn: boolean;
@@ -21,10 +19,10 @@ export default ({ notificationNum, notificationOn, setNotificationOn, setNotific
 
     return (
         <View style={styles.container}>
-            <StyledText style={styles.infoText}>Up to an hour before,</StyledText>
-            <StyledTextBold style={styles.questionText}>At What Time Do You Want To Be Notified?</StyledTextBold>
+            <StyledTextBold style={styles.questionText}>Turn on reminders?</StyledTextBold>
+            <StyledText style={styles.infoText}>You will be reminded at the time of which you selected to start your habit.</StyledText>
             <View style={styles.content}>
-                <Picker
+                {/* <Picker
                     selectedValue={notificationNum}
                     onValueChange={(itemValue: any, itemIndex: number) => setNotificationNum(parseInt(itemValue))}
                     itemStyle={styles.pickerItemStyle}
@@ -32,12 +30,17 @@ export default ({ notificationNum, notificationOn, setNotificationOn, setNotific
                     {arrayOfNums(61).map((item) => (
                         <Picker.Item label={item.toString()} value={item} key={item.toString()} />
                     ))}
-                </Picker>
-                <StyledText style={styles.text}>mins before</StyledText>
+                </Picker> */}
+                {/* <StyledText style={styles.text}>mins before</StyledText> */}
                 {
                     notificationOn
-                        ? <Entypo name="bell" size={normalizeHeight(35)} color={Colors.primary} style={styles.bell} onPress={() => setNotificationOn(false)} />
-                        : <Entypo name="sound-mute" size={normalizeHeight(35)} color={Colors.primary} style={styles.bell} onPress={() => setNotificationOn(true)} />
+                        ? <FontAwesome name="bell" size={normalizeHeight(20)} color={Colors.primary} style={styles.bell} onPress={() => setNotificationOn(false)} />
+                        : <FontAwesome name="bell-slash" size={normalizeHeight(20)} color={Colors.primary} style={styles.bell} onPress={() => setNotificationOn(true)} />
+                }
+                {
+                    notificationOn
+                        ? <StyledTextBold style={styles.text}>On</StyledTextBold>
+                        : <StyledTextBold style={styles.text}>Off</StyledTextBold>
                 }
 
             </View>
@@ -72,7 +75,7 @@ const styles = StyleSheet.create({
     },
     content: {
         flexDirection: 'row',
-        alignItems: 'center'
+        justifyContent: 'center'
     },
     bell: {
         marginLeft: 5
@@ -93,11 +96,12 @@ const styles = StyleSheet.create({
     questionText: {
         textTransform: 'capitalize',
         fontSize: normalizeWidth(15),
-        color: Colors.primary
+        color: Colors.primary,
     },
     infoText: {
         fontSize: normalizeWidth(30),
         color: Colors.primary,
+        marginBottom: normalizeHeight(25)
     },
 })
 

@@ -83,8 +83,8 @@ export default ({ habits, startTime, endTime, setStartTime, setEndTime, handlePr
                     style={[{
                         height: habitListHeight,
                         width: habitListWidth.interpolate({ inputRange: [0, 1, 2], outputRange: ['0%', '100%', '0%'] }),
-                        backgroundColor: Colors.grey,
-                        borderRadius: 10,
+                        backgroundColor: Colors.white,
+                        borderRadius: 5,
                         top: -10
                     }]}
                 >
@@ -94,9 +94,19 @@ export default ({ habits, startTime, endTime, setStartTime, setEndTime, handlePr
                         ListEmptyComponent={<StyledText style={styles.habitListText}>No Habits</StyledText>}
                         style={styles.habitContainer}
                         contentContainerStyle={styles.habitList}
+                        ListHeaderComponent={() => (
+                            <View>
+                                <View style={styles.habitListContainer}>
+                                    <StyledTextBold style={styles.habitListText}>Name</StyledTextBold>
+                                    <StyledTextBold style={styles.habitListText}>Sequence</StyledTextBold>
+                                    <StyledTextBold style={styles.habitListText}>Time</StyledTextBold>
+                                </View>
+                                <View style={styles.underline} />
+                            </View>
+                        )}
                         renderItem={({ item }) => (
                             <View style={styles.habitListContainer}>
-                                <StyledTextBold style={styles.habitListText}>{item.name}</StyledTextBold>
+                                <StyledText style={styles.habitListText}>{item.name}</StyledText>
                                 <StyledText style={styles.habitListText}>{item.sequence.type} {renderSequenceValue(item)}</StyledText>
                                 <StyledTextMedium style={styles.habitListText}>{formatTime(item.startTime)} - {formatTime(item.endTime)}</StyledTextMedium>
                             </View>
@@ -142,6 +152,11 @@ const styles = StyleSheet.create({
         height: normalizeHeight(2),
         borderRadius: 20,
         justifyContent: 'space-between'
+    },
+    underline: {
+        height: 1,
+        width: '100%',
+        backgroundColor: Colors.contentBg,
     },
     habitList: {
         padding: 5,

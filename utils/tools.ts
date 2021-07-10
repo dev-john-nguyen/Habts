@@ -17,7 +17,7 @@ export function formatTime(time: Time) {
     if (remHour == 0) {
         hourStr = '12'
     } else if (remHour < 10) {
-        hourStr = '0' + remHour
+        hourStr = remHour
     } else {
         hourStr = remHour
     }
@@ -212,9 +212,9 @@ export function renderSequenceValue(habit: HabitProps) {
                 return (index === 0 ? '' : ' ') + daysShort[day]
             }) + ')'
         case SequenceType.monthly:
-            return '(' + habit.sequence.value.map((day: any, index) => {
+            return ' (' + habit.sequence.value.map((day: any, index) => {
                 return (index === 0 ? '' : ' ') + day
-            }) + ' day(s) of the month)'
+            }) + ')'
         default:
             return ''
     }

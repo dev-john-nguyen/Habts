@@ -89,7 +89,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
             } else if (data.habitId) {
                 navigation.navigate('Habit', {
                     habitDocId: data.habitId,
-                    activeDay: new Date().getDate()
+                    activeDay: new Date().toString()
                 })
             }
         });
@@ -155,7 +155,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
 
     const navToSettings = () => navigation.navigate('Settings');
 
-    const navToHabit = (item: HabitProps) => !expired && navigation.navigate('Habit', { habitDocId: item.docId, activeDay: activeDate.getDate() });
+    const navToHabit = (item: HabitProps) => !expired && navigation.navigate('Habit', { habitDocId: item.docId, activeDay: activeDate.toString() });
 
     const navToNew = () => !expired && navigation.navigate('New');
 
@@ -215,6 +215,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                 <View style={styles.borderLineBottom} />
 
                 <FlatList
+                    style={{ height: '100%' }}
                     data={todayHabits}
                     extraData={activeDate}
                     contentContainerStyle={styles.contentContainerStyle}
@@ -311,7 +312,7 @@ const styles = StyleSheet.create({
         zIndex: 1000
     },
     dayText: {
-        fontSize: normalizeWidth(6),
+        fontSize: normalizeWidth(7),
         color: Colors.primary,
         marginRight: 5
     },
@@ -322,7 +323,7 @@ const styles = StyleSheet.create({
     listTitleContainer: {
         width: '100%',
         marginTop: 20,
-        marginBottom: 20,
+        marginBottom: 30,
         flexDirection: 'row',
         zIndex: -1
     },

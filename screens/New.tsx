@@ -40,7 +40,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
     const [startTime, setStartTime] = useState<Date>(new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate(), 9, 0));
     const [endTime, setEndTime] = useState<Date>(new Date(dateNow.getFullYear(), dateNow.getMonth(), dateNow.getDate(), 9, 30));
     const [notificationNum, setNotificationNum] = useState<number>(0);
-    const [notificationOn, setNotificationOn] = useState<boolean>(true);
+    const [notificationOn, setNotificationOn] = useState<boolean>(false);
     const [cue, setCue] = useState<string>('');
     const [sequence, setSequence] = useState<SequenceProps>({ type: SequenceType.daily, value: [] })
     const [locationDes, setLocationDes] = useState<string>('');
@@ -177,8 +177,9 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
         switch (step) {
             case 0:
                 return (
-                    <View style={[styles.content, { height: normalizeHeight(5) }]}>
+                    <View style={styles.content}>
                         <StyledTextBold style={styles.questionText}>Removing An Old Habit?</StyledTextBold>
+                        <StyledText style={styles.infoText} />
                         <View style={styles.buttonContainer}>
                             <StyledPrimaryButton text='Yes' style={{ flex: .4 }} onPress={() => handleRemoveOldHabit(true)} />
                             <StyledSecondaryButton text='No' style={{ flex: .4 }} onPress={() => handleRemoveOldHabit(false)} />
@@ -187,8 +188,9 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             case 1:
                 return (
-                    <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
+                    <Pressable style={styles.content} onPress={Keyboard.dismiss}>
                         <StyledTextBold style={styles.questionText}>What Habit Do You Want To Remove From Your Life?</StyledTextBold>
+                        <StyledText style={styles.infoText} />
                         <StyledTextInput
                             value={remove}
                             style={styles.responseInput}
@@ -210,7 +212,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             case 2:
                 return (
-                    <View style={[styles.content, { height: normalizeHeight(4) }]}>
+                    <View style={styles.content}>
                         <StyledTextBold style={styles.questionText}>We Recommend Replacing The Old Habit With A New One.</StyledTextBold>
                         <View style={styles.buttonContainer}>
                             <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
@@ -220,8 +222,9 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             case 3:
                 return (
-                    <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
+                    <Pressable style={styles.content} onPress={Keyboard.dismiss}>
                         <StyledTextBold style={styles.questionText}>What Habit Do You Want To Implement Into Your Life?</StyledTextBold>
+                        <StyledText style={styles.infoText} />
                         <StyledTextInput
                             value={name}
                             style={styles.responseInput}
@@ -263,7 +266,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 />
             case 6:
                 return (
-                    <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
+                    <Pressable style={styles.content} onPress={Keyboard.dismiss}>
                         <View>
                             <StyledTextBold style={styles.questionText}>Location of which the habit will be performed</StyledTextBold>
                             <StyledText style={styles.infoText}>Ex. Home - Living Room</StyledText>
@@ -293,7 +296,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             case 7:
                 return (
-                    <Pressable style={[styles.content, { height: normalizeHeight(3) }]} onPress={Keyboard.dismiss}>
+                    <Pressable style={styles.content} onPress={Keyboard.dismiss}>
                         <View>
                             <StyledTextBold style={styles.questionText}>What Cue Do You Want To Trigger The Habit?</StyledTextBold>
                             <StyledText style={styles.infoText}>Ex. “I will meditate after I drink my morning coffee.”</StyledText>
@@ -332,7 +335,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 />
             case 9:
                 return (
-                    <Pressable style={[styles.content, { height: normalizeHeight(2.5) }]} onPress={Keyboard.dismiss}>
+                    <Pressable style={styles.content} onPress={Keyboard.dismiss}>
 
                         <View>
                             <StyledTextBold style={styles.questionText}>Any Personal Notes You Want To Add?</StyledTextBold>
@@ -341,8 +344,8 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
 
                         <StyledTextInput
                             value={notes}
-                            style={[styles.responseInput, { flex: .8 }]}
-                            placeholder="I want to decrease my stress and anxiety, and at the same time increase my self-awareness."
+                            style={styles.responseInput}
+                            placeholder="Ex. Meditating daily will help decrease my stress and improve my focus."
                             placeholderTextColor={Colors.grey}
                             autoCorrect={true}
                             multiline={true}
@@ -357,37 +360,39 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             default:
                 return (
-                    <View style={[styles.content, { height: normalizeHeight(2.5) }]}>
-                        <HabitHeader
-                            newCom={true}
-                            setHabitEdit={() => undefined}
-                            habitEdit={emptyHabitEdit}
-                            edit={false}
-                            habit={{
-                                startTime: {
-                                    date: startTime,
-                                    hour: startTime.getHours(),
-                                    minute: startTime.getMinutes(),
-                                    zoneName: DateTime.now().zoneName
-                                },
-                                endTime: {
-                                    date: endTime,
-                                    hour: endTime.getHours(),
-                                    minute: endTime.getMinutes(),
-                                    zoneName: DateTime.now().zoneName
-                                },
-                                cue,
-                                locationDes,
-                                notes,
-                                remove,
-                                name,
-                                sequence,
-                                notificationTime: genNotificationTime(),
-                                notificationOn,
-                                consecutive: sequence.type === SequenceType.daily ? dailyGoals() : otherGoals(sequence.value.length),
-                                ...emptyHabitExtra
-                            }}
-                        />
+                    <View style={styles.content}>
+                        <View style={{ marginBottom: normalizeHeight(20) }}>
+                            <HabitHeader
+                                newCom={true}
+                                setHabitEdit={() => undefined}
+                                habitEdit={emptyHabitEdit}
+                                edit={false}
+                                habit={{
+                                    startTime: {
+                                        date: startTime,
+                                        hour: startTime.getHours(),
+                                        minute: startTime.getMinutes(),
+                                        zoneName: DateTime.now().zoneName
+                                    },
+                                    endTime: {
+                                        date: endTime,
+                                        hour: endTime.getHours(),
+                                        minute: endTime.getMinutes(),
+                                        zoneName: DateTime.now().zoneName
+                                    },
+                                    cue,
+                                    locationDes,
+                                    notes,
+                                    remove,
+                                    name,
+                                    sequence,
+                                    notificationTime: genNotificationTime(),
+                                    notificationOn,
+                                    consecutive: sequence.type === SequenceType.daily ? dailyGoals() : otherGoals(sequence.value.length),
+                                    ...emptyHabitExtra
+                                }}
+                            />
+                        </View>
                         <View style={styles.buttonContainer}>
                             <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
                             <StyledPrimaryButton text={loading ? <ActivityIndicator color={Colors.primary} /> : 'Save'} style={{ flex: .4, zIndex: 100 }} onPress={handleSave} />
@@ -434,11 +439,12 @@ const styles = StyleSheet.create({
     questionText: {
         textTransform: 'capitalize',
         fontSize: normalizeWidth(15),
-        color: Colors.primary,
+        color: Colors.primary
     },
     infoText: {
         fontSize: normalizeWidth(30),
         color: Colors.primary,
+        marginBottom: normalizeHeight(20)
     },
     responseInput: {
         borderRadius: 10,
@@ -446,7 +452,8 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingTop: 10,
         color: Colors.primary,
-        backgroundColor: Colors.white
+        backgroundColor: Colors.white,
+        marginBottom: normalizeHeight(20)
     },
     buttonContainer: {
         width: '100%',

@@ -68,11 +68,12 @@ export default ({ setActiveDate, activeDate }: props) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: normalizeWidth(20)
+        padding: normalizeWidth(20),
+        height: 'auto'
     },
     contentContainerStyle: {
         paddingRight: 10,
-        left: -normalizeWidth(20)
+        left: -normalizeWidth(20),
     },
     itemContainer: {
         flexDirection: 'column',

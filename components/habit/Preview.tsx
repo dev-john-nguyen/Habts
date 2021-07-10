@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, FontAwesome } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { StyledText, StyledTextBold } from '../StyledText';
 import { HabitProps, HabitsActionsProps } from '../../services/habits/types';
@@ -9,7 +9,7 @@ import { normalizeWidth } from '../../utils/styles';
 import CircleChecked from '../../assets/svgs/CircleCheck';
 import CircleSquare from '../../assets/svgs/CircleSquare';
 import { consecutiveTools } from '../../services/habits/utils/consecutive';
-import AlertCircle from '../../assets/svgs/AlertCircle';
+import PreviewActionItem from './components/PreviewActionItem';
 
 interface HabitPreviewProps {
     onPress: () => void;
@@ -23,36 +23,8 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
     const [loading, setLoading] = useState(false);
     const [styles] = useState(genStyles(active));
     const [iconColor] = useState(active ? Colors.white : Colors.grey);
-    // const [pressed, setPressed] = useState(false);
-    // const [pressedColor, setPressedColor] = useState(Colors.orange)
 
-    // useEffect(() => {
-    //     let interval: any;
-    //     if (pressed) {
-    //         let opacity = 1;
-    //         let count = 0;
-    //         interval = setInterval(async () => {
-    //             setPressedColor(`rgba(${Colors.orangeRgb}, ${opacity})`);
-    //             opacity = opacity - .05;
-    //             if (count > 10) {
-    //                 clearInterval(interval);
-    //                 // await handleCompletePress();
-    //                 setPressedColor(Colors.orange)
-    //             } else {
-    //                 count++
-    //             }
-    //         }, 100)
-    //     } else {
-    //         clearInterval(interval)
-    //         setPressedColor(Colors.orange)
-    //     }
-
-    //     return () => {
-    //         clearInterval(interval)
-    //     }
-    // }, [pressed])
-
-    const handleCompletePress = async () => {
+    const onCompletedActionPress = async () => {
         if (loading) return;
 
         setLoading(true);
@@ -75,8 +47,6 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
             )
         }
 
-        console.log(habit.consecutive, todayDate)
-
         let foundCompleted = habit.completedHabits.find(({ dateCompleted }) => {
             if (consecutiveTools.datesAreOnSameDay(dateCompleted, todayDate)) return true
         })
@@ -92,16 +62,16 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
 
             if (warning && !reset) {
                 return (
-                    <Pressable style={styles.circleInfo} onLongPress={handleCompletePress}>
-                        {({ pressed }) => <AlertCircle fillColor={pressed ? `rgba(${Colors.orangeRgb}, .5)` : Colors.orange} strokeColor={Colors.white} />}
-                    </Pressable>
+                    <View style={styles.circleInfo}>
+                        <PreviewActionItem handleAddCompletedHabit={onCompletedActionPress} isWarning={true} />
+                    </View>
                 )
             }
 
             return (
-                <Pressable style={styles.circleInfo} onLongPress={handleCompletePress}>
-                    {({ pressed }) => <CircleSquare squareColor={Colors.white} circleColor={pressed ? `rgba(${Colors.primaryRgb}, .5)` : Colors.primary} />}
-                </Pressable>
+                <View style={styles.circleInfo}>
+                    <PreviewActionItem handleAddCompletedHabit={onCompletedActionPress} />
+                </View>
             )
         }
     }
@@ -110,8 +80,8 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
         <Pressable style={styles.container} onPress={onPress}
         >
             <View style={styles.timeContainer}>
-                <StyledTextBold style={styles.timeStart}>{formatTime(habit.startTime)}</StyledTextBold>
-                <StyledTextBold style={styles.timeEnd}>{formatTime(habit.endTime)}</StyledTextBold>
+                <StyledTextBold style={styles.timeStart} numberOfLines={1} ellipsizeMode='head'>{formatTime(habit.startTime)}</StyledTextBold>
+                <StyledTextBold style={styles.timeEnd} numberOfLines={1}>{formatTime(habit.endTime)}</StyledTextBold>
             </View>
             <View style={styles.containerGap}>
                 <View style={styles.gapLine} />
@@ -123,8 +93,8 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
                 <View style={styles.notification}>
                     {
                         habit.notificationOn
-                            ? <Entypo name="bell" size={normalizeWidth(25)} color={iconColor} />
-                            : <Entypo name="sound-mute" size={normalizeWidth(25)} color={iconColor} />
+                            ? <FontAwesome name="bell" size={normalizeWidth(25)} color={iconColor} />
+                            : <FontAwesome name="bell-slash" size={normalizeWidth(25)} color={iconColor} />
                     }
                 </View>
 
@@ -184,25 +154,26 @@ const genStyles = (active: boolean) => StyleSheet.create({
         color: active ? Colors.white : Colors.grey,
     },
     containerGap: {
-        flex: .2,
-        alignItems: 'center'
+        alignItems: 'flex-start',
+        width: '7%'
     },
     gapLine: {
         width: 1,
         height: '120%',
-        backgroundColor: Colors.mediumGrey
+        backgroundColor: Colors.veryLightGrey
     },
     timeContainer: {
         alignItems: 'flex-start',
+        width: '20%'
     },
     timeStart: {
         color: active ? Colors.primary : Colors.grey,
         fontSize: normalizeWidth(18),
-        marginBottom: 1
+        marginBottom: 1,
     },
     timeEnd: {
         color: active ? Colors.primary : Colors.grey,
-        fontSize: normalizeWidth(18),
+        fontSize: normalizeWidth(18)
     },
     contentContainer: {
         flex: 1,

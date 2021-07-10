@@ -2,7 +2,6 @@ import React, { useRef, useEffect } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import Layout from '../../constants/Layout';;
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
-import Superman from '../../assets/svgs/superman';
 
 export default ({ step }: { step: number }) => {
     const runnerPosition = useRef(new Animated.Value(0)).current;
@@ -19,7 +18,7 @@ export default ({ step }: { step: number }) => {
             <Animated.View style={[{
                 left: runnerPosition,
             }, styles.runner]}>
-                <Superman />
+
             </Animated.View>
         </View>
     )

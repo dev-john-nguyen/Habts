@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Colors from '../../../constants/Colors';
 import { normalizeWidth } from '../../../utils/styles';
 import { CompletedHabitsProps, HabitProps } from '../../../services/habits/types';
 import Track from './components/Track';
 import { TrackProps } from './types';
+import { consecutiveTools } from '../../../services/habits/utils/consecutive';
 
 interface Props {
     completedHabits: CompletedHabitsProps[];
-    activeDay: number;
     handleAddCompletedHabit: () => void;
     startDate: Date;
     endDate?: Date;
@@ -33,7 +33,7 @@ type BadgeProps = Array<{
 }>
 
 
-const Tracker = ({ completedHabits, startDate, consecutive, endDate }: Props) => {
+const Tracker = ({ completedHabits, startDate, consecutive, endDate, handleAddCompletedHabit }: Props) => {
     const [data, setData] = useState<DataArray>();
 
 
@@ -41,7 +41,7 @@ const Tracker = ({ completedHabits, startDate, consecutive, endDate }: Props) =>
         return (d1.getFullYear() === d2.getFullYear() && d1.getMonth() === d2.getMonth() && d1.getDate() === d2.getDate())
     }
 
-    useEffect(() => {
+    const getBadgeData = useCallback(() => {
         let badgeData: BadgeProps = [];
 
         Object.keys(consecutive).forEach((goalKey, i) => {
@@ -79,19 +79,16 @@ const Tracker = ({ completedHabits, startDate, consecutive, endDate }: Props) =>
             }
         })
 
-        //get the difference between today and the start date
-        let eDate = endDate ? endDate : new Date();
-        let startDateTime = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate()).getTime();
-        let endDateTime = new Date(eDate.getFullYear(), eDate.getMonth(), eDate.getDate()).getTime();
-        let diff = endDateTime - startDateTime;
-        let diffInDays = Math.ceil(diff / (1000 * 3600 * 24));
+        return badgeData
+    }, [consecutive])
 
+    const populateData = useCallback((diffInDays: number, dataEndDate: Date, badgeData: BadgeProps) => {
         let preparedData: DataArray = [];
         let missCount = 0;
         let missSDate;
 
         for (let i = diffInDays; i >= 0; i--) {
-            let cDate = new Date(eDate.getFullYear(), eDate.getMonth(), eDate.getDate() - i);
+            let cDate = new Date(dataEndDate.getFullYear(), dataEndDate.getMonth(), dataEndDate.getDate() - i);
 
             //check if completed
             let foundCompleted = completedHabits.find(({ dateCompleted }) => {
@@ -132,14 +129,7 @@ const Tracker = ({ completedHabits, startDate, consecutive, endDate }: Props) =>
 
             //check if multiple misses
             if (missCount) {
-                //missed twice
-                if (missCount < 5) {
-                    preparedData.unshift({
-                        date: cDate,
-                        type: 'miss'
-                    })
-                }
-
+                //check if last item
                 if (i < 1) {
                     if (missSDate) {
                         preparedData.unshift({
@@ -151,6 +141,15 @@ const Tracker = ({ completedHabits, startDate, consecutive, endDate }: Props) =>
                     preparedData.unshift({
                         date: cDate,
                         type: 'action'
+                    })
+                    break;
+                }
+
+                //missed twice
+                if (missCount < 5) {
+                    preparedData.unshift({
+                        date: cDate,
+                        type: 'miss'
                     })
                 }
 
@@ -176,9 +175,20 @@ const Tracker = ({ completedHabits, startDate, consecutive, endDate }: Props) =>
             missCount++
         }
 
+        return preparedData
+    }, [completedHabits])
+
+    useEffect(() => {
+        const badgeData: BadgeProps = getBadgeData();
+        //get the difference between today and the start date
+        const dataEndDate = endDate ? endDate : new Date()
+        const diffInDays = consecutiveTools.getDiffBetweenDates(startDate, dataEndDate)
+
+        const preparedData: DataArray = populateData(diffInDays, dataEndDate, badgeData)
+
         setData(preparedData)
 
-    }, [completedHabits])
+    }, [completedHabits, endDate, startDate, getBadgeData, populateData])
 
     return (
         <View style={styles.container}>
@@ -198,6 +208,7 @@ const Tracker = ({ completedHabits, startDate, consecutive, endDate }: Props) =>
                                 date={item.date}
                                 badge={item.badge}
                                 missCountRows={item.missCountRows}
+                                handleAddCompletedHabit={handleAddCompletedHabit}
                             />
                         </View>
                     )

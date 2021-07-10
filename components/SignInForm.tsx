@@ -134,9 +134,13 @@ export default ({ signUp, signIn, setBanner }: Props) => {
 
                 <View style={[styles.loginContainer, Colors.boxShadow]} >
                     <View style={styles.loginHeaderContainer}>
-                        <StyledTextBold style={styles.loginHeaderText}>Login</StyledTextBold>
-                        <StyledTextMedium style={styles.loginHeaderSubText}>One month free trail</StyledTextMedium>
-                        <StyledTextMedium style={styles.loginHeaderSecSubText}>and then $1.99 / month to continue using our service.</StyledTextMedium>
+                        <StyledTextBold style={styles.loginHeaderText}>{showSignUp ? 'Register' : "Login"}</StyledTextBold>
+                        {
+                            showSignUp && <>
+                                <StyledTextBold style={styles.loginHeaderSubText}>Get a month for free when you register!</StyledTextBold>
+                                <StyledTextMedium style={styles.loginHeaderSecSubText}>One month free trail and then $1.99 / month to continue using our service. An option to subscribe will appear after your free trail.</StyledTextMedium>
+                            </>
+                        }
                     </View>
 
                     <View style={styles.loginInputContainer}>
@@ -248,13 +252,13 @@ const styles = StyleSheet.create({
     },
     loginContainer: {
         flex: .8,
-        backgroundColor: Colors.contentBg,
+        backgroundColor: Colors.white,
         borderRadius: 10,
         padding: 20,
         margin: 20,
     },
     loginHeaderContainer: {
-        flex: .5,
+        flex: .6,
         justifyContent: 'space-evenly'
     },
     loginInputContainer: {
@@ -262,18 +266,18 @@ const styles = StyleSheet.create({
         justifyContent: 'space-evenly'
     },
     loginButtonsContainer: {
-        flex: .5,
         justifyContent: 'center',
         alignItems: 'center'
     },
     loginHeaderText: {
         color: Colors.primary,
         textAlign: 'center',
-        fontSize: normalizeHeight(30)
+        fontSize: normalizeHeight(25)
     },
     loginHeaderSubText: {
         color: Colors.primary,
-        fontSize: normalizeHeight(70),
+        fontSize: normalizeHeight(60),
+        textAlign: 'center'
     },
     loginHeaderSecSubText: {
         color: Colors.primary,

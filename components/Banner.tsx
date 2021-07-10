@@ -59,7 +59,7 @@ export default ({ removeBanner, banner }: Props) => {
 
 
     return (
-        <Animated.View style={[styles.container, { top: topAdmin, backgroundColor: handleBackgroundColor() }]}>
+        <Animated.View style={[styles.container, { bottom: topAdmin, backgroundColor: handleBackgroundColor() }]}>
             <Pressable style={styles.messageContainer} onPress={hide}>
                 <StyledTextMedium style={styles.messageText}>{banner.message}</StyledTextMedium>
             </Pressable>
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
         zIndex: 120
     },
     messageText: {
-        fontSize: normalizeHeight(55),
+        fontSize: normalizeHeight(50),
         color: Colors.white
     }
 })

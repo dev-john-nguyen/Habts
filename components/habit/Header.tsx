@@ -2,16 +2,13 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native'
 import { StyledText, StyledTextBold, StyledTextMedium } from '../StyledText';
 import Colors from '../../constants/Colors';
-import { Entypo } from '@expo/vector-icons';
+import { Entypo, FontAwesome } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { HabitProps, HabitEditProps, CompletedHabitsProps } from '../../services/habits/types';
+import { HabitProps, HabitEditProps } from '../../services/habits/types';
 import { StyledTextInput } from '../StyledTextInput';
 import { formatTime, renderSequenceValue } from '../../utils/tools';
 import { ScrollView } from 'react-native-gesture-handler';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
-import { Picker } from '@react-native-picker/picker';
-import { arrayOfNums } from '../../screens/utils';
-import HabitBadges from '../badges/HabitBadges';
 import Inputs from '../../constants/Inputs';
 import { DateTime } from 'luxon';
 import Notes from './Notes';
@@ -78,15 +75,16 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                 :
                 <View style={edit ? styles.contentEditBg : {}}>
                     <View>
-                        <View style={styles.dataItem}>
-                            {edit ?
+
+                        {edit ?
+                            <View style={styles.dataItem}>
                                 <View style={styles.timeContainer}>
                                     <Pressable style={styles.timeHeaderEdit} onPress={onTurnOnOffNotification}>
-                                        <StyledTextBold style={styles.timeText}>Time</StyledTextBold>
+                                        <StyledTextBold style={styles.timeText}>Reminder</StyledTextBold>
                                         {
                                             habitEdit.notificationOn
-                                                ? <Entypo name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
-                                                : <Entypo name="sound-mute" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
+                                                ? <FontAwesome name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
+                                                : <FontAwesome name="bell-slash" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
                                         }
                                     </Pressable>
                                     <View style={styles.time}>
@@ -111,16 +109,23 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                         />
                                     </View>
                                 </View>
-                                : <>
-                                    <StyledTextMedium style={styles.dataText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)} ({habit.sequence.type}{renderSequenceValue(habit)}) </StyledTextMedium>
+                            </View>
+                            : <>
+                                <View style={styles.dataItem}>
+                                    <StyledTextBold style={styles.dataTimeText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)}</StyledTextBold>
                                     {
                                         habit.notificationOn ?
-                                            <Entypo name="bell" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} /> :
-                                            <Entypo name="sound-mute" size={normalizeHeight(50)} color={Colors.secondary} style={styles.bell} />
+                                            <FontAwesome name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} /> :
+                                            <FontAwesome name="bell-slash" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} />
                                     }
-                                </>
-                            }
-                        </View>
+                                </View>
+                                <View style={styles.dataItem}>
+                                    <StyledTextMedium style={styles.dataSeqText}>{habit.sequence.type}</StyledTextMedium>
+                                    <StyledText style={styles.dataSeqText}>{renderSequenceValue(habit)}</StyledText>
+                                </View>
+                            </>
+                        }
+
 
                         <View style={styles.dataItem}>
                             {
@@ -133,7 +138,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                         multiline={true}
                                         maxLength={Inputs.habitLocationMaxChar}
                                     />
-                                    : <StyledTextMedium style={styles.dataText}>{habit.locationDes}</StyledTextMedium>
+                                    : <StyledText style={styles.dataText}>{habit.locationDes}</StyledText>
                             }
                         </View>
 
@@ -148,7 +153,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                         multiline={true}
                                         maxLength={Inputs.habitCueMaxChar}
                                     />
-                                    : <StyledTextMedium style={styles.dataText}>{habit.cue}</StyledTextMedium>
+                                    : <StyledText style={styles.dataText}>{habit.cue}</StyledText>
                             }
                         </View>
 
@@ -159,7 +164,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
 
                         <View style={styles.dataItem}>
                             <Entypo name="bar-graph" size={normalizeHeight(40)} color={Colors.secondary} style={{ marginRight: 5 }} />
-                            <StyledTextMedium style={styles.dataText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</StyledTextMedium>
+                            <StyledText style={styles.dataText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</StyledText>
                         </View>
 
                         <View style={styles.dataItem}>
@@ -214,9 +219,9 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     timeText: {
-        fontSize: normalizeHeight(45),
+        fontSize: normalizeHeight(40),
         color: Colors.primary,
-        marginRight: 2
+        marginRight: 5
     },
     timeContainer: {
         flex: 1,
@@ -243,7 +248,6 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white
     },
     bell: {
-
     },
     headerText: {
         fontSize: normalizeHeight(20),
@@ -269,6 +273,16 @@ const styles = StyleSheet.create({
     dataText: {
         fontSize: normalizeHeight(55),
         color: Colors.primary,
+    },
+    dataTimeText: {
+        fontSize: normalizeHeight(40),
+        color: Colors.primary,
+        marginRight: 5
+    },
+    dataSeqText: {
+        fontSize: normalizeHeight(50),
+        color: Colors.primary,
+        marginRight: 2
     },
     notifiedText: {
         fontSize: normalizeHeight(55),

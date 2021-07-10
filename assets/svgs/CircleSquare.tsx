@@ -1,24 +1,44 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Animated } from 'react-native';
 
 interface Props {
     circleColor: string;
     squareColor: string;
 }
 
-export default ({ circleColor, squareColor }: Props) => (
-    <View
-        style={[styles.container, {
-            backgroundColor: circleColor,
-        }]}
-    >
-        <View
-            style={[styles.content, {
-                borderColor: squareColor
-            }]}
-        />
-    </View>
-)
+// export default ({ circleColor, squareColor }: Props) => (
+//     <View
+//         style={[styles.container, {
+//             backgroundColor: circleColor,
+//         }]}
+//     >
+//         <View
+//             style={[styles.content, {
+//                 borderColor: squareColor
+//             }]}
+//         />
+//     </View>
+// )
+
+class CircleSquare extends React.Component<Props, {}> {
+    render() {
+        return (
+            <View
+                style={[styles.container, {
+                    backgroundColor: this.props.circleColor,
+                }]}
+            >
+                <View
+                    style={[styles.content, {
+                        borderColor: this.props.squareColor
+                    }]}
+                />
+            </View>
+        )
+    }
+}
+
+export default CircleSquare
 
 const styles = StyleSheet.create({
     container: {

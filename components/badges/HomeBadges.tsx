@@ -41,7 +41,7 @@ const HomeBadges = ({ habits, navigation }: Props) => {
                 <StyledTextBold style={styles.title}>Awards</StyledTextBold>
                 <View style={styles.borderBottom} />
             </View>
-            <ScrollView horizontal={true}>
+            <ScrollView horizontal={true} style={styles.scrollViewContainer}>
                 {
                     mappedBadges.length ? mappedBadges :
                         <View style={styles.infoContainer}>
@@ -61,7 +61,10 @@ const styles = StyleSheet.create({
         padding: 5,
         alignItems: 'center',
         top: normalizeHeight(30),
-        height: '70%'
+        height: '80%'
+    },
+    scrollViewContainer: {
+        width: '100%'
     },
     borderBottom: {
         width: '100%',
