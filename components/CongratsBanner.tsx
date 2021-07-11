@@ -2,9 +2,15 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Animated, StyleSheet, Easing, View, Pressable } from 'react-native';
 import Colors from '../constants/Colors';
 import { FontAwesome } from '@expo/vector-icons';
-import { normalizeHeight } from '../utils/styles';
+import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import { StyledTextBold, StyledText } from './StyledText';
 import Badge from '../assets/svgs/badge';
+import Fireworks from '../assets/svgs/Fireworks';
+import CelebratePeople from '../assets/svgs/CelebratePeople';
+import { StyledTextInput } from './StyledTextInput';
+import { StyledPrimaryButton } from './StyledButton';
+
+const AnimatedFireWorks = Animated.createAnimatedComponent(Fireworks)
 
 interface Props {
     goalIndex: number | undefined;
@@ -20,6 +26,8 @@ export default ({ goalIndex }: Props) => {
         message: 'Hi'
     })
     const [hidden, setHidden] = useState(true);
+    const [btnText, setBtnText] = useState('Got it!')
+    const fireworkColor = useRef(new Animated.Value(0)).current;
 
     const setBadgeData = () => {
         //should be order
@@ -29,7 +37,7 @@ export default ({ goalIndex }: Props) => {
 
         switch (goalIndex) {
             case 1:
-                message = "Congrats on earning the second badge! That's half of the badges so far. Keep going!";
+                message = "You are a lot more capable than you think. That's half of the badges so far. Keep going!";
                 badgeColor = Colors.primary;
                 badgeOutline = false;
                 break;
@@ -39,13 +47,13 @@ export default ({ goalIndex }: Props) => {
                 badgeOutline = true;
                 break;
             case 3:
-                message = 'And just like that. You earned the final badge. You are a rockstar.';
+                message = 'I knew you could do it. You completed all four badges. You are a rockstar.';
                 badgeColor = Colors.yellow;
                 badgeOutline = false;
                 break;
             case 0:
             default:
-                message = "Congratulations on earning the first badge! Hardest badge to earn. Dont stop!";
+                message = "Your first badge! Hardest badge to earn. Many more to go. Dont stop!";
                 badgeColor = Colors.primary;
                 badgeOutline = true;
         }
@@ -59,12 +67,14 @@ export default ({ goalIndex }: Props) => {
     }
 
     useEffect(() => {
-        if (goalIndex !== undefined) {
-            setBadgeData()
-            onOpen()
-        } else {
-            onClose()
-        }
+        setBadgeData();
+        onOpen();
+        // if (goalIndex !== undefined) {
+        //     setBadgeData()
+        //     onOpen()
+        // } else {
+        //     onClose()
+        // }
     }, [goalIndex])
 
     const onOpen = () => {
@@ -87,8 +97,14 @@ export default ({ goalIndex }: Props) => {
                 duration: 1000,
                 easing: Easing.inOut(Easing.exp),
                 toValue: 1
-            })
+            }),
         ]).start()
+        Animated.loop(Animated.timing(fireworkColor, {
+            useNativeDriver: false,
+            duration: 1000,
+            easing: Easing.inOut(Easing.exp),
+            toValue: 1
+        })).start()
     }
 
     const onClose = () => {
@@ -113,7 +129,15 @@ export default ({ goalIndex }: Props) => {
             })
         ]).start(() => {
             setHidden(true)
+            setBtnText('Got it!')
         })
+        fireworkColor.stopAnimation()
+    }
+
+    const onBtnPressOut = () => {
+        setTimeout(() => {
+            onClose()
+        }, 500)
     }
 
     if (hidden) {
@@ -130,17 +154,37 @@ export default ({ goalIndex }: Props) => {
                     })
             }]
         }]}>
-            <Pressable onPress={onClose} style={{ alignSelf: 'flex-end' }} hitSlop={5}>
-                <FontAwesome name='close' color={Colors.primary} size={normalizeHeight(50)} />
-            </Pressable>
-            <View style={{ flex: 1, marginBottom: 10 }}>
-                <StyledTextBold style={styles.headerText}>Badge</StyledTextBold>
+            <View style={{ flex: 1, marginBottom: 20 }}>
+                <StyledTextBold style={styles.headerText}>Congratulations</StyledTextBold>
             </View>
-            <View style={{ flex: 1, height: normalizeHeight(6), marginBottom: 10 }}>
+            <View style={{ flex: 1, height: normalizeHeight(6), marginBottom: 20 }}>
                 <Badge outlineBadge={badge.outline} fill={badge.color} />
             </View>
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 1, marginBottom: 20 }}>
                 <StyledText style={styles.text}>{badge.message}</StyledText>
+            </View>
+
+            <StyledPrimaryButton
+                text={btnText}
+                onPressIn={() => setBtnText("I'm a rockstar")}
+                onPressOut={onBtnPressOut}
+
+            />
+
+            <View style={[styles.fireworks, { right: '5%', zIndex: 1000 }]}>
+                <AnimatedFireWorks color={fireworkColor.interpolate({
+                    inputRange: [0, .5, 1],
+                    outputRange: [Colors.red, Colors.green, Colors.orange]
+                })} />
+            </View>
+            <View style={[styles.fireworks, { left: '5%', top: '10%', zIndex: -1 }]}>
+                <AnimatedFireWorks color={fireworkColor.interpolate({
+                    inputRange: [0, .5, 1],
+                    outputRange: [Colors.green, Colors.orange, Colors.red]
+                })} />
+            </View>
+            <View style={[styles.fireworks, { left: '5%', bottom: '40%' }]}>
+                <CelebratePeople />
             </View>
         </Animated.View>
     )
@@ -150,22 +194,28 @@ const styles = StyleSheet.create({
     container: {
         zIndex: 10000,
         position: 'absolute',
-        top: normalizeHeight(15),
+        top: normalizeHeight(6),
         alignSelf: 'center',
         justifyContent: 'center',
         borderRadius: 10,
-        padding: 20,
+        padding: 30,
         width: '90%',
         backgroundColor: Colors.white
     },
+    fireworks: {
+        position: 'absolute',
+        width: '30%',
+        height: '30%',
+        zIndex: -10
+    },
     headerText: {
-        fontSize: normalizeHeight(20),
+        fontSize: normalizeWidth(14),
         color: Colors.primary,
         width: '100%',
         textAlign: 'center'
     },
     text: {
-        fontSize: normalizeHeight(50),
+        fontSize: normalizeWidth(25),
         color: Colors.primary,
     }
 })
