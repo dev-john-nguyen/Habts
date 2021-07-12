@@ -83,8 +83,8 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                         <StyledTextBold style={styles.timeText}>Reminder</StyledTextBold>
                                         {
                                             habitEdit.notificationOn
-                                                ? <FontAwesome name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
-                                                : <FontAwesome name="bell-slash" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
+                                                ? <FontAwesome name="bell" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
+                                                : <FontAwesome name="bell-slash" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
                                         }
                                     </Pressable>
                                     <View style={styles.time}>
@@ -115,8 +115,8 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                     <StyledTextBold style={styles.dataTimeText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)}</StyledTextBold>
                                     {
                                         habit.notificationOn ?
-                                            <FontAwesome name="bell" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} /> :
-                                            <FontAwesome name="bell-slash" size={normalizeHeight(40)} color={Colors.secondary} style={styles.bell} />
+                                            <FontAwesome name="bell" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} /> :
+                                            <FontAwesome name="bell-slash" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} />
                                     }
                                 </View>
                                 <View style={styles.dataItem}>

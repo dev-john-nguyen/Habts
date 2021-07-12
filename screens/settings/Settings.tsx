@@ -60,6 +60,16 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
                     <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
                 </Pressable>
 
+                <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('HabitHistory')}>
+                    <View style={styles.item}>
+                        <View style={{ height: normalizeHeight(40), width: normalizeHeight(40) }}>
+                            <History color={Colors.white} />
+                        </View>
+                        <StyledTextBold style={styles.itemText}>History</StyledTextBold>
+                    </View>
+                    <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
+                </Pressable>
+
                 <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('Subscription')}>
                     <View style={styles.item}>
                         <Entypo name="wallet" size={normalizeHeight(40)} color={Colors.white} />
@@ -72,16 +82,6 @@ export default ({ navigation }: { navigation: SettingsNavProps }) => {
                     <View style={styles.item}>
                         <Entypo name="phone" size={normalizeHeight(40)} color={Colors.white} />
                         <StyledTextBold style={styles.itemText}>Contact</StyledTextBold>
-                    </View>
-                    <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
-                </Pressable>
-
-                <Pressable style={styles.itemContainer} onPress={() => navigation.navigate('HabitHistory')}>
-                    <View style={styles.item}>
-                        <View style={{ height: normalizeHeight(40), width: normalizeHeight(40) }}>
-                            <History color={Colors.white} />
-                        </View>
-                        <StyledTextBold style={styles.itemText}>History</StyledTextBold>
                     </View>
                     <Entypo name="chevron-right" size={normalizeHeight(40)} color={Colors.white} style={styles.chevron} />
                 </Pressable>

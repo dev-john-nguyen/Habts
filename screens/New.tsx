@@ -344,7 +344,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
 
                         <StyledTextInput
                             value={notes}
-                            style={styles.responseInput}
+                            style={[styles.responseInput, { maxHeight: normalizeHeight(5) }]}
                             placeholder="Ex. Meditating daily will help decrease my stress and improve my focus."
                             placeholderTextColor={Colors.grey}
                             autoCorrect={true}

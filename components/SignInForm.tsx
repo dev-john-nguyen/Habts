@@ -9,10 +9,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { isEqual } from 'lodash';
 import { validateEmail } from './utils';
 import { BannerActionsProps } from '../services/banner/types';
-import { StyledTextBold, StyledText, StyledTextMedium } from './StyledText';
+import { StyledTextBold, StyledTextMedium } from './StyledText';
 import BottomSvg from '../assets/svgs/bottom';
 import HeaderBgImg from '../assets/svgs/home/HeaderBgImg';
-import HeaderImg from '../assets/svgs/home/HeaderImg';
+// import HeaderImg from '../assets/svgs/home/HeaderImg';
 import { FontAwesome } from '@expo/vector-icons';
 import Oval from '../assets/svgs/home/Oval';
 
@@ -112,27 +112,22 @@ export default ({ signUp, signIn, setBanner }: Props) => {
             <View style={styles.headerBgContainer}>
                 <HeaderBgImg />
             </View>
-            <Animated.View style={[styles.container, { bottom: keyboardRef }]}>
+            <View style={styles.container}>
 
                 <View style={styles.headerContainer}>
                     <View style={{
                         flex: 1,
                         justifyContent: 'space-evenly'
                     }}>
-                        <View>
-                            <StyledTextBold style={styles.headerText}>Habts</StyledTextBold>
-                            <StyledTextMedium style={styles.headerSubText}>We are what we repeatedly do.</StyledTextMedium>
-                        </View>
-                        <View style={styles.ovalContainer}>
-                            <Oval fillColor={Colors.secondary} />
-                        </View>
-                    </View>
-                    <View style={{ flex: 1 }}>
-                        <HeaderImg />
+                        <StyledTextBold style={styles.headerText}>Habts</StyledTextBold>
+                        <StyledTextMedium style={styles.headerSubText}>We are what we repeatedly do.</StyledTextMedium>
                     </View>
                 </View>
 
-                <View style={[styles.loginContainer, Colors.boxShadow]} >
+                <Animated.View style={[styles.loginContainer, Colors.boxShadow, {
+                    flex: showSignUp ? 1 : .7,
+                    bottom: keyboardRef
+                }]} >
                     <View style={styles.loginHeaderContainer}>
                         <StyledTextBold style={styles.loginHeaderText}>{showSignUp ? 'Register' : "Login"}</StyledTextBold>
                         {
@@ -206,7 +201,7 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                             onPress={handleOnSubmit}
                         />
                     </View>
-                </View>
+                </Animated.View>
 
                 <View style={styles.bottomSectionContainer}>
                     <StyledTextMedium style={styles.bottomSectionText}>{showSignUp ? "Have an account?" : "Don't have an account?"}</StyledTextMedium>
@@ -216,7 +211,7 @@ export default ({ signUp, signIn, setBanner }: Props) => {
                         style={styles.buttons}
                     />
                 </View>
-            </Animated.View>
+            </View>
             <View style={styles.bottomSvg}>
                 <BottomSvg />
             </View>
@@ -235,23 +230,24 @@ const styles = StyleSheet.create({
     },
     ovalContainer: {
         height: normalizeHeight(50),
-        width: '100%',
+        width: '60%',
+        marginTop: 10
     },
     headerContainer: {
         flexDirection: 'row',
         flex: .5,
-        marginBottom: 20
+        marginBottom: 20,
+        alignItems: 'flex-start'
     },
     headerSubText: {
-        fontSize: normalizeHeight(60),
+        fontSize: normalizeHeight(50),
         color: Colors.white
     },
     headerText: {
-        fontSize: normalizeHeight(15),
+        fontSize: normalizeHeight(12),
         color: Colors.white
     },
     loginContainer: {
-        flex: .8,
         backgroundColor: Colors.white,
         borderRadius: 10,
         padding: 20,
@@ -284,7 +280,7 @@ const styles = StyleSheet.create({
         fontSize: normalizeHeight(100)
     },
     bottomSectionContainer: {
-        flex: .5, alignItems: 'center', justifyContent: 'center'
+        flex: .4, alignItems: 'center', justifyContent: 'center'
     },
     bottomSectionText: {
         fontSize: normalizeHeight(60),

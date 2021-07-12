@@ -95,16 +95,10 @@ export default ({ subscriptionPurchased }: { subscriptionPurchased: UserActionsP
                         flex: 1,
                         justifyContent: 'space-evenly'
                     }}>
-                        <View>
-                            <StyledTextBold style={styles.headerText}>Habts</StyledTextBold>
-                            <StyledTextMedium style={styles.headerSubText}>Lets continue to pursue your unknown potential.</StyledTextMedium>
-                        </View>
-                        <View style={styles.ovalContainer}>
-                            <Oval fillColor={Colors.secondary} />
-                        </View>
+                        <StyledTextBold style={styles.headerText}>Habts</StyledTextBold>
+                        <StyledTextMedium style={styles.headerSubText}>Lets continue to pursue your unknown potential.</StyledTextMedium>
                     </View>
                     <View style={{ flex: 1 }}>
-                        <HeaderImg />
                     </View>
                 </View>
 
@@ -141,20 +135,18 @@ const styles = StyleSheet.create({
         flex: 1
     },
     headerContainer: {
-        flexDirection: 'row',
         flex: .5,
-        marginBottom: 20
     },
     ovalContainer: {
         width: '90%',
         height: normalizeHeight(50)
     },
     headerSubText: {
-        fontSize: normalizeHeight(60),
+        fontSize: normalizeHeight(50),
         color: Colors.white
     },
     headerText: {
-        fontSize: normalizeHeight(15),
+        fontSize: normalizeHeight(12),
         color: Colors.white
     },
     content: {
