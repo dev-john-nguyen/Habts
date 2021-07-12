@@ -86,13 +86,11 @@ const PreviewActionItem = ({ handleAddCompletedHabit, isWarning }: Props) => {
         ]).start()
     }
 
-    const onPressed = () => setIsPressed(true)
-
-    const onOfPressed = () => setIsPressed(false)
+    const onPressed = () => setIsPressed(isPressed ? false : true)
 
     if (isWarning) {
         return (
-            <Pressable onPressIn={onPressed} onPressOut={onOfPressed} style={{ flex: 1 }}>
+            <Pressable onPressIn={onPressed} style={{ flex: 1 }}>
                 <Animated.View style={[{
                     transform: [{ translateX: posX }, { translateY: posY }
                     ],
@@ -114,7 +112,7 @@ const PreviewActionItem = ({ handleAddCompletedHabit, isWarning }: Props) => {
     }
 
     return (
-        <Pressable onPressIn={onPressed} onPressOut={onOfPressed} style={{ flex: 1 }}>
+        <Pressable onPressIn={onPressed} style={{ flex: 1 }}>
             <Animated.View style={[{
                 transform: [{ translateX: posX }, { translateY: posY }
                 ],

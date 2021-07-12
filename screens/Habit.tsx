@@ -22,6 +22,7 @@ import Tracker from '../components/habit/tracker';
 import { StyledTextBold, StyledText } from '../components/StyledText';
 import HabitBadges from '../components/badges/HabitBadges';
 import { consecutiveTools } from '../services/habits/utils/consecutive';
+import { getDate } from '../utils/tools';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
 type HabitComRouteProps = RouteProp<RootStackParamList, 'Habit'>
@@ -212,9 +213,9 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                     handleAddCompletedHabit={handleAddCompletedHabit}
                     consecutive={habit.consecutive}
                 />
-                <View style={styles.totalContainer}>
-                    <StyledText style={styles.totalText}>Total: </StyledText>
-                    <StyledTextBold style={styles.totalText}>{habit.completedHabits.length}</StyledTextBold>
+                <View style={styles.dateContainer}>
+                    <StyledTextBold style={styles.dateText}>Created on: </StyledTextBold>
+                    <StyledText style={styles.dateText}>{getDate(habit.createdAt)}</StyledText>
                 </View>
             </View>
         </SafeAreaView>
@@ -232,11 +233,11 @@ const styles = StyleSheet.create({
         padding: normalizeWidth(15),
         paddingTop: normalizeHeight(25),
     },
-    totalContainer: {
+    dateContainer: {
         flexDirection: 'row',
         marginTop: 5
     },
-    totalText: {
+    dateText: {
         fontSize: normalizeWidth(30),
         color: Colors.primary
     }

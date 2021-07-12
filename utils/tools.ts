@@ -238,7 +238,7 @@ export function calcDaysInARow(ch: HabitProps['completedHabits']) {
         if (consecutiveTools.datesAreOnSameDay(dPrev, nD)) {
             count++
         } else {
-            count = 0;
+            break;
         }
     }
 

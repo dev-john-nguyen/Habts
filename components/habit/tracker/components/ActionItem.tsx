@@ -85,14 +85,14 @@ const ActionItem = ({ dateString, handleAddCompletedHabit }: Props) => {
         ]).start()
     }
 
-    const onPressed = () => setIsPressed(true)
-
-    const onOfPressed = () => setIsPressed(false)
+    const onPressed = () => setIsPressed(isPressed ? false : true)
 
     return (
-        <Pressable onPressIn={onPressed} onPressOut={onOfPressed}>
+        <Pressable onPressIn={onPressed}>
             <Animated.View style={[styles.container, {
-                transform: [{ translateX: posX }, { translateY: posY }
+                transform: [
+                    { translateX: posX },
+                    { translateY: posY }
                 ]
             }]}>
                 <View style={{ flexDirection: 'row' }}>

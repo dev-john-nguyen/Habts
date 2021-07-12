@@ -10,6 +10,7 @@ import HabitHeader from '../components/habit/Header';
 import { emptyHabitEdit } from './utils';
 import Tracker from '../components/habit/tracker';
 import HabitBadges from '../components/badges/HabitBadges';
+import { getDate } from '../utils/tools';
 
 
 
@@ -60,11 +61,16 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                                 handleAddCompletedHabit={() => undefined}
                                 consecutive={targetHabit.consecutive}
                             />
-                            <View style={styles.totalContainer}>
-                                <StyledText>Total: </StyledText>
-                                <StyledTextBold>{targetHabit.completedHabits.length}</StyledTextBold>
+                            <View style={styles.dateContainer}>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <StyledTextBold style={styles.dateText}>Created on: </StyledTextBold>
+                                    <StyledText style={styles.dateText}>{getDate(targetHabit.createdAt)}</StyledText>
+                                </View>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <StyledTextBold style={styles.dateText}>Archived on: </StyledTextBold>
+                                    <StyledText style={styles.dateText}>{targetHabit.archivedAt ? getDate(targetHabit.archivedAt) : ''}</StyledText>
+                                </View>
                             </View>
-
                         </>
                     }
                 </View>
@@ -110,9 +116,12 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         backgroundColor: Colors.contentBg,
     },
-    totalContainer: {
-        flexDirection: 'row',
+    dateContainer: {
         marginTop: 5
+    },
+    dateText: {
+        fontSize: normalizeWidth(30),
+        color: Colors.primary
     }
 })
 
