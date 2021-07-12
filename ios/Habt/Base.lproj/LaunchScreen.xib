@@ -13,24 +13,18 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" fixedFrame="YES" image="SplashScreenBackground" translatesAutoresizingMaskIntoConstraints="NO" id="s7c-xv-XhH">
-                    <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                    <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
-                </imageView>
-                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="transparentIcon" translatesAutoresizingMaskIntoConstraints="NO" id="Qvq-RR-ukk">
-                    <rect key="frame" x="153" y="75" width="170" height="170"/>
-                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" fixedFrame="YES" image="transparentIcon" translatesAutoresizingMaskIntoConstraints="NO" id="m7K-TM-C6G">
+                    <rect key="frame" x="144" y="110" width="154" height="146"/>
+                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.019607843137254902" green="0.24705882352941178" blue="0.36862745098039218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <point key="canvasLocation" x="547.82608695652175" y="454.6875"/>
         </view>
     </objects>
     <resources>
-        <image name="SplashScreenBackground" width="768.5" height="1389"/>
-        <image name="transparentIcon" width="512" height="512"/>
+        <image name="transparentIcon" width="518.5" height="492.5"/>
     </resources>
 </document>

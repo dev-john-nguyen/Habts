@@ -121,7 +121,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                 return;
             }
         }
-        setExpired(true)
+        setExpired(false)
     }, [user.expiredAt])
 
     const handleAppStateChange = (nextAppState: AppStateStatus) => {
