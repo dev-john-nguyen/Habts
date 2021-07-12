@@ -24,6 +24,7 @@ import { addCompletedHabit } from '../services/habits/actions';
 import Oval from '../assets/svgs/home/Oval';
 import CongratsBanner from '../components/CongratsBanner';
 import { cloneDeep } from 'lodash';
+import HomeEmptyList from '../components/HomeEmptyList';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
 
@@ -236,8 +237,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                         </View>
                     )}
                     ListHeaderComponentStyle={styles.listHeader}
-                    // ListEmptyComponent={() => (
-                    // )}
+                    ListEmptyComponent={<HomeEmptyList navToNew={navToNew} />}
                     renderItem={({ item, index }) => (
                         <HabitPreview
                             onPress={() => navToHabit(item)}

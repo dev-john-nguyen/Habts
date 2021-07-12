@@ -4,7 +4,7 @@ import { Entypo, FontAwesome } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import { StyledText, StyledTextBold } from '../StyledText';
 import { HabitProps, HabitsActionsProps } from '../../services/habits/types';
-import { formatTime } from '../../utils/tools';
+import { formatTime, calcDaysInARow } from '../../utils/tools';
 import { normalizeWidth } from '../../utils/styles';
 import CircleChecked from '../../assets/svgs/CircleCheck';
 import CircleSquare from '../../assets/svgs/CircleSquare';
@@ -144,7 +144,7 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
                 <View style={{ marginTop: 5 }}>
                     <View style={styles.contentItem}>
                         <Entypo name="bar-graph" size={normalizeWidth(30)} color={iconColor} style={{ marginRight: 5 }} />
-                        <StyledText style={styles.contentItemText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</StyledText>
+                        <StyledText style={styles.contentItemText}>{calcDaysInARow(habit.completedHabits)} day(s) in a row</StyledText>
                     </View>
 
                     <View style={styles.contentItem}>

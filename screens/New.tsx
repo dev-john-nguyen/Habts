@@ -427,7 +427,7 @@ const styles = StyleSheet.create({
     content: {
         backgroundColor: Colors.contentBg,
         padding: normalizeWidth(15),
-        borderRadius: 20,
+        borderRadius: 10,
         justifyContent: 'space-between'
     },
     bottomSvg: {

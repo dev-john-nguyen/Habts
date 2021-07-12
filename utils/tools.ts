@@ -1,5 +1,6 @@
 import { HabitProps, TimeDataProps, Time, SequenceType } from "../services/habits/types";
 import { DateTime } from "luxon";
+import { consecutiveTools } from "../services/habits/utils/consecutive";
 
 const months = ["January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
@@ -222,4 +223,24 @@ export function renderSequenceValue(habit: HabitProps) {
 
 export function randomIntFromInterval(min: number, max: number) {
     return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export function calcDaysInARow(ch: HabitProps['completedHabits']) {
+    if (ch.length < 1) return 0;
+
+    let count = 1;
+
+    for (let i = 0; i < ch.length - 1; i++) {
+        const d = ch[i].dateCompleted;
+        const nD = ch[i + 1].dateCompleted;
+        const dPrev = consecutiveTools.getNextDays(d, -1);
+
+        if (consecutiveTools.datesAreOnSameDay(dPrev, nD)) {
+            count++
+        } else {
+            count = 0;
+        }
+    }
+
+    return count
 }

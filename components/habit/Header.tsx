@@ -6,7 +6,7 @@ import { Entypo, FontAwesome } from '@expo/vector-icons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { HabitProps, HabitEditProps } from '../../services/habits/types';
 import { StyledTextInput } from '../StyledTextInput';
-import { formatTime, renderSequenceValue } from '../../utils/tools';
+import { formatTime, renderSequenceValue, calcDaysInARow } from '../../utils/tools';
 import { ScrollView } from 'react-native-gesture-handler';
 import { normalizeHeight, normalizeWidth } from '../../utils/styles';
 import Inputs from '../../constants/Inputs';
@@ -164,7 +164,7 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
 
                         <View style={styles.dataItem}>
                             <Entypo name="bar-graph" size={normalizeHeight(40)} color={Colors.secondary} style={{ marginRight: 5 }} />
-                            <StyledText style={styles.dataText}>{consecutiveTools.getCurrentConsecutiveTotal(habit.consecutive)} day(s) in a row</StyledText>
+                            <StyledText style={styles.dataText}>{calcDaysInARow(habit.completedHabits)} day(s) in a row</StyledText>
                         </View>
 
                         <View style={styles.dataItem}>
