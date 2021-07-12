@@ -197,7 +197,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <CongratsBanner goalIndex={congratsIndex} />
+                <CongratsBanner goalIndex={congratsIndex} headerText={'Congratulations'} />
                 <HabitHeader
                     habit={habit}
                     edit={edit}

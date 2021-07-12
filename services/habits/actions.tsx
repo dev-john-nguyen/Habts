@@ -6,7 +6,7 @@ import Database from "../../constants/Database";
 import { ReducerStateProps } from "..";
 import { ADD_HABIT, ADD_COMPLETED_HABIT, UPDATE_HABIT, ARCHIVE_HABIT } from "./actionTypes";
 import { processArchiveHabit, saveNotificationData, orderAndFormatHabits, handleCompletedHabit, removeNotification } from "./utils";
-import { isInvalidTime, convertTimeToInt, formatTimeForNotification } from "../../utils/tools";
+import { isInvalidTime, convertTimeToInt } from "../../utils/tools";
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { AutoId } from "../../utils/styles";
 import { dailyGoals, otherGoals } from "./utils/variables";

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StyleSheet, FlatList, AppState, AppStateStatus, Pressable } from 'react-native';
+import { View, StyleSheet, FlatList, AppState, AppStateStatus } from 'react-native';
 import { StyledText, StyledTextBold } from '../components/StyledText'
 import Colors from '../constants/Colors';
 import { Entypo } from '@expo/vector-icons';
@@ -22,6 +22,8 @@ import HomeBadges from '../components/badges/HomeBadges';
 import { subscriptionPurchased } from '../services/user/actions';
 import { addCompletedHabit } from '../services/habits/actions';
 import Oval from '../assets/svgs/home/Oval';
+import CongratsBanner from '../components/CongratsBanner';
+import { cloneDeep } from 'lodash';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
 
@@ -43,7 +45,11 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
     const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([]);
     const [activeDate, setActiveDate] = useState<Date>(new Date());
     const listRef: any = useRef();
-    const [expired, setExpired] = useState(false)
+    const [expired, setExpired] = useState(false);
+    const [congratsData, setCongratsData] = useState<{ headerText: string, goalIndex: undefined | number }>({
+        headerText: '',
+        goalIndex: undefined
+    })
 
 
     useEffect(() => {
@@ -72,7 +78,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
             handleActiveHabit(filterTodayHabits)
 
             if (filterTodayHabits) {
-                setTodayHabits(filterTodayHabits)
+                setTodayHabits(cloneDeep(filterTodayHabits))
             } else {
                 setTodayHabits([])
             }
@@ -170,6 +176,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
         return activeDate.getDate() === todaysDate.getDate() && activeDate.getMonth() === todaysDate.getMonth() && activeDate.getFullYear() === todaysDate.getFullYear()
     }
 
+
     if (expired) return (
         <SafeAreaView style={{ flex: 1 }}>
             <Pay
@@ -186,6 +193,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
 
     return (
         <SafeAreaView style={styles.container}>
+            <CongratsBanner headerText={congratsData.headerText} goalIndex={congratsData.goalIndex} />
             <View style={styles.headerContainer}>
                 <View style={styles.headerLeftContainer}>
                     <View style={styles.dateContainer}>
@@ -217,7 +225,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                 <FlatList
                     style={{ height: '100%' }}
                     data={todayHabits}
-                    extraData={activeDate}
+                    extraData={[todayHabits, activeDate]}
                     contentContainerStyle={styles.contentContainerStyle}
                     ref={ref => listRef.current = ref}
                     ListHeaderComponent={() => (
@@ -237,6 +245,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                             active={index === activeTime}
                             addCompletedHabit={addCompletedHabit}
                             activeDate={activeDate}
+                            setCongratsData={setCongratsData}
                         />
                     )}
                     keyExtractor={(item, index) => item.docId ? item.docId + index.toString() : index.toString()}

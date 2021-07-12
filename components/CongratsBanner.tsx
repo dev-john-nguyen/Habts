@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Animated, StyleSheet, Easing, View, Pressable } from 'react-native';
+import { Animated, StyleSheet, Easing, View } from 'react-native';
 import Colors from '../constants/Colors';
-import { FontAwesome } from '@expo/vector-icons';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import { StyledTextBold, StyledText } from './StyledText';
 import Badge from '../assets/svgs/badge';
@@ -14,9 +13,11 @@ const AnimatedFireWorks = Animated.createAnimatedComponent(Fireworks)
 
 interface Props {
     goalIndex: number | undefined;
+    headerText: string;
+    home?: boolean;
 }
 
-export default ({ goalIndex }: Props) => {
+export default ({ goalIndex, headerText, home }: Props) => {
     const sizeAdmin = useRef(new Animated.Value(0)).current;
     const opacityAdmin = useRef(new Animated.Value(0)).current;
     const rotateAdmin = useRef(new Animated.Value(0)).current;
@@ -67,14 +68,12 @@ export default ({ goalIndex }: Props) => {
     }
 
     useEffect(() => {
-        setBadgeData();
-        onOpen();
-        // if (goalIndex !== undefined) {
-        //     setBadgeData()
-        //     onOpen()
-        // } else {
-        //     onClose()
-        // }
+        if (goalIndex !== undefined) {
+            setBadgeData()
+            onOpen()
+        } else {
+            onClose()
+        }
     }, [goalIndex])
 
     const onOpen = () => {
@@ -152,10 +151,11 @@ export default ({ goalIndex }: Props) => {
                         inputRange: [0, 1, 2],
                         outputRange: ['0deg', '360deg', '0deg']
                     })
-            }]
+            }],
+            top: home ? 100 : normalizeHeight(6)
         }]}>
             <View style={{ flex: 1, marginBottom: 20 }}>
-                <StyledTextBold style={styles.headerText}>Congratulations</StyledTextBold>
+                <StyledTextBold style={styles.headerText}>{headerText}</StyledTextBold>
             </View>
             <View style={{ flex: 1, height: normalizeHeight(6), marginBottom: 20 }}>
                 <Badge outlineBadge={badge.outline} fill={badge.color} />
@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
     container: {
         zIndex: 10000,
         position: 'absolute',
-        top: normalizeHeight(6),
         alignSelf: 'center',
         justifyContent: 'center',
         borderRadius: 10,

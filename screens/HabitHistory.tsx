@@ -25,6 +25,11 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                         style={styles.filterList}
                         contentContainerStyle={styles.filterListItems}
                         data={archivedHabits}
+                        ListEmptyComponent={(
+                            <View style={[styles.filterItem, { backgroundColor: Colors.primary }]}>
+                                <StyledText style={[styles.filterItemText, { color: Colors.white }]}>Empty</StyledText>
+                            </View>
+                        )}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => {
                             let isSelected = item.docId === targetHabit.docId ? true : false
@@ -51,7 +56,6 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                             <Tracker
                                 completedHabits={targetHabit.completedHabits}
                                 startDate={targetHabit.createdAt}
-                                activeDay={0}
                                 endDate={targetHabit.archivedAt}
                                 handleAddCompletedHabit={() => undefined}
                                 consecutive={targetHabit.consecutive}
@@ -73,7 +77,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: normalizeWidth(15),
-        paddingTop: normalizeHeight(25),
+        paddingTop: normalizeHeight(25)
     },
     habitContainer: {
         flex: 1,

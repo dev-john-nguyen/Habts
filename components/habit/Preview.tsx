@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, Pressable } from 'react-native';
 import { Entypo, FontAwesome } from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
@@ -10,6 +10,7 @@ import CircleChecked from '../../assets/svgs/CircleCheck';
 import CircleSquare from '../../assets/svgs/CircleSquare';
 import { consecutiveTools } from '../../services/habits/utils/consecutive';
 import PreviewActionItem from './components/PreviewActionItem';
+import { isEqual, cloneDeep } from 'lodash';
 
 interface HabitPreviewProps {
     onPress: () => void;
@@ -17,12 +18,45 @@ interface HabitPreviewProps {
     active: boolean;
     addCompletedHabit: HabitsActionsProps['addCompletedHabit'];
     activeDate: Date;
+    setCongratsData: React.Dispatch<React.SetStateAction<{
+        headerText: string;
+        goalIndex: number | undefined;
+    }>>
 }
 
-export default ({ onPress, habit, active, addCompletedHabit, activeDate }: HabitPreviewProps) => {
+export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCongratsData }: HabitPreviewProps) => {
     const [loading, setLoading] = useState(false);
     const [styles] = useState(genStyles(active));
     const [iconColor] = useState(active ? Colors.white : Colors.grey);
+    const prevConsec = useRef<HabitProps['consecutive']>();
+
+    const handleShowBadgeBanner = (newConsec: HabitProps['consecutive']) => {
+        if (isEqual(prevConsec.current, newConsec) || !prevConsec.current) return;
+        const keys = Object.keys(newConsec);
+
+        for (let i = 0; i < keys.length; i++) {
+            const newGoal = newConsec[keys[i]];
+            const oldGoal = prevConsec.current[keys[i]];
+
+            if (newGoal.count.length != oldGoal.count.length) {
+                if (newGoal.count.length == newGoal.goal) {
+                    //accomplished star
+                    // setCongratsIndex(i)
+                    setCongratsData({
+                        headerText: habit.name,
+                        goalIndex: i
+                    })
+                    return;
+                }
+            }
+        }
+    }
+
+    useEffect(() => {
+        handleShowBadgeBanner(habit.consecutive)
+        prevConsec.current = cloneDeep(habit.consecutive);
+    }, [habit.consecutive])
+
 
     const onCompletedActionPress = async () => {
         if (loading) return;
@@ -33,7 +67,6 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate }: Habit
 
         setLoading(false)
     }
-
 
     const renderActionIcons = () => {
         let todayDate = new Date();
