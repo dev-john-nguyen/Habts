@@ -3,7 +3,6 @@ import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../services';
 import Navigation from '../navigation';
-// import useColorScheme from '../hooks/useColorScheme';
 import Colors from '../constants/Colors';
 import { UserProps, UserActionsProps } from '../services/user/types';
 import { removeBanner, setBanner } from '../services/banner/actions';
@@ -13,12 +12,10 @@ import { signUp, saveNotificationToken, signIn, subscriptionPurchased, updateReq
 import SignInForm from '../components/SignInForm';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
-import { LinearGradient } from 'expo-linear-gradient';
-import Stars from '../components/Stars';
-import Layout from '../constants/Layout';
 import * as InAppPurchases from 'expo-in-app-purchases';
 import * as StoreReview from 'expo-store-review';
 import { DateTime } from 'luxon';
+import CongratsBanner from '../components/CongratsBanner';
 
 interface MainProps {
     user: UserProps;
@@ -160,6 +157,7 @@ const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationT
         <View style={styles.container}>
             {renderContent()}
             <Banner removeBanner={removeBanner} banner={banner} />
+            <CongratsBanner headerText={banner.congratsBanner.headerText} goalIndex={banner.congratsBanner.goalIndex} />
         </View>
     )
 }

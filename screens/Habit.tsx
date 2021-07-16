@@ -2,20 +2,18 @@ import React, { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native'
 import Colors from '../constants/Colors';
 import { Entypo } from '@expo/vector-icons';
-import Layout from '../constants/Layout';
 import { BottomTabParamList, RootStackParamList } from '../navigation/types';
 import { StackNavigationProp } from '@react-navigation/stack';
 import HabitHeader from '../components/habit/Header';
 import { RouteProp } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import { ReducerStateProps } from '../services';
-import { HabitProps, HabitsActionsProps, HabitEditProps, CompletedHabitsProps } from '../services/habits/types';
+import { HabitProps, HabitsActionsProps, HabitEditProps } from '../services/habits/types';
 import { setBanner } from '../services/banner/actions';
 import { BannerActionsProps } from '../services/banner/types';
 import { addCompletedHabit, updateHabit, archiveHabit } from '../services/habits/actions';
 import Modal from '../components/habit/ArchiveModal';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
-import CongratsBanner from '../components/CongratsBanner';
 import { cloneDeep, isEqual } from 'lodash';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Tracker from '../components/habit/tracker';
@@ -23,6 +21,7 @@ import { StyledTextBold, StyledText } from '../components/StyledText';
 import HabitBadges from '../components/badges/HabitBadges';
 import { consecutiveTools } from '../services/habits/utils/consecutive';
 import { getDate } from '../utils/tools';
+import { setCongratsBanner } from '../services/banner/actions';
 
 type HabitComNavProps = StackNavigationProp<BottomTabParamList, 'Home'>
 type HabitComRouteProps = RouteProp<RootStackParamList, 'Habit'>
@@ -35,15 +34,15 @@ interface HabitComProps {
     addCompletedHabit: HabitsActionsProps['addCompletedHabit'];
     updateHabit: HabitsActionsProps['updateHabit'];
     archiveHabit: HabitsActionsProps['archiveHabit'];
+    setCongratsBanner: BannerActionsProps['setCongratsBanner'];
 }
 
-const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, updateHabit, archiveHabit }: HabitComProps) => {
+const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, updateHabit, archiveHabit, setCongratsBanner }: HabitComProps) => {
     const [habit, setHabit] = useState<HabitProps>();
     const [habitEdit, setHabitEdit] = useState<HabitEditProps>();
     const [edit, setEdit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [congratsIndex, setCongratsIndex] = useState<number>();
     const mount = useRef(false);
 
     useLayoutEffect(() => {
@@ -165,7 +164,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
             if (newGoal.count.length != oldGoal.count.length) {
                 if (newGoal.count.length == newGoal.goal) {
                     //accomplished star
-                    setCongratsIndex(i)
+                    setCongratsBanner(i, habit ? habit.name : 'Badge')
                     return;
                 }
             }
@@ -198,7 +197,6 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-                <CongratsBanner goalIndex={congratsIndex} headerText={'Congratulations'} />
                 <HabitHeader
                     habit={habit}
                     edit={edit}
@@ -248,4 +246,4 @@ const mapStateToProps = (state: ReducerStateProps) => ({
     habits: state.habits.habits
 })
 
-export default connect(mapStateToProps, { setBanner, addCompletedHabit, updateHabit, archiveHabit })(HabitCom);
+export default connect(mapStateToProps, { setBanner, addCompletedHabit, updateHabit, archiveHabit, setCongratsBanner })(HabitCom);

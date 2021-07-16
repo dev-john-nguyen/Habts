@@ -11,6 +11,7 @@ import CircleSquare from '../../assets/svgs/CircleSquare';
 import { consecutiveTools } from '../../services/habits/utils/consecutive';
 import PreviewActionItem from './components/PreviewActionItem';
 import { isEqual, cloneDeep } from 'lodash';
+import { BannerActionsProps } from '../../services/banner/types';
 
 interface HabitPreviewProps {
     onPress: () => void;
@@ -18,13 +19,10 @@ interface HabitPreviewProps {
     active: boolean;
     addCompletedHabit: HabitsActionsProps['addCompletedHabit'];
     activeDate: Date;
-    setCongratsData: React.Dispatch<React.SetStateAction<{
-        headerText: string;
-        goalIndex: number | undefined;
-    }>>
+    setCongratsBanner: BannerActionsProps['setCongratsBanner']
 }
 
-export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCongratsData }: HabitPreviewProps) => {
+export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCongratsBanner }: HabitPreviewProps) => {
     const [loading, setLoading] = useState(false);
     const [styles] = useState(genStyles(active));
     const [iconColor] = useState(active ? Colors.white : Colors.grey);
@@ -42,10 +40,7 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
                 if (newGoal.count.length == newGoal.goal) {
                     //accomplished star
                     // setCongratsIndex(i)
-                    setCongratsData({
-                        headerText: habit.name,
-                        goalIndex: i
-                    })
+                    setCongratsBanner(i, habit.name)
                     return;
                 }
             }
@@ -91,9 +86,9 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
                 </View>
             )
         } else {
-            const { warning, reset } = consecutiveTools.shouldReset(habit, todayDate)
+            const { reset } = consecutiveTools.shouldReset(habit, todayDate)
 
-            if (warning && !reset) {
+            if (reset) {
                 return (
                     <View style={styles.circleInfo}>
                         <PreviewActionItem handleAddCompletedHabit={onCompletedActionPress} isWarning={true} />

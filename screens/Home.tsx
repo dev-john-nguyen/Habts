@@ -22,9 +22,10 @@ import HomeBadges from '../components/badges/HomeBadges';
 import { subscriptionPurchased } from '../services/user/actions';
 import { addCompletedHabit } from '../services/habits/actions';
 import Oval from '../assets/svgs/home/Oval';
-import CongratsBanner from '../components/CongratsBanner';
 import { cloneDeep } from 'lodash';
 import HomeEmptyList from '../components/HomeEmptyList';
+import { setCongratsBanner } from '../services/banner/actions';
+import { BannerActionsProps } from '../services/banner/types';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
 
@@ -35,22 +36,19 @@ interface HomeProps {
     archivedHabits: HabitsProps['habits'];
     subscriptionPurchased: UserActionsProps['subscriptionPurchased'];
     addCompletedHabit: HabitsActionsProps['addCompletedHabit'];
+    setCongratsBanner: BannerActionsProps['setCongratsBanner'];
 }
 
 
 //note: to scroll to current position I can see how many habit preview items there are to determine where to scroll to
 
-const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased, addCompletedHabit }: HomeProps) => {
+const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased, addCompletedHabit, setCongratsBanner }: HomeProps) => {
     const appState = useRef(AppState.currentState);
     const [activeTime, setActiveTime] = useState(0);
     const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([]);
     const [activeDate, setActiveDate] = useState<Date>(new Date());
     const listRef: any = useRef();
     const [expired, setExpired] = useState(false);
-    const [congratsData, setCongratsData] = useState<{ headerText: string, goalIndex: undefined | number }>({
-        headerText: '',
-        goalIndex: undefined
-    })
 
 
     useEffect(() => {
@@ -194,7 +192,6 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
 
     return (
         <SafeAreaView style={styles.container}>
-            <CongratsBanner headerText={congratsData.headerText} goalIndex={congratsData.goalIndex} />
             <View style={styles.headerContainer}>
                 <View style={styles.headerLeftContainer}>
                     <View style={styles.dateContainer}>
@@ -245,7 +242,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                             active={index === activeTime}
                             addCompletedHabit={addCompletedHabit}
                             activeDate={activeDate}
-                            setCongratsData={setCongratsData}
+                            setCongratsBanner={setCongratsBanner}
                         />
                     )}
                     keyExtractor={(item, index) => item.docId ? item.docId + index.toString() : index.toString()}
@@ -397,5 +394,5 @@ const mapStateToProps = (state: ReducerStateProps) => ({
     user: state.user
 })
 
-export default connect(mapStateToProps, { subscriptionPurchased, addCompletedHabit })(Home);
+export default connect(mapStateToProps, { subscriptionPurchased, addCompletedHabit, setCongratsBanner })(Home);
 

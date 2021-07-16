@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         borderRadius: 10,
         padding: 30,
-        width: '90%',
+        width: '80%',
         backgroundColor: Colors.white
     },
     fireworks: {
