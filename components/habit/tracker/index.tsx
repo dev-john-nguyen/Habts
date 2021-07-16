@@ -2,13 +2,14 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Colors from '../../../constants/Colors';
 import { normalizeWidth } from '../../../utils/styles';
-import { CompletedHabitsProps, HabitProps } from '../../../services/habits/types';
+import { CompletedHabitsProps, HabitProps, SequenceType } from '../../../services/habits/types';
 import Track from './components/Track';
 import { TrackProps } from './types';
 import { consecutiveTools } from '../../../services/habits/utils/consecutive';
 
 interface Props {
     completedHabits: CompletedHabitsProps[];
+    sequence: HabitProps['sequence'];
     handleAddCompletedHabit: () => void;
     startDate: Date;
     endDate?: Date;
@@ -33,7 +34,7 @@ type BadgeProps = Array<{
 }>
 
 
-const Tracker = ({ completedHabits, startDate, consecutive, endDate, handleAddCompletedHabit }: Props) => {
+const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, handleAddCompletedHabit }: Props) => {
     const [data, setData] = useState<DataArray>();
 
 
@@ -83,12 +84,46 @@ const Tracker = ({ completedHabits, startDate, consecutive, endDate, handleAddCo
     }, [consecutive])
 
     const populateData = useCallback((diffInDays: number, dataEndDate: Date, badgeData: BadgeProps) => {
+        //check to see if other than daily
         let preparedData: DataArray = [];
         let missCount = 0;
         let missSDate;
 
         for (let i = diffInDays; i >= 0; i--) {
             let cDate = new Date(dataEndDate.getFullYear(), dataEndDate.getMonth(), dataEndDate.getDate() - i);
+
+            //check to see if non daily sequence type
+            //if not found skip this date
+            //if found continue
+            //be aware of miss count
+            if (sequence.type !== SequenceType.daily) {
+                let cTargetDay = sequence.type === SequenceType.monthly ? cDate.getDate() : cDate.getDay();
+                let seqIdx = sequence.value.find((num) => num === cTargetDay);
+
+                if (i < 1) {
+                    //at current date right now
+                    if (missSDate) {
+                        preparedData.unshift({
+                            date: missSDate,
+                            type: 'miss',
+                            missCountRows: missCount - 5
+                        })
+                    }
+
+                    if (seqIdx !== undefined) {
+                        //indicating should be completed
+                        preparedData.unshift({
+                            date: cDate,
+                            type: 'action'
+                        });
+                    }
+                    //don't display if undefined
+                    break;
+                }
+
+                if (seqIdx === undefined) continue;
+
+            }
 
             //check if completed
             let foundCompleted = completedHabits.find(({ dateCompleted }) => {
@@ -129,6 +164,7 @@ const Tracker = ({ completedHabits, startDate, consecutive, endDate, handleAddCo
 
             //check if multiple misses
             if (missCount) {
+                //check if non daily sequence
                 //check if last item
                 if (i < 1) {
                     if (missSDate) {
@@ -165,7 +201,8 @@ const Tracker = ({ completedHabits, startDate, consecutive, endDate, handleAddCo
                 preparedData.unshift({
                     date: cDate,
                     type: 'action'
-                })
+                });
+                break;
             } else {
                 preparedData.unshift({
                     date: cDate,

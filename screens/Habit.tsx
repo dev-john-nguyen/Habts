@@ -207,6 +207,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
                 />
                 <HabitBadges consecutive={habit.consecutive} />
                 <Tracker
+                    sequence={habit.sequence}
                     completedHabits={habit.completedHabits}
                     startDate={habit.createdAt}
                     endDate={habit.archivedAt}
