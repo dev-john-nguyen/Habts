@@ -18,9 +18,6 @@ export default function useCachedResources() {
         await Font.loadAsync({
           ...Ionicons.font,
           'space-mono': require('../assets/fonts/SpaceMono-Regular.ttf'),
-          Asap_400Regular,
-          Asap_700Bold,
-          Asap_500Medium,
           Cabin_400Regular,
           Cabin_500Medium,
           Cabin_700Bold

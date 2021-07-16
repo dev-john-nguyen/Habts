@@ -74,7 +74,6 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         alignItems: 'center',
         justifyContent: 'center',
-        minHeight: normalizeHeight(10),
         borderRadius: 10,
         zIndex: 100
     },
@@ -87,7 +86,7 @@ const styles = StyleSheet.create({
         zIndex: 120
     },
     messageText: {
-        fontSize: normalizeHeight(50),
+        fontSize: normalizeHeight(60),
         color: Colors.white
     }
 })

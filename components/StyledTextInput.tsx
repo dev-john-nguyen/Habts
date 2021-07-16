@@ -3,5 +3,5 @@ import { TextInput } from 'react-native'
 import Colors from '../constants/Colors';
 
 export function StyledTextInput(props: TextInput['props'] & { placeholderTextColor?: string }) {
-    return <TextInput {...props} placeholderTextColor={props.placeholderTextColor ? props.placeholderTextColor : Colors.grey} style={[props.style, { fontFamily: 'Asap_400Regular', letterSpacing: .5 }]} />;
+    return <TextInput {...props} placeholderTextColor={props.placeholderTextColor ? props.placeholderTextColor : Colors.grey} style={[props.style, { fontFamily: 'Cabin_400Regular' }]} />;
 }

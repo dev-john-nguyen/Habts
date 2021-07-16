@@ -17,7 +17,6 @@ import { isInvalidTime } from '../utils/tools';
 import { emptyHabitEdit, emptyHabitExtra } from './utils';
 import SequenceForm from './new/SequenceForm';
 import TimeForm from './new/TimeForm';
-import ProgressAvatar from './new/ProgressAvatar';
 import BottomSvg from '../assets/svgs/bottom';
 import { normalizeHeight, normalizeWidth } from '../utils/styles';
 import NotificationForm from './new/NotificationForm';
@@ -74,7 +73,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
         if (ans) {
             handleNextStep()
         } else {
-            setStep(3)
+            setStep(2)
         }
     }
 
@@ -104,7 +103,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
     }
 
     const handleNextStep = () => {
-        if (step == 5) {
+        if (step == 4) {
 
             const timeDate = getTimeDate();
 
@@ -123,7 +122,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
     }
 
     const handlePreviousStep = () => {
-        if (step < 4) {
+        if (step < 3) {
             setStep(0)
         } else {
             setStep(step - 1)
@@ -212,16 +211,6 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                 )
             case 2:
                 return (
-                    <View style={styles.content}>
-                        <StyledTextBold style={styles.questionText}>We Recommend Replacing The Old Habit With A New One.</StyledTextBold>
-                        <View style={styles.buttonContainer}>
-                            <StyledSecondaryButton text='Previous' style={{ flex: .4 }} onPress={handlePreviousStep} />
-                            <StyledPrimaryButton text='Next' style={{ flex: .4 }} onPress={handleNextStep} />
-                        </View>
-                    </View>
-                )
-            case 3:
-                return (
                     <Pressable style={styles.content} onPress={Keyboard.dismiss}>
                         <StyledTextBold style={styles.questionText}>What Habit Do You Want To Implement Into Your Life?</StyledTextBold>
                         <StyledText style={styles.infoText} />
@@ -246,7 +235,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                         </View>
                     </Pressable>
                 )
-            case 4:
+            case 3:
                 return <SequenceForm
                     sequence={sequence}
                     setSequence={setSequence}
@@ -254,7 +243,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                     handlePreviousStep={handlePreviousStep}
                     setBanner={setBanner}
                 />
-            case 5:
+            case 4:
                 return <TimeForm
                     startTime={startTime}
                     endTime={endTime}
@@ -264,7 +253,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                     handlePreviousStep={handlePreviousStep}
                     habits={habits}
                 />
-            case 6:
+            case 5:
                 return (
                     <Pressable style={styles.content} onPress={Keyboard.dismiss}>
                         <View>
@@ -294,7 +283,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                         </View>
                     </Pressable>
                 )
-            case 7:
+            case 6:
                 return (
                     <Pressable style={styles.content} onPress={Keyboard.dismiss}>
                         <View>
@@ -323,7 +312,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                         </View>
                     </Pressable>
                 )
-            case 8:
+            case 7:
                 return <NotificationForm
                     notificationNum={notificationNum}
                     setNotificationNum={setNotificationNum}
@@ -333,7 +322,7 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                     handleNextStep={handleNextStep}
 
                 />
-            case 9:
+            case 8:
                 return (
                     <Pressable style={styles.content} onPress={Keyboard.dismiss}>
 
@@ -349,7 +338,6 @@ const New = ({ addHabit, navigation, setBanner, habits }: NewProps) => {
                             placeholderTextColor={Colors.grey}
                             autoCorrect={true}
                             multiline={true}
-                            maxLength={Inputs.habitNotesMaxChar}
                             onChangeText={(text) => setNotes(text)}
                         />
                         <View style={styles.buttonContainer}>
@@ -444,7 +432,8 @@ const styles = StyleSheet.create({
     infoText: {
         fontSize: normalizeWidth(30),
         color: Colors.primary,
-        marginBottom: normalizeHeight(20)
+        marginTop: 5,
+        marginBottom: 10
     },
     responseInput: {
         borderRadius: 10,

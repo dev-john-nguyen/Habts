@@ -79,14 +79,6 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                         {edit ?
                             <View style={styles.dataItem}>
                                 <View style={styles.timeContainer}>
-                                    <Pressable style={styles.timeHeaderEdit} onPress={onTurnOnOffNotification}>
-                                        <StyledTextBold style={styles.timeText}>Reminder</StyledTextBold>
-                                        {
-                                            habitEdit.notificationOn
-                                                ? <FontAwesome name="bell" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
-                                                : <FontAwesome name="bell-slash" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
-                                        }
-                                    </Pressable>
                                     <View style={styles.time}>
                                         <DateTimePicker
                                             value={habitEdit.startTime.date}
@@ -108,23 +100,31 @@ export default ({ habit, newCom, edit, setHabitEdit, habitEdit }: HabitHeader) =
                                             children
                                         />
                                     </View>
+                                    <Pressable style={styles.timeHeaderEdit} onPress={onTurnOnOffNotification}>
+                                        {
+                                            habitEdit.notificationOn
+                                                ? <FontAwesome name="bell" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
+                                                : <FontAwesome name="bell-slash" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} onPress={onTurnOnOffNotification} />
+                                        }
+                                    </Pressable>
                                 </View>
                             </View>
-                            : <>
-                                <View style={styles.dataItem}>
-                                    <StyledTextBold style={styles.dataTimeText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)}</StyledTextBold>
-                                    {
-                                        habit.notificationOn ?
-                                            <FontAwesome name="bell" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} /> :
-                                            <FontAwesome name="bell-slash" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} />
-                                    }
-                                </View>
-                                <View style={styles.dataItem}>
-                                    <StyledTextMedium style={styles.dataSeqText}>{habit.sequence.type}</StyledTextMedium>
-                                    <StyledText style={styles.dataSeqText}>{renderSequenceValue(habit)}</StyledText>
-                                </View>
-                            </>
+                            :
+                            <View style={styles.dataItem}>
+                                <StyledTextBold style={styles.dataTimeText}>{formatTime(habit.startTime)} - {formatTime(habit.endTime)}</StyledTextBold>
+                                {
+                                    habit.notificationOn ?
+                                        <FontAwesome name="bell" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} /> :
+                                        <FontAwesome name="bell-slash" size={normalizeHeight(45)} color={Colors.secondary} style={styles.bell} />
+                                }
+                            </View>
+
                         }
+
+                        <View style={styles.dataItem}>
+                            <StyledTextMedium style={styles.dataSeqText}>{habit.sequence.type}</StyledTextMedium>
+                            <StyledText style={styles.dataSeqText}>{renderSequenceValue(habit)}</StyledText>
+                        </View>
 
 
                         <View style={styles.dataItem}>
@@ -203,13 +203,11 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     contentEditBg: {
-        backgroundColor: Colors.contentBg,
-        borderRadius: 10,
-        padding: 10
     },
     timeHeaderEdit: {
         flexDirection: 'row',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginLeft: 5
     },
     pickerItemStyle: {
         fontSize: normalizeHeight(55),
@@ -218,14 +216,9 @@ const styles = StyleSheet.create({
         height: normalizeHeight(30),
         borderRadius: 10
     },
-    timeText: {
-        fontSize: normalizeHeight(40),
-        color: Colors.primary,
-        marginRight: 5
-    },
     timeContainer: {
         flex: 1,
-        flexDirection: 'column'
+        flexDirection: 'row'
     },
     datePicker: {
         fontSize: normalizeHeight(55),
@@ -234,13 +227,13 @@ const styles = StyleSheet.create({
     },
     time: {
         flexDirection: 'row',
-        height: 50,
+        height: 40,
         alignItems: 'center'
     },
     textInput: {
         fontSize: normalizeHeight(55),
         color: Colors.primary,
-        borderRadius: 10,
+        borderRadius: 5,
         padding: 10,
         paddingTop: 10,
         flex: 1,

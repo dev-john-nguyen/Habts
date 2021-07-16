@@ -25,6 +25,7 @@ const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
                     <Feather name="x" size={normalizeWidth(20)} color={Colors.primary} onPress={onClose} />
                 </Pressable>
             </View>
+            <View style={styles.underline} />
             {edit ?
                 <StyledTextInput
                     style={styles.textInput}
@@ -32,7 +33,6 @@ const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
                     onChangeText={updateNotes}
                     autoCorrect={true}
                     multiline={true}
-                    maxLength={Inputs.habitNotesMaxChar}
                 />
                 : <ScrollView contentContainerStyle={styles.content}>
                     <StyledText style={styles.text}>{notes}</StyledText>
@@ -45,10 +45,13 @@ const Notes = ({ notes, onClose, edit, updateNotes, editNotes }: Props) => {
 const styles = StyleSheet.create({
     container: {
         zIndex: 100,
-        padding: 10,
-        backgroundColor: Colors.contentBg,
-        borderRadius: 10,
         height: normalizeHeight(3)
+    },
+    underline: {
+        height: 1,
+        width: '100%',
+        backgroundColor: Colors.contentBg,
+        marginBottom: 5
     },
     content: {
         paddingBottom: 10
@@ -74,7 +77,7 @@ const styles = StyleSheet.create({
     textInput: {
         fontSize: normalizeHeight(55),
         color: Colors.primary,
-        borderRadius: 10,
+        borderRadius: 5,
         backgroundColor: Colors.white,
         padding: 10,
         paddingTop: 10,

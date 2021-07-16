@@ -168,10 +168,14 @@ export const updateHabit = (updatedHabit: HabitEditProps) => async (dispatch: Ap
 
 
     //recalc notificationData
-    if (updateNotificationData || (originalHabit.notificationTime.totalMins != updatedHabit.notificationTime.totalMins)) {
+    if (updatedHabit.notificationOn && !originalHabit.notificationOn) {
 
+        //previous configuration if user wanted to be notified before their habit time.
         const orgnalNotifyDate = new Date(updatedHabit.startTime.date)
-        const updatedNotificationDate = new Date(orgnalNotifyDate.getFullYear(), orgnalNotifyDate.getMonth(), orgnalNotifyDate.getDate(), orgnalNotifyDate.getHours(), orgnalNotifyDate.getMinutes() - updatedHabit.notificationTime.totalMins);
+        // const updatedNotificationDate = new Date(orgnalNotifyDate.getFullYear(), orgnalNotifyDate.getMonth(), orgnalNotifyDate.getDate(), orgnalNotifyDate.getHours(), orgnalNotifyDate.getMinutes() - updatedHabit.notificationTime.totalMins);
+
+        const updatedNotificationDate = new Date(orgnalNotifyDate.getFullYear(), orgnalNotifyDate.getMonth(), orgnalNotifyDate.getDate(), orgnalNotifyDate.getHours(), orgnalNotifyDate.getMinutes());
+
 
         updatedHabit.notificationTime = {
             date: updatedNotificationDate,

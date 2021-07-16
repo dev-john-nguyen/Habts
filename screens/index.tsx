@@ -106,7 +106,6 @@ const Main = ({ user, banner, removeBanner, signUp, setBanner, saveNotificationT
             registerForPushNotificationsAsync()
                 .catch((err) => {
                     console.log(err)
-                    setBanner("error", "Failed to access push notification.")
                 })
         }
     }, [user.uid])
