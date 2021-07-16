@@ -209,11 +209,11 @@ export function renderSequenceValue(habit: HabitProps) {
 
     switch (type) {
         case SequenceType.weekly:
-            return '(' + habit.sequence.value.map((day: any, index) => {
+            return '(' + habit.sequence.value.sort((a, b) => a - b).map((day: any, index) => {
                 return (index === 0 ? '' : ' ') + daysShort[day]
             }) + ')'
         case SequenceType.monthly:
-            return ' (' + habit.sequence.value.map((day: any, index) => {
+            return ' (' + habit.sequence.value.sort((a, b) => a - b).map((day: any, index) => {
                 return (index === 0 ? '' : ' ') + day
             }) + ')'
         default:
