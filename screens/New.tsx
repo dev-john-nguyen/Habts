@@ -436,7 +436,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     responseInput: {
-        borderRadius: 10,
+        borderRadius: 5,
         fontSize: normalizeWidth(25),
         padding: 10,
         paddingTop: 10,
