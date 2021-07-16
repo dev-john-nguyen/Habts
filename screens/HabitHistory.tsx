@@ -15,8 +15,7 @@ import { getDate } from '../utils/tools';
 
 
 const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archivedHabits'] }) => {
-    const len = archivedHabits.length > 1 ? archivedHabits.length - 1 : 0
-    const [targetHabit, setTargetHabit] = useState<HabitProps>(archivedHabits[len]);
+    const [targetHabit, setTargetHabit] = useState<HabitProps>();
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
@@ -26,6 +25,17 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                         style={styles.filterList}
                         contentContainerStyle={styles.filterListItems}
                         data={archivedHabits}
+                        ListHeaderComponent={(
+                            <View>
+                                <StyledTextBold style={{
+                                    fontSize: normalizeHeight(50),
+                                    paddingTop: 5,
+                                    paddingBottom: 5,
+                                    color: Colors.primary
+                                }}>Habit History</StyledTextBold>
+                                <View style={styles.underline} />
+                            </View>
+                        )}
                         ListEmptyComponent={(
                             <View style={[styles.filterItem, { backgroundColor: Colors.primary }]}>
                                 <StyledText style={[styles.filterItemText, { color: Colors.white }]}>Empty</StyledText>
@@ -33,12 +43,16 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                         )}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => {
-                            let isSelected = item.docId === targetHabit.docId ? true : false
+                            let isSelected = false;
+                            if (targetHabit) {
+                                isSelected = item.docId === targetHabit.docId && true
+                            }
                             return (
                                 <Pressable onPress={() => {
                                     setTargetHabit(item)
                                 }} style={[styles.filterItem, { backgroundColor: isSelected ? Colors.primary : Colors.white }]}>
                                     <StyledText style={[styles.filterItemText, { color: isSelected ? Colors.white : Colors.primary }]}>{item.name}</StyledText>
+                                    <StyledText style={[styles.filterItemText, { color: isSelected ? Colors.white : Colors.primary, fontSize: normalizeHeight(80) }]}>{getDate(item.createdAt)} - {getDate(item.archivedAt ? item.archivedAt : new Date())}</StyledText>
                                 </Pressable>
                             )
                         }}
@@ -55,6 +69,7 @@ const HabitHistory = ({ archivedHabits }: { archivedHabits: HabitsProps['archive
                             />
                             <HabitBadges consecutive={targetHabit.consecutive} />
                             <Tracker
+                                sequence={targetHabit.sequence}
                                 completedHabits={targetHabit.completedHabits}
                                 startDate={targetHabit.createdAt}
                                 endDate={targetHabit.archivedAt}
@@ -90,11 +105,16 @@ const styles = StyleSheet.create({
         bottom: 0,
         width: '100%',
     },
+    underline: {
+        height: 1,
+        width: '100%',
+        backgroundColor: Colors.grey,
+        marginBottom: 10
+    },
     filterList: {
 
     },
     filterListItems: {
-        flexDirection: 'column-reverse',
         alignItems: 'stretch',
         padding: 10,
         paddingBottom: 10
@@ -104,6 +124,8 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         borderRadius: 10,
         marginBottom: 10,
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     filterItemText: {
         fontSize: normalizeHeight(60),
