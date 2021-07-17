@@ -26,6 +26,7 @@ import { cloneDeep } from 'lodash';
 import HomeEmptyList from '../components/HomeEmptyList';
 import { setCongratsBanner } from '../services/banner/actions';
 import { BannerActionsProps } from '../services/banner/types';
+import { consecutiveTools } from '../services/habits/utils/consecutive';
 
 type HomeScreenNavProp = StackNavigationProp<RootStackParamList, 'Home'>
 
@@ -85,6 +86,28 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
             setTodayHabits([])
         }
     }, [habits, activeDate])
+
+    useEffect(() => {
+        //refresh
+        let interval: NodeJS.Timeout | undefined;
+
+        if (interval) {
+            clearInterval(interval)
+        }
+
+        interval = setInterval(() => {
+            setActiveDate(d => {
+                if (consecutiveTools.datesAreOnSameDay(d, new Date())) {
+                    return new Date()
+                }
+                return d
+            })
+        }, 300000)
+
+        return () => {
+            interval && clearInterval(interval)
+        }
+    }, [])
 
     useEffect(() => {
         const subscription = Notifications.addNotificationResponseReceivedListener(response => {
