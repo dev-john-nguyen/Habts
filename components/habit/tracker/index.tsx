@@ -91,38 +91,15 @@ const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, h
 
         for (let i = diffInDays; i >= 0; i--) {
             let cDate = new Date(dataEndDate.getFullYear(), dataEndDate.getMonth(), dataEndDate.getDate() - i);
-
             //check to see if non daily sequence type
             //if not found skip this date
             //if found continue
             //be aware of miss count
+            let cTargetDay = sequence.type === SequenceType.monthly ? cDate.getDate() : cDate.getDay();
+            let seqIdx = sequence.value.find((num) => num === cTargetDay);
+
             if (sequence.type !== SequenceType.daily) {
-                let cTargetDay = sequence.type === SequenceType.monthly ? cDate.getDate() : cDate.getDay();
-                let seqIdx = sequence.value.find((num) => num === cTargetDay);
-
-                if (i < 1) {
-                    //at current date right now
-                    if (missSDate) {
-                        preparedData.unshift({
-                            date: missSDate,
-                            type: 'miss',
-                            missCountRows: missCount - 5
-                        })
-                    }
-
-                    if (seqIdx !== undefined) {
-                        //indicating should be completed
-                        preparedData.unshift({
-                            date: cDate,
-                            type: 'action'
-                        });
-                    }
-                    //don't display if undefined
-                    break;
-                }
-
                 if (seqIdx === undefined) continue;
-
             }
 
             //check if completed

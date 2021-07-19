@@ -102,47 +102,12 @@ export function isInvalidTime(timeData: TimeDataProps, habits: HabitProps[]): { 
         habits.splice(foundIndex, 1)
     }
 
+    //removed warning case in regards to overlapping habits
+
     const startTime = convertTimeToInt(timeData.startTime)
     const endTime = convertTimeToInt(timeData.endTime)
 
     if (startTime >= endTime) return { type: 'error', message: 'Start time cannot be greater than or equal to your end time.' }
-
-    //should be in ascending order
-
-    let interfereName = ''
-
-    for (let i = 0; i < habits.length; i++) {
-        const currentHabitTime = {
-            name: habits[i].name,
-            start: convertTimeToInt(habits[i].startTime),
-            end: convertTimeToInt(habits[i].endTime)
-        }
-
-        if (startTime == currentHabitTime.start) {
-            interfereName = currentHabitTime.name;
-            break;
-        }
-
-        if (startTime < currentHabitTime.start && endTime > currentHabitTime.start) {
-            interfereName = currentHabitTime.name;
-            break;
-        }
-
-        if (startTime < currentHabitTime.start && endTime > currentHabitTime.end) {
-            interfereName = currentHabitTime.name;
-            break;
-        }
-
-        if (startTime > currentHabitTime.start && startTime < currentHabitTime.end) {
-            interfereName = currentHabitTime.name;
-            break;
-        }
-
-    }
-
-    if (!!interfereName) {
-        return { type: 'warning', message: `Just to let you know this might intefere with ${interfereName}.` };
-    }
 
     return {
         type: 'ok',
