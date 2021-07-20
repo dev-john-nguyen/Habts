@@ -50,6 +50,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
     const [activeDate, setActiveDate] = useState<Date>(new Date());
     const listRef: any = useRef();
     const [expired, setExpired] = useState(false);
+    const hasScrolled = useRef(false);
 
 
     useEffect(() => {
@@ -168,14 +169,17 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
 
             setActiveTime(index);
 
-            new Promise(resolve => setTimeout(resolve, 500))
-                .then(() => {
-                    listRef && listRef.current && listRef.current.scrollToIndex({
-                        index: index,
-                        animated: true,
-                        viewPosition: 0.5
+            if (!hasScrolled.current) {
+                new Promise(resolve => setTimeout(resolve, 500))
+                    .then(() => {
+                        listRef && listRef.current && listRef.current.scrollToIndex({
+                            index: index,
+                            animated: true,
+                            viewPosition: 0.5
+                        })
+                        hasScrolled.current = true;
                     })
-                })
+            }
         } else {
             setActiveTime(-1)
         }
