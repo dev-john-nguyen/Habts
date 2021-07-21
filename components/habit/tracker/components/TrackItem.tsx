@@ -2,36 +2,27 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import CircleCheck from '../../../../assets/svgs/CircleCheck';
 import Colors from '../../../../constants/Colors';
-import CirclSquare from '../../../../assets/svgs/CircleSquare';
 import Badge from '../../../../assets/svgs/badge';
-import { StyledTextMedium, StyledTextBold, StyledText } from '../../../StyledText';
+import { StyledTextMedium, StyledTextBold } from '../../../StyledText';
 import { normalizeWidth } from '../../../../utils/styles';
 import XCircle from '../../../../assets/svgs/XCircle';
 import { TrackProps } from '../types';
 import AlertCircle from '../../../../assets/svgs/AlertCircle';
-import ActionItem from './ActionItem';
 
 interface Props {
     type: TrackProps['type'];
-    date: Date;
+    dateString: string;
     badge?: {
         color: string;
         outline: boolean;
     };
     missCountRows?: number;
-    handleAddCompletedHabit: () => void;
 }
 
-const Track = ({ type, date, badge, missCountRows, handleAddCompletedHabit }: Props) => {
+const TrackItem = ({ type, dateString, badge, missCountRows }: Props) => {
 
     let borderColor = '';
     let icon;
-
-    const dateString = (date.getMonth() + 1) + '/' + date.getDate();
-
-    if (type === 'action') {
-        return <ActionItem dateString={dateString} handleAddCompletedHabit={handleAddCompletedHabit} />
-    }
 
     switch (type) {
         case 'check':
@@ -141,4 +132,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Track;
+export default TrackItem;

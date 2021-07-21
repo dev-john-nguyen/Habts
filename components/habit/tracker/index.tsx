@@ -3,14 +3,16 @@ import { View, StyleSheet, FlatList } from 'react-native';
 import Colors from '../../../constants/Colors';
 import { normalizeWidth } from '../../../utils/styles';
 import { CompletedHabitsProps, HabitProps, SequenceType } from '../../../services/habits/types';
-import Track from './components/Track';
+import TrackItem from './components/TrackItem';
 import { TrackProps } from './types';
 import { consecutiveTools } from '../../../services/habits/utils/consecutive';
+import ActionItem from './components/ActionItem';
+import WarningActionItem from './components/WarningActionItem';
 
 interface Props {
     completedHabits: CompletedHabitsProps[];
     sequence: HabitProps['sequence'];
-    handleAddCompletedHabit: () => void;
+    handleAddCompletedHabit: (prevDay?: boolean) => void;
     startDate: Date;
     endDate?: Date;
     consecutive: HabitProps['consecutive'];
@@ -141,7 +143,6 @@ const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, h
 
             //check if multiple misses
             if (missCount) {
-                //check if non daily sequence
                 //check if last item
                 if (i < 1) {
                     if (missSDate) {
@@ -150,6 +151,16 @@ const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, h
                             type: 'miss',
                             missCountRows: missCount - 5
                         })
+                    } else {
+                        //get first item and update it to be an action warning
+                        // the item should be warning
+                        if (preparedData[0].type === 'warning') {
+                            preparedData[0] = {
+                                ...preparedData[0],
+                                type: 'action-warning'
+                            }
+                        }
+
                     }
                     preparedData.unshift({
                         date: cDate,
@@ -215,14 +226,31 @@ const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, h
                 contentContainerStyle={styles.contentContainerStyle}
                 columnWrapperStyle={styles.columnWrapperStyle}
                 renderItem={({ item }) => {
+                    const dateString = (item.date.getMonth() + 1) + '/' + item.date.getDate();
+
+                    if (item.type === 'action') {
+                        return (
+                            <View style={styles.itemContainer}>
+                                <ActionItem dateString={dateString} handleAddCompletedHabit={handleAddCompletedHabit} />
+                            </View>
+                        )
+                    }
+
+                    if (item.type === 'action-warning') {
+                        return (
+                            <View style={styles.itemContainer}>
+                                <WarningActionItem dateString={dateString} handleAddCompletedHabit={handleAddCompletedHabit} />
+                            </View>
+                        )
+                    }
+
                     return (
                         <View style={styles.itemContainer}>
-                            <Track
+                            <TrackItem
                                 type={item.type}
-                                date={item.date}
+                                dateString={dateString}
                                 badge={item.badge}
                                 missCountRows={item.missCountRows}
-                                handleAddCompletedHabit={handleAddCompletedHabit}
                             />
                         </View>
                     )

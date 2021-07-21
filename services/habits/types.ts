@@ -103,7 +103,7 @@ export interface HabitsProps {
 
 export interface HabitsActionsProps {
     addHabit: (habit: NewHabitProps) => Promise<void | boolean>;
-    addCompletedHabit: (habitDocId: string) => Promise<void | undefined>;
+    addCompletedHabit: (habitDocId: string, prevDay?: boolean) => Promise<void | undefined>;
     updateHabit: (updatedHabit: HabitEditProps) => Promise<void | undefined | boolean>;
     archiveHabit: (docId: string) => Promise<boolean>
 }

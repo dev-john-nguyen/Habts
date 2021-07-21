@@ -43,6 +43,7 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
     const [edit, setEdit] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [prevDayWarning, setPrevDayWarning] = useState(false);
     const mount = useRef(false);
 
     useLayoutEffect(() => {
@@ -171,19 +172,29 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
         }
     }
 
-    const handleAddCompletedHabit = () => {
+    const handleAddCompletedHabit = (prevDay?: boolean) => {
         if (!habit) {
             setBanner('error', "Sorry, couldn't found the habit id.");
             navigation.goBack()
             return;
         }
 
-        if (!consecutiveTools.datesAreOnSameDay(new Date(route.params.activeDay), new Date())) {
+        let todaysDate = new Date();
+        let paramsDate = new Date(route.params.activeDay)
+
+        if (!consecutiveTools.datesAreOnSameDay(paramsDate, todaysDate)) {
             setBanner('warning', "Please go back to today to complete this habit.");
             return;
         }
 
-        addCompletedHabit(habit.docId);
+        //warn user to complete previous day if haven't done so already
+        if (!prevDay && !prevDayWarning) {
+            setBanner('warning', "Please mark yesterday as completed if performed. If not, continue by trying again.")
+            setPrevDayWarning(true)
+            return;
+        }
+
+        addCompletedHabit(habit.docId, prevDay);
     }
 
     if (!habit || !habitEdit) {

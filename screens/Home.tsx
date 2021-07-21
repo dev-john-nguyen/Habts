@@ -24,7 +24,7 @@ import { addCompletedHabit } from '../services/habits/actions';
 import Oval from '../assets/svgs/home/Oval';
 import { cloneDeep } from 'lodash';
 import HomeEmptyList from '../components/HomeEmptyList';
-import { setCongratsBanner } from '../services/banner/actions';
+import { setCongratsBanner, setBanner } from '../services/banner/actions';
 import { BannerActionsProps } from '../services/banner/types';
 import { consecutiveTools } from '../services/habits/utils/consecutive';
 
@@ -38,12 +38,13 @@ interface HomeProps {
     subscriptionPurchased: UserActionsProps['subscriptionPurchased'];
     addCompletedHabit: HabitsActionsProps['addCompletedHabit'];
     setCongratsBanner: BannerActionsProps['setCongratsBanner'];
+    setBanner: BannerActionsProps['setBanner'];
 }
 
 
 //note: to scroll to current position I can see how many habit preview items there are to determine where to scroll to
 
-const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased, addCompletedHabit, setCongratsBanner }: HomeProps) => {
+const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased, addCompletedHabit, setCongratsBanner, setBanner }: HomeProps) => {
     const appState = useRef(AppState.currentState);
     const [activeTime, setActiveTime] = useState(0);
     const [todayHabits, setTodayHabits] = useState<HabitsProps['habits']>([]);
@@ -270,6 +271,7 @@ const Home = ({ navigation, habits, user, archivedHabits, subscriptionPurchased,
                             addCompletedHabit={addCompletedHabit}
                             activeDate={activeDate}
                             setCongratsBanner={setCongratsBanner}
+                            setBanner={setBanner}
                         />
                     )}
                     keyExtractor={(item, index) => item.docId ? item.docId + index.toString() : index.toString()}
@@ -421,5 +423,5 @@ const mapStateToProps = (state: ReducerStateProps) => ({
     user: state.user
 })
 
-export default connect(mapStateToProps, { subscriptionPurchased, addCompletedHabit, setCongratsBanner })(Home);
+export default connect(mapStateToProps, { subscriptionPurchased, addCompletedHabit, setCongratsBanner, setBanner })(Home);
 

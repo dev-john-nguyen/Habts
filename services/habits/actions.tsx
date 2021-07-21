@@ -101,13 +101,20 @@ export const addHabit = (habit: NewHabitProps) => async (dispatch: AppDispatch, 
     return true;
 }
 
-export const addCompletedHabit = (habitDocId: string) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
+export const addCompletedHabit = (habitDocId: string, prevDay?: boolean) => async (dispatch: AppDispatch, getState: () => ReducerStateProps) => {
     if (!habitDocId) {
         dispatch(setBanner('error', "Sorry, I couldn't find your habit id."))
         return;
     }
 
-    const newDate = new Date()
+    let newDate: Date;
+
+    if (prevDay) {
+        let d = new Date()
+        newDate = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1);
+    } else {
+        newDate = new Date()
+    }
 
     const { habits, user } = getState();
 

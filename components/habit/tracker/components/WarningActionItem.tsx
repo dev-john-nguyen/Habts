@@ -2,17 +2,17 @@ import React, { useEffect, useState, useRef } from 'react';
 import { View, StyleSheet, Pressable, Animated } from 'react-native';
 import { normalizeWidth } from '../../../../utils/styles';
 import { StyledTextMedium } from '../../../StyledText';
-import CircleSquare from '../../../../assets/svgs/CircleSquare';
 import Colors from '../../../../constants/Colors';
+import AlertCircle from '../../../../assets/svgs/AlertCircle';
 
-const AnimatedCircle = Animated.createAnimatedComponent(CircleSquare)
+const AnimatedCircle = Animated.createAnimatedComponent(AlertCircle)
 
 interface Props {
     dateString: string;
     handleAddCompletedHabit: (prevDay?: boolean) => void;
 }
 
-const ActionItem = ({ dateString, handleAddCompletedHabit }: Props) => {
+const WarningActionItem = ({ dateString, handleAddCompletedHabit }: Props) => {
     const [isPressed, setIsPressed] = useState(false);
     const posX = useRef(new Animated.Value(0)).current;
     const posY = useRef(new Animated.Value(0)).current;
@@ -25,7 +25,7 @@ const ActionItem = ({ dateString, handleAddCompletedHabit }: Props) => {
         if (isPressed) {
             startAnimation();
             timeOut = setTimeout(() => {
-                mount.current && handleAddCompletedHabit();
+                mount.current && handleAddCompletedHabit(true);
             }, 1000)
         } else {
             endAnimation()
@@ -105,10 +105,16 @@ const ActionItem = ({ dateString, handleAddCompletedHabit }: Props) => {
                 </View>
                 <View style={styles.iconContainer}>
                     <View style={styles.circleSquare}>
-                        <AnimatedCircle circleColor={color.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [Colors.primary, Colors.green]
-                        })} squareColor={Colors.white} />
+                        <AnimatedCircle
+                            fillColor={color.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [Colors.orange, Colors.green]
+                            })}
+                            strokeColor={Colors.white}
+                            strokeOutlineColor={color.interpolate({
+                                inputRange: [0, 1],
+                                outputRange: [Colors.orange, Colors.green]
+                            })} />
                     </View>
                 </View>
             </Animated.View>
@@ -124,7 +130,7 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.white,
         width: normalizeWidth(8),
         height: normalizeWidth(8),
-        borderColor: Colors.primary
+        borderColor: Colors.orange
     },
     dateContainer: {
         flex: 1,
@@ -133,7 +139,7 @@ const styles = StyleSheet.create({
         padding: 2,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: Colors.primary
+        backgroundColor: Colors.orange
     },
     iconContainer: {
         flex: .9,
@@ -148,10 +154,7 @@ const styles = StyleSheet.create({
         color: Colors.white
     },
     circleSquare: {
-        height: normalizeWidth(12),
-        width: normalizeWidth(12),
-        alignItems: 'center',
-        justifyContent: 'center'
+        flex: 1
     },
     missCountContainer: {
         justifyContent: 'center',
@@ -160,4 +163,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ActionItem;
+export default WarningActionItem;

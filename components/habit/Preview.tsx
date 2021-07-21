@@ -19,12 +19,18 @@ interface HabitPreviewProps {
     active: boolean;
     addCompletedHabit: HabitsActionsProps['addCompletedHabit'];
     activeDate: Date;
-    setCongratsBanner: BannerActionsProps['setCongratsBanner']
+    setCongratsBanner: BannerActionsProps['setCongratsBanner'];
+    setBanner: BannerActionsProps['setBanner'];
 }
 
-export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCongratsBanner }: HabitPreviewProps) => {
+export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCongratsBanner, setBanner }: HabitPreviewProps) => {
     const [loading, setLoading] = useState(false);
     const [styles] = useState(genStyles(active));
+    const [shownWarning, setShownWarning] = useState(false);
+    const [actionVals, setActionVals] = useState({
+        warning: false,
+        reset: false
+    });
     const [iconColor] = useState(active ? Colors.white : Colors.grey);
     const prevConsec = useRef<HabitProps['consecutive']>();
 
@@ -53,8 +59,24 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
     }, [habit.consecutive])
 
 
+    useEffect(() => {
+        let today = new Date()
+        const { warning, reset } = consecutiveTools.shouldReset(habit, today);
+        setActionVals({
+            warning: warning ? true : false,
+            reset: reset ? true : false
+        });
+
+    }, [habit.completedHabits])
+
     const onCompletedActionPress = async () => {
         if (loading) return;
+
+        if (!shownWarning && actionVals.warning) {
+            setShownWarning(true);
+            setBanner('warning', "Please mark yesterday as completed if performed. If not, continue by trying again.");
+            return;
+        }
 
         setLoading(true);
 
@@ -66,8 +88,10 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
     const renderActionIcons = () => {
         let todayDate = new Date();
 
+        const isSameDay = consecutiveTools.datesAreOnSameDay(todayDate, activeDate);
+
         //check if choosen date (activeDate) isn't on the same day as today
-        if (!consecutiveTools.datesAreOnSameDay(todayDate, activeDate)) {
+        if (!isSameDay) {
             return (
                 <View style={styles.circleInfo}>
                     <CircleSquare squareColor={Colors.mediumGrey} circleColor={Colors.grey} />
@@ -86,9 +110,7 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
                 </View>
             )
         } else {
-            const { reset } = consecutiveTools.shouldReset(habit, todayDate)
-
-            if (reset) {
+            if (actionVals.reset || actionVals.warning) {
                 return (
                     <View style={styles.circleInfo}>
                         <PreviewActionItem handleAddCompletedHabit={onCompletedActionPress} isWarning={true} />
