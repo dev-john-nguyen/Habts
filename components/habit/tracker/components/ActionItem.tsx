@@ -9,7 +9,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(CircleSquare)
 
 interface Props {
     dateString: string;
-    handleAddCompletedHabit: (prevDay?: boolean) => void;
+    handleAddCompletedHabit: (prevDay: boolean) => void;
 }
 
 const ActionItem = ({ dateString, handleAddCompletedHabit }: Props) => {
@@ -25,7 +25,8 @@ const ActionItem = ({ dateString, handleAddCompletedHabit }: Props) => {
         if (isPressed) {
             startAnimation();
             timeOut = setTimeout(() => {
-                mount.current && handleAddCompletedHabit();
+                mount.current && handleAddCompletedHabit(false);
+                mount.current && endAnimation();
             }, 1000)
         } else {
             endAnimation()

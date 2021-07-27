@@ -172,23 +172,25 @@ const HabitCom = ({ navigation, route, habits, setBanner, addCompletedHabit, upd
         }
     }
 
-    const handleAddCompletedHabit = (prevDay?: boolean) => {
+    const handleAddCompletedHabit = (prevDay: boolean, isPrevAction: boolean) => {
         if (!habit) {
             setBanner('error', "Sorry, couldn't found the habit id.");
             navigation.goBack()
             return;
         }
 
-        let todaysDate = new Date();
+        let todayDate = new Date();
+        let yesterday = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() - 1);
         let paramsDate = new Date(route.params.activeDay)
 
-        if (!consecutiveTools.datesAreOnSameDay(paramsDate, todaysDate)) {
-            setBanner('warning', "Please go back to today to complete this habit.");
+        if (!consecutiveTools.datesAreOnSameDay(paramsDate, todayDate) && !consecutiveTools.datesAreOnSameDay(paramsDate, yesterday)) {
+            setBanner('warning', "Please go back to today or yesterday to complete this habit.");
             return;
         }
 
         //warn user to complete previous day if haven't done so already
-        if (!prevDay && !prevDayWarning) {
+        //isPrevAction indicates the previous day can be taken action upon 
+        if (!prevDay && isPrevAction && !prevDayWarning) {
             setBanner('warning', "Please mark yesterday as completed if performed. If not, continue by trying again.")
             setPrevDayWarning(true)
             return;

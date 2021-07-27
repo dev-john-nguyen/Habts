@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { View, StyleSheet, FlatList } from 'react-native';
 import Colors from '../../../constants/Colors';
 import { normalizeWidth } from '../../../utils/styles';
@@ -12,7 +12,7 @@ import WarningActionItem from './components/WarningActionItem';
 interface Props {
     completedHabits: CompletedHabitsProps[];
     sequence: HabitProps['sequence'];
-    handleAddCompletedHabit: (prevDay?: boolean) => void;
+    handleAddCompletedHabit: (prevDay: boolean, isPrevAction: boolean) => void;
     startDate: Date;
     endDate?: Date;
     consecutive: HabitProps['consecutive'];
@@ -38,6 +38,7 @@ type BadgeProps = Array<{
 
 const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, handleAddCompletedHabit }: Props) => {
     const [data, setData] = useState<DataArray>();
+    const isPrevAction = useRef(false);
 
 
     const isSameDate = (d1: Date, d2: Date) => {
@@ -145,21 +146,16 @@ const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, h
             if (missCount) {
                 //check if last item
                 if (i < 1) {
-                    if (missSDate) {
-                        preparedData.unshift({
-                            date: missSDate,
-                            type: 'miss',
-                            missCountRows: missCount - 5
-                        })
-                    } else {
-                        //get first item and update it to be an action warning
-                        // the item should be warning
-                        if (preparedData[0].type === 'warning') {
-                            preparedData[0] = {
-                                ...preparedData[0],
-                                type: 'action-warning'
-                            }
+                    //always able to complete the previous day dispite a miss or not
+                    //get first item and update it to be an action warning
+                    // the item should be warning
+                    if (preparedData[0].type !== 'action') {
+                        preparedData[0] = {
+                            ...preparedData[0],
+                            type: 'action-warning'
                         }
+                        //use to indicate prev day might still need to be completed
+                        isPrevAction.current = true;
 
                     }
                     preparedData.unshift({
@@ -215,6 +211,10 @@ const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, h
 
     }, [completedHabits, endDate, startDate, getBadgeData, populateData])
 
+    const onCompletedHabit = (prevDay: boolean) => {
+        handleAddCompletedHabit(prevDay, isPrevAction.current)
+    }
+
     return (
         <View style={styles.container}>
             <FlatList
@@ -231,7 +231,7 @@ const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, h
                     if (item.type === 'action') {
                         return (
                             <View style={styles.itemContainer}>
-                                <ActionItem dateString={dateString} handleAddCompletedHabit={handleAddCompletedHabit} />
+                                <ActionItem dateString={dateString} handleAddCompletedHabit={onCompletedHabit} />
                             </View>
                         )
                     }
@@ -239,7 +239,7 @@ const Tracker = ({ completedHabits, sequence, startDate, consecutive, endDate, h
                     if (item.type === 'action-warning') {
                         return (
                             <View style={styles.itemContainer}>
-                                <WarningActionItem dateString={dateString} handleAddCompletedHabit={handleAddCompletedHabit} />
+                                <WarningActionItem dateString={dateString} handleAddCompletedHabit={onCompletedHabit} />
                             </View>
                         )
                     }

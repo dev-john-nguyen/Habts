@@ -27,6 +27,7 @@ const PreviewActionItem = ({ handleAddCompletedHabit, isWarning }: Props) => {
             startAnimation();
             timeOut = setTimeout(() => {
                 mount.current && handleAddCompletedHabit();
+                mount.current && endAnimation();
             }, 1000)
         } else {
             endAnimation()

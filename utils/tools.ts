@@ -154,6 +154,17 @@ export function genCalendarVals() {
     //     })
     // }
 
+    //1 day before to allow previous day completed
+    let prevDay = new Date(d.getFullYear(), d.getMonth(), d.getDate() - 1);
+
+    dates.push({
+        day: prevDay.getDate(),
+        dayName: getDayName(prevDay),
+        monthShort: getMonthShort(prevDay),
+        month: prevDay.getMonth(),
+        year: prevDay.getFullYear()
+    })
+
     //30 days after
     for (let i = 0; i <= 30; i++) {
         let date = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i);

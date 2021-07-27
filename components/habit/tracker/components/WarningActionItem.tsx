@@ -9,7 +9,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(AlertCircle)
 
 interface Props {
     dateString: string;
-    handleAddCompletedHabit: (prevDay?: boolean) => void;
+    handleAddCompletedHabit: (prevDay: boolean) => void;
 }
 
 const WarningActionItem = ({ dateString, handleAddCompletedHabit }: Props) => {
@@ -26,6 +26,7 @@ const WarningActionItem = ({ dateString, handleAddCompletedHabit }: Props) => {
             startAnimation();
             timeOut = setTimeout(() => {
                 mount.current && handleAddCompletedHabit(true);
+                mount.current && endAnimation();
             }, 1000)
         } else {
             endAnimation()

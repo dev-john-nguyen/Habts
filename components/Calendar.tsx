@@ -1,11 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { StyleSheet, View, Pressable } from 'react-native';
 import { genCalendarVals } from '../utils/tools';
 import Colors from '../constants/Colors';
-import { normalizeHeight, normalizeWidth } from '../utils/styles';
+import { normalizeWidth } from '../utils/styles';
 import { FlatList } from 'react-native-gesture-handler';
-import { StyledText, StyledTextBold, StyledTextMedium } from './StyledText';
-import { Entypo } from '@expo/vector-icons';
+import { StyledTextBold, StyledTextMedium } from './StyledText';
 
 interface props {
     setActiveDate: (date: Date) => void;

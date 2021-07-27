@@ -23,13 +23,24 @@ interface HabitPreviewProps {
     setBanner: BannerActionsProps['setBanner'];
 }
 
+type ActionValsProps = {
+    warning: boolean,
+    reset: boolean,
+    isYesterday: boolean,
+    targetDate: Date | undefined,
+    isToday: boolean,
+}
+
 export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCongratsBanner, setBanner }: HabitPreviewProps) => {
     const [loading, setLoading] = useState(false);
     const [styles] = useState(genStyles(active));
     const [shownWarning, setShownWarning] = useState(false);
-    const [actionVals, setActionVals] = useState({
+    const [actionVals, setActionVals] = useState<ActionValsProps>({
         warning: false,
-        reset: false
+        reset: false,
+        isYesterday: false,
+        targetDate: undefined,
+        isToday: false
     });
     const [iconColor] = useState(active ? Colors.white : Colors.grey);
     const prevConsec = useRef<HabitProps['consecutive']>();
@@ -62,17 +73,23 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
     useEffect(() => {
         let today = new Date()
         const { warning, reset } = consecutiveTools.shouldReset(habit, today);
+        const { yesterday, date, isToday } = handleTargetDate();
+
         setActionVals({
+            isYesterday: yesterday,
+            targetDate: date,
             warning: warning ? true : false,
-            reset: reset ? true : false
+            reset: reset ? true : false,
+            isToday
         });
 
-    }, [habit.completedHabits])
+    }, [habit.completedHabits, activeDate])
 
     const onCompletedActionPress = async () => {
         if (loading) return;
 
-        if (!shownWarning && actionVals.warning) {
+        //even if yesterday was a miss still show warning
+        if (!shownWarning && (actionVals.warning || actionVals.reset) && !actionVals.isYesterday) {
             setShownWarning(true);
             setBanner('warning', "Please mark yesterday as completed if performed. If not, continue by trying again.");
             return;
@@ -80,18 +97,35 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
 
         setLoading(true);
 
-        await addCompletedHabit(habit.docId)
+        await addCompletedHabit(habit.docId, actionVals.isYesterday)
 
         setLoading(false)
     }
 
-    const renderActionIcons = () => {
+    const handleTargetDate = () => {
         let todayDate = new Date();
+        let yesterday = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate() - 1);
 
         const isSameDay = consecutiveTools.datesAreOnSameDay(todayDate, activeDate);
+        const isYest = consecutiveTools.datesAreOnSameDay(yesterday, activeDate);
 
-        //check if choosen date (activeDate) isn't on the same day as today
-        if (!isSameDay) {
+        if (!isSameDay && !isYest) return {
+            yesterday: false,
+            date: undefined,
+            isToday: isSameDay
+        }
+
+        return {
+            yesterday: isYest,
+            date: yesterday,
+            isToday: isSameDay
+        }
+    }
+
+    const renderActionIcons = () => {
+
+        //check if choosen date (activeDate) isn't on the same day as today or yesterday
+        if (!actionVals.targetDate) {
             return (
                 <View style={styles.circleInfo}>
                     <CircleSquare squareColor={Colors.mediumGrey} circleColor={Colors.grey} />
@@ -100,7 +134,7 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
         }
 
         let foundCompleted = habit.completedHabits.find(({ dateCompleted }) => {
-            if (consecutiveTools.datesAreOnSameDay(dateCompleted, todayDate)) return true
+            if (consecutiveTools.datesAreOnSameDay(dateCompleted, activeDate)) return true
         })
 
         if (foundCompleted) {
@@ -110,6 +144,21 @@ export default ({ onPress, habit, active, addCompletedHabit, activeDate, setCong
                 </View>
             )
         } else {
+
+            //if active date is yesterday and today has already been completed show unavailable
+            let isTodayCompleted = habit.completedHabits.find(({ dateCompleted }) => {
+                if (consecutiveTools.datesAreOnSameDay(dateCompleted, new Date())) return true
+            })
+
+            if (actionVals.isYesterday && isTodayCompleted) {
+                return (
+                    <View style={styles.circleInfo}>
+                        <CircleSquare squareColor={Colors.mediumGrey} circleColor={Colors.grey} />
+                    </View>
+                )
+            }
+
+
             if (actionVals.reset || actionVals.warning) {
                 return (
                     <View style={styles.circleInfo}>
