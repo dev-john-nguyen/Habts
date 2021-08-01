@@ -7,8 +7,6 @@ import Colors from '../../constants/Colors';
 import { StyledText, StyledTextBold, StyledTextMedium } from '../../components/StyledText';
 import { UserActionsProps } from '../../services/user/types';
 import HeaderBgImg from '../../assets/svgs/home/HeaderBgImg';
-import HeaderImg from '../../assets/svgs/home/HeaderImg';
-import Oval from '../../assets/svgs/home/Oval';
 
 const privacyUrl = 'https://habt-b0f23.web.app/privacy';
 const termsUrl = 'https://habt-b0f23.web.app/terms';
@@ -115,9 +113,9 @@ export default ({ subscriptionPurchased }: { subscriptionPurchased: UserActionsP
                         <StyledText style={styles.error}>
                             {error}
                         </StyledText>
-                        {/* <Pressable onPress={continueForFree} style={styles.buttons}>
-                <StyledText style={styles.buttonText}>{loading.free ? <ActivityIndicator size='small' color={Colors.white} /> : 'Continue for free'}</StyledText>
-            </Pressable> */}
+                        <Pressable onPress={continueForFree} style={styles.buttons}>
+                            <StyledText style={styles.buttonText}>{loading.free ? <ActivityIndicator size='small' color={Colors.white} /> : 'Continue for free'}</StyledText>
+                        </Pressable>
                     </View>
                 </View>
                 <View style={{ flex: .3 }}>
