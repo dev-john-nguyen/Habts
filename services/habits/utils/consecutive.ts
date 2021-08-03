@@ -81,9 +81,9 @@ class ConsecutiveTools {
             //find current goal
             if (count.length < goal || goal === 0) {
                 //ensure date is a valid sequence
-                const isValid = sequenceVals.find((v) => v === targetDateDay);
+                const isValid = sequenceVals.findIndex((v) => v === targetDateDay);
 
-                if (!isValid) {
+                if (isValid < 0) {
                     return {
                         invalid:
                             "The target date doesn't fit any of the sequence values with zero in count"
