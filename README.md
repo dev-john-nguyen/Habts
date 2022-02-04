@@ -1,2 +1,2 @@
-# Habts-Eject
- Ejected to implement IAP
+# Habts
+Build better habits
